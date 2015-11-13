@@ -1,0 +1,9 @@
+ms.aux
+ms.bbl
+ms.blg
+ms.log
+ms.out
+ms.pdf
+
+syntax: glob
+*~
