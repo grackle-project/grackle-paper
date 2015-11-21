@@ -3,9 +3,19 @@
 
 
 \subsection{Primordial Chemistry}
-Sample citation is \citet{1997NewA....2..181A}.
+The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
+treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
+in the latest version of Enzo available at the time of writing (version ***). The Enzo primordial chemistry itself is based 
+originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..209A}, although the current version has been
+modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
+included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
 
 \subsubsection{Chemistry Network}
+Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
+The six-species network is designed for modelling atomic and/or ionized gas, and tracks the abundances of the species
+H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$. The reactions included in this network are listed in Table ***, along with
+the sources used for the various reaction rate coefficients. 
+
 
 
 \subsubsection{Solving and Updating the Network}
