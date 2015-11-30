@@ -5,7 +5,7 @@
 \subsection{Primordial Chemistry}
 The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
 treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
-in the latest version of Enzo available at the time of writing (version ***). The Enzo primordial chemistry itself is based 
+in the latest version of Enzo available at the time of writing (version 2.4). The Enzo primordial chemistry itself is based 
 originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..209A}, although the current version has been
 modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
 included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
@@ -16,6 +16,27 @@ The six-species network is designed for modelling atomic and/or ionized gas, and
 H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$. The reactions included in this network are listed in Table ***, along with
 the sources used for the various reaction rate coefficients. 
 
+\begin{table}
+\begin{tabular}{lclcc}
+\hline
+\multicolumn{3}{c}{Reaction} & \multicolumn{2}{c}{Reference} \\
+& & & Data & Fit \\
+\hline
+${\rm H + e^{-}}$ & $\rightarrow$ & $\rm{H^{+} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm H^{+} + e^{-}}$ & $\rightarrow$ & $\rm{H + \gamma} $ & 3 & 2, 4\\
+${\rm He + e^{-}}$ & $\rightarrow$ & ${\rm He^{+} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm He^{+} + e^{-}}$ & $\rightarrow$ & ${\rm He + \gamma}$ & 5, 6 & 4, 6, 7 \\
+${\rm He^{+} + e^{-}}$ & $\rightarrow$ & ${\rm He^{++} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm He^{++} + e^{-}}$ & $\rightarrow$ & ${\rm He^{+} + \gamma}$ & 3, 8 & 4, 9 \\
+${\rm H + H}$ & $\rightarrow$ & ${\rm H^{+} + e^{-} + H}$ & 10 & 11 \\
+${\rm H + He}$ & $\rightarrow$ & ${\rm H^{+} + e^{-} + He}$ & 12 & 11 \\
+${\rm H + \gamma}$ & $\rightarrow$ & ${\rm H^{+} + e^{-}}$ & 13 & --- \\
+${\rm He + \gamma}$ & $\rightarrow$ & ${\rm He^{+} + e^{-}}$ & 13 & --- \\
+${\rm He^{+} + \gamma}$ & $\rightarrow$ & ${\rm He^{++} + e^{-}}$ & 13 & --- \\
+\hline
+\end{tabular}
+\\ Key: 1 -- \citet{1987ephh.book.....J}; 2 -- \citet{1997NewA....2..181A}; 3 -- \citet{1992ApJ...387...95F}; 4 -- \citet{1997MNRAS.292...27H}; 5 -- \citet{1960MNRAS.121..471B}; 6 -- \citet{1973A&A....25..137A}; 7 -- \citet{1981MNRAS.197..553B}; 8 -- \citet{1978ppim.book.....S}; 9 -- \citet{1992ApJS...78..341C}; 10 -- \citet{1987PhRvA..36.3100G}; 11 -- \citet{1991ApJS...76..759L}; 12 -- \citet{1981JChPh..74..314V}; 13 -- see Section~\ref{section:radback}
+\end{table}
 
 
 \subsubsection{Solving and Updating the Network}
@@ -55,6 +76,7 @@ the sources used for the various reaction rate coefficients.
 
 
 \subsection{Radiation Backgrounds}
+\label{section:radback}
 - available models
 
 - including in the solver
