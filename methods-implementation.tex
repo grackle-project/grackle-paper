@@ -17,7 +17,86 @@
 \subsubsection{examples}
 
 
-\subsection{Code Structure}
+\subsection{Code Structure} \label{Code_Structure}
 
 
-\subsection{Adding New Models/Rates}
+\subsection{\jr{Adding New Models/Rates}}
+
+Adding new rates to Grackle involves modifying the values stored in the rate coefficients and 
+additionally defining a new network for both the chemistry and if desired also the cooling. As it stands the
+code is not sufficiently modular to allow this task to be completed with significant ease and some
+hands on manipulation of the code structure is required (see \S \ref{Future_Directions} for 
+future improvements in this regard). \\
+\indent When considering a manipulation of the Grackle code base an important consideration is that the structure
+of the current code base is set up to realize either an equilibrium chemistry model using cooling tables
+derived from Cloudy or a non-equilibrium cooling model based on a six, nine or twelve species cooling model. 
+If your wish is to implement a different equilibrium cooling model then the process is relatively straight
+forward. Grackle reads the cloudy cooling and interpolates the data along one, two or three dimensions as
+appropriate. By substituting in a different cooling table the behavior of the cooling for a given species
+can be manipulated. The format of the cooling table should however match the format of the Cloudy cooling
+tables. \\
+\indent If on the other-hand your intention is to manipulate the non-equilibrium cooling behavior then more
+code manipulation will be required. Grackle assumes that non-equilibrium cooling models are hierarchical
+with the nine species model containing the six species model plus three additional components for example. 
+If the intention is to expand the network to include a fourth model containing the twelve species model as 
+a subset then the procedure is straight forward. However, if a different chemical network is envisaged 
+containing some species already in the twelve species model and some not then this will require more care. 
+The flow of the chemistry network is controlled by the primordial\_chemistry flag, 
+primordial\_chemistry = 1 for the six species model, primordial\_chemistry = 2 for the nine species model and
+primordial\_chemistry = 3 for the twelve species model. In general through out the code an if clause of 
+if(primordial\_chemistry > 0) is followed by else if (primordial\_chemistry > 1) which means that instructions
+are carried out consecutively assuming one model is a subset of a higher order model.
+For example say we wish to implements a 10 species model using the current 9 species set and one other element. 
+Two options exist in this case. We could implement a 13 species model and set primordial\_species = 4 and 
+update the code accordingly to deal with an additional species setting the Deuterium species to zero in input.
+This would be straight forward but somewhat wasteful. The alternative option would be to adjust the 
+primordial\_species = 2 criteria to include an extra species. This species would also need to be added into
+Grackle API. In both of these cases the hierarchical nature of the code would be preserved. \\
+%\indent In the following 
+%example we will discuss the more straight forward case of a 15 species model. The new model will 
+%contain the original twelve species model plus new three chemical elements to evolve - 
+%primordial\_chemistry = 4 as a result becomes our fictional 15 species model.
+
+\subsubsection{Updating the Rate Coefficients}
+As described in \S \ref{Code_Structure} the rates are allocated and declared in initialize\_chemistry.c. If the
+intention is to use your own rate coefficients (say based on more recent experimental data) then 
+it would still be prudent to make use of the already existing rate coefficient arrays (k array) as declared
+in initialize\_chemistry.c. The rates are populated in calc\_rates\_g.F. Within this function the rates 
+are fully described. For example k1 is the rate coefficient for the collisional ionization of neutral 
+Hydrogen (k1: HI + e -> HII + 2e). If a significant number of new rate coefficients are desired then 
+the most expedient approach would be to insert a \#define preprocessor directive into calc\_rates\_g.F
+into which your appropriate function call can be inserted. In this case upon compilation your new function 
+will populate all of the rate coefficients required for your new network. Your function can use the 
+routine coll\_rates\_g as a template for how to implement a new set of rate coefficients. Any rates that are not
+set in the new routine will be set to a very small number and will therefore not effect the calculation.\\
+\indent For any additional rate coefficients that are required the k array needs to be declared and allocated
+in initialize\_chemistry.c. These rates can then be used to model the chemical behavior of the new species
+as a function of temperature and density as required. Furthermore, in the function lookup\_cool\_rates1d\_g 
+in solve\_rate\_cool\_g.F the interpolation of the new rates will need to be added. 
+
+
+\subsection{Updating the chemistry network}
+If in addition (or independently) you wish to update the chemical network to either include or exclude
+reactions then a new rate network will be required. As a template the function step\_rate in 
+solve\_rate\_cool\_g.F can be used. This function currently evolves both the six, nine and twelve species 
+models. To modify this network you can either create a new chemistry solver following the 
+existing solver's methods as a guide or create a new routine which solves the chemical network. If the 
+new network is simply an addition to the existing network (e.g. a 15 species model) then the easiest 
+option is to simply augment this network with the three extra species using the appropriate 
+interactions. The species will then be evolved until they converge.
+
+\subsection{Updating the cooling network}
+Apart from the chemical network the cooling network may also be modified. As discussed previously if the intention
+is to implement a new cooling table then the changes are straight forward. Once the tables are formatted correctly
+Grackle will the new values to calculate a new temperature. If instead we want to modify the cooling rate due 
+to emission line cooling from given species this is handled in the cool1d\_multi\_g.F. As discussed in \S
+\ref{Cooling} line emission cooling is determined using collisional excitation, collisional ionization and 
+recombination rates. If the intention is to update/modify existing rates then the cooling rates are also set
+in calc\_rates\_g.F and can be modified here. If new cooling rates are required from another species 
+whose cooling properties are important for the network then the rates can be added here also. Any new arrays
+required in this case will also need to be declared and initialized in initialize\_chemistry.c similar to the
+rate coefficients. The rates can then be interpolated to the required temperature values in calc\_rates\_g.F 
+following the examples there. Once the new cooling rate has been determined it's values needs to be added
+to the edot array so that the cooling effects of this new species is properly account for.
+
+
