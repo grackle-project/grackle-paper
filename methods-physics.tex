@@ -81,16 +81,16 @@ ${\rm H^{-} + H^{+}}$ & $\rightarrow$ & ${\rm H_{2}^{+} + e^{-}}$ & 15 & 12, 16 
 ${\rm H_{2}^{+} + e^{-}}$ & $\rightarrow$ & ${\rm H + H}$ & 17 & 12 \\
 ${\rm H_{2}^{+} + H^{-}}$ & $\rightarrow$ & ${\rm H_{2} + H}$ & 18 & 18 \\ 
 ${\rm H + H + H}$ & $\rightarrow$ & ${\rm H_{2} + H}$ & 19  & 19  \\
-${\rm H + H + H_{2}}$ & $\rightarrow$ & ${\rm H_{2} + H_{2}}$ & 20 & 21 \\
-${\rm H^{-} + \gamma}$ & $\rightarrow$ & ${\rm H + e^{-}}$ & 22 & --- \\
-${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H + H^{+}}$ & 22 & --- \\
-${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H_{2}^{+} + e^{-}}$ & 22 & --- \\
-${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H^{+} + H^{+} + e^{-}}$ & 22 & --- \\
-${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H + H}$ & 22 & --- \\
+${\rm H + H + H_{2}}$ & $\rightarrow$ & ${\rm H_{2} + H_{2}}$ & 20, 21 & 22 \\
+${\rm H^{-} + \gamma}$ & $\rightarrow$ & ${\rm H + e^{-}}$ & 23 & --- \\
+${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H + H^{+}}$ & 23 & --- \\
+${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H_{2}^{+} + e^{-}}$ & 23 & --- \\
+${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H^{+} + H^{+} + e^{-}}$ & 23 & --- \\
+${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H + H}$ & 23 & --- \\
 \hline
 \end{tabular}
 \\ Note: the nine species network also includes all of the reactions listed in Table~\ref{tab:six}.
-\\ Key: 1 -- \citet{1979MNRAS.187P..59W}; 2 -- \citet{1998ApJ...509....1S}; 3 -- \citet{2010Sci...329...69K}; 4 -- \citet{1976PhRvA..13...58R}; 5 -- \citet{2015MNRAS.446.3163L}; 6 -- \citet{1979JChPh..70.2877K}; 7 -- \citet{2002PhRvA..66d2717K}; 8 --- \citet{2004ApJ...606L.167S,2004ApJ...607L.147S}; 9 -- \citet{2002PPCF...44.1263T}; 10 -- \citet{1996ApJ...461..265M}; 11 -- \citet{1987ephh.book.....J}; 12 -- \citet{1997NewA....2..181A}; 13 -- \citet{1986JPhB...19L..31F}; 14 -- \citet{1999MNRAS.304..327C}; 15 -- \citet{1978JPhB...11L.671P}; 16 -- \citet{1987ApJ...318...32S}; 17 -- \citet{1994ApJ...424..983S}; 18 -- \citet{1987IAUS..120..109D}; 19 -- See text; 20 -- \citet{1962JChPh..36.2923S,1970JChPh..53.4395H}; 21 -- \citet{1983JPCRD..12..531C}; 22 -- see Section~\ref{section:radback}.
+\\ Key: 1 -- \citet{1979MNRAS.187P..59W}; 2 -- \citet{1998ApJ...509....1S}; 3 -- \citet{2010Sci...329...69K}; 4 -- \citet{1976PhRvA..13...58R}; 5 -- \citet{2015MNRAS.446.3163L}; 6 -- \citet{1979JChPh..70.2877K}; 7 -- \citet{2002PhRvA..66d2717K}; 8 --- \citet{2004ApJ...606L.167S,2004ApJ...607L.147S}; 9 -- \citet{2002PPCF...44.1263T}; 10 -- \citet{1996ApJ...461..265M}; 11 -- \citet{1987ephh.book.....J}; 12 -- \citet{1997NewA....2..181A}; 13 -- \citet{1986JPhB...19L..31F}; 14 -- \citet{1999MNRAS.304..327C}; 15 -- \citet{1978JPhB...11L.671P}; 16 -- \citet{1987ApJ...318...32S}; 17 -- \citet{1994ApJ...424..983S}; 18 -- \citet{1987IAUS..120..109D}; 19 -- See text; 20 -- \citet{1962JChPh..36.2923S}; 21 -- \citet{1970JChPh..53.4395H}; 22 -- \citet{1983JPCRD..12..531C}; 23 -- see Section~\ref{section:radback}.
 \end{table}
 
 The nine species network includes all of the reactions in Table~\ref{tab:six} plus the additional reactions listed in Table~\ref{tab:nine}. Again,
@@ -119,6 +119,35 @@ function.
 \end{enumerate}
 \end{enumerate}
 
+Finally, the twelve species network includes the reactions in Tables~\ref{tab:six} and \ref{tab:nine}, plus a small number of additional reactions involving
+D$^{+}$, D and HD, listed in Table~\ref{tab:12}. The intent of the twelve species network is to allow the HD abundance of the gas to be tracked accurately,
+since in cold gas HD can become a more effective coolant than H$_{2}$ despite its much lower fractional abundance \citep[see e.g.][]{2006MNRAS.366..247J,2008ApJ...685....8M}. It is therefore necessary to include only a small number of reactions, as the direct conversion of H$_{2}$ to HD by collisions with D$^{+}$ and D, together with the
+corresponding inverse reactions generally dominate the production and destruction of HD.
+
+Two reactions in the twelve species network require further discussion:
+\begin{enumerate}
+\item[(i)] The rate coefficient that we adopt for the reaction
+\begin{equation}
+{\rm HD + H} \rightarrow {\rm H_{2} + D}
+\end{equation}
+is an analytical fit presented in \citet{2002P&SS...50.1197G}, based on data from \citet{1959JChPh..31.1359S}. However, this fit blows up
+at temperatures $T < 100$~K, yielding an unphysically large value for the rate coefficient. We therefore follow \citet{2007MNRAS.376..709R}
+and \citet{2008ApJ...685....8M} and assume that the rate at $T < 100$~K is the same as the rate at $T = 100$~K. Note that as this reaction
+proceeds extremely slowly at temperatures below as few hundred K, this is unlikely to be a significant source of error. 
+\item[(ii)] We assume that the rate coefficient for the associative detachment of H$^{-}$ by D
+\begin{equation}
+{\rm D + H^{-} \rightarrow  HD + e^{-}}
+\end{equation}
+is the same as for the corresponding reaction between H and H$^{-}$, since measurements by \citet{2012PhRvA..86c2714M} suggest that
+there is not a significant isotope effect for this reaction. However, in the solver, we multiply the rate coefficient by a factor of two when
+computing the HD formation rate to account approximately for the contribution from the reaction
+\begin{equation}
+{\rm H + D^{-} \rightarrow  HD + e^{-}}.
+\end{equation}
+Note that we do not explicitly include this reaction in our network because it would require us to track the abundance of the D$^{-}$ ion,
+thereby adding significant additional complexity to the model for only a marginal increase in accuracy.
+\end{enumerate}
+
 \begin{table}
 \caption{Additional reactions included in the twelve species network \label{tab:12}}
 \begin{tabular}{lclcc}
@@ -126,17 +155,19 @@ function.
 \multicolumn{3}{c}{Reaction} & \multicolumn{2}{c}{Reference} \\
 & & & Data & Fit \\
 \hline
-${\rm H^{+} + D}$ & $\rightarrow$ & ${\rm H + D^{+}}$ & & \\
-${\rm D^{+} + H}$ & $\rightarrow$ & ${\rm D + H^{+}}$ & & \\
-${\rm H_{2} + D^{+}}$ & $\rightarrow$ & ${\rm HD + H^{+}}$ & & \\
-${\rm HD + H^{+}}$ & $\rightarrow$ & ${\rm H_{2} + D^{+}}$ & & \\
-${\rm H_{2} + D}$ & $\rightarrow$ & ${\rm HD + H}$ & & \\
-${\rm HD + H}$ & $\rightarrow$ & ${\rm H_{2} + D}$ & & \\
-${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & & \\
+${\rm H^{+} + D}$ & $\rightarrow$ & ${\rm H + D^{+}}$ & 1, 2 & 3 \\
+${\rm D^{+} + H}$ & $\rightarrow$ & ${\rm D + H^{+}}$ & 1, 2 & 3 \\
+${\rm H_{2} + D^{+}}$ & $\rightarrow$ & ${\rm HD + H^{+}}$ & 4 & 5 \\
+${\rm HD + H^{+}}$ & $\rightarrow$ & ${\rm H_{2} + D^{+}}$ & 4 & 5 \\
+${\rm H_{2} + D}$ & $\rightarrow$ & ${\rm HD + H}$ & 6 & 7 \\
+${\rm HD + H}$ & $\rightarrow$ & ${\rm H_{2} + D}$ & 8 & 5, 9 \\
+${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 \hline
 \end{tabular}
 \\ Note: the twelve species network also includes all of the reactions listed in Tables~\ref{tab:six} \& \ref{tab:nine}.
-%\\ Key: 1 -- ***
+\\ Key: 1 -- \citet{1999PhRvL..83.4041I}; 2 -- \citet{2000PhRvA..62d2706Z}; 3 -- \citet{2002ApJ...566..599S};
+4 -- \citet{1982sasp.nasa..304G}; 5 -- \citet{2002P&SS...50.1197G}; 6 -- \citet{2003PhRvL..91f3201M}; 7 -- \citet{2011ApJ...727..110C}; 
+8 -- \citet{1959JChPh..31.1359S}; 9 -- \citet{2007MNRAS.376..709R}; 10 -- \citet{2010Sci...329...69K}; 11 -- \citet{2012PhRvA..86c2714M}
 \end{table}
 
 \subsubsection{Solving and Updating the Network}
