@@ -3,10 +3,172 @@
 
 
 \subsection{Primordial Chemistry}
-Sample citation is \citet{1997NewA....2..181A}.
+The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
+treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
+in the latest version of Enzo available at the time of writing (version 2.4). The Enzo primordial chemistry itself is based 
+originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..209A}, although the current version has been
+modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
+included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
 
 \subsubsection{Chemistry Network}
+Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
+The choice of chemical network is controlled by the primordial\_chemistry parameter. Setting primordial\_chemistry = 1 selects the
+six species network, which tracks the abundances of the species H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$ and is 
+designed for modelling atomic and/or ionized gas. Setting primordial\_chemistry = 2 selects the nine species network. This
+includes all of the species and reactions included in the six species network, but adds molecular hydrogen (H$_2$), plus the
+two ions primarily responsible for its formation in primordial gas (H$^{-}$ and H$_{2}^{+}$). Finally, setting primordial\_chemistry = 3
+selects the twelve species network, which is an extension of the nine species model that includes D, D$^{+}$ and HD.
 
+\begin{table}
+\caption{Chemical reactions in the six species network \label{tab:six}}
+\begin{tabular}{lclcc}
+\hline
+\multicolumn{3}{c}{Reaction} & \multicolumn{2}{c}{Reference} \\
+& & & Data & Fit \\
+\hline
+${\rm H + e^{-}}$ & $\rightarrow$ & $\rm{H^{+} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm H^{+} + e^{-}}$ & $\rightarrow$ & $\rm{H + \gamma} $ & 3 & 2, 4\\
+${\rm He + e^{-}}$ & $\rightarrow$ & ${\rm He^{+} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm He^{+} + e^{-}}$ & $\rightarrow$ & ${\rm He + \gamma}$ & 5, 6 & 4, 6, 7 \\
+${\rm He^{+} + e^{-}}$ & $\rightarrow$ & ${\rm He^{++} + e^{-} + e^{-}}$ & 1 & 2 \\
+${\rm He^{++} + e^{-}}$ & $\rightarrow$ & ${\rm He^{+} + \gamma}$ & 3, 8 & 4, 9 \\
+${\rm H + H}$ & $\rightarrow$ & ${\rm H^{+} + e^{-} + H}$ & 10 & 11 \\
+${\rm H + He}$ & $\rightarrow$ & ${\rm H^{+} + e^{-} + He}$ & 12 & 11 \\
+${\rm H + \gamma}$ & $\rightarrow$ & ${\rm H^{+} + e^{-}}$ & 13 & --- \\
+${\rm He + \gamma}$ & $\rightarrow$ & ${\rm He^{+} + e^{-}}$ & 13 & --- \\
+${\rm He^{+} + \gamma}$ & $\rightarrow$ & ${\rm He^{++} + e^{-}}$ & 13 & --- \\
+\hline
+\end{tabular}
+\\ Key: 1 -- \citet{1987ephh.book.....J}; 2 -- \citet{1997NewA....2..181A}; 3 -- \citet{1992ApJ...387...95F}; 4 -- \citet{1997MNRAS.292...27H}; 5 -- \citet{1960MNRAS.121..471B}; 6 -- \citet{1973A&A....25..137A}; 7 -- \citet{1981MNRAS.197..553B}; 8 -- \citet{1978ppim.book.....S}; 9 -- \citet{1992ApJS...78..341C}; 10 -- \citet{1987PhRvA..36.3100G}; 11 -- \citet{1991ApJS...76..759L}; 12 -- \citet{1981JChPh..74..314V}; 13 -- see Section~\ref{section:radback}
+\end{table}
+
+The reactions included in the six species network are listed in Table~\ref{tab:six}. The rate coefficients for these reactions are implemented in
+Grackle using simple temperature-dependent analytical fits. In the Table, we list the references from which we take these fits, and also the 
+references that are the original sources of the theoretical or experimental  data on which these fits are based.
+
+A few of the reactions listed in Table~\ref{tab:six} deserve further comment:
+\begin{enumerate}
+\item[(i)] By default, the recombination of
+H$^{+}$, He$^{+}$ and He$^{++}$ is modelled using the case A recombination rate coefficients. However, the case B
+rate coefficients can instead be selected by setting casebrates = 1. The additional complication that photons from the recombination of
+He$^{+}$ can bring about the photoionization of hydrogen \citep[discussed in some detail in][]{1989agna.book.....O} is not accounted
+for, but in most circumstances this will only lead to a small error in the H$^{+}$ and He$^{+}$ abundances. 
+\item[(ii)] The rates of the photoionization reactions are not calculated internally by Grackle, but instead are specified in an input data file,
+as described in more detail in Section~\ref{section:radback}.
+\item[(iii)] The six species network implemented in Grackle includes two additional reactions that were not part of the original \citet{1997NewA....2..181A}
+six species network: the collisional ionization of H by collisions with H and He atoms. Often, these reactions are unimportant. However, they 
+can become competitive with the collisional ionization of H by electrons if the fractional ionization of the gas is very low \citep[see e.g.][for an example of when this can be important]{2015MNRAS.451.2082G}.
+\end{enumerate}
+
+\begin{table}
+\caption{Chemical reactions in the nine species network \label{tab:nine}}
+\begin{tabular}{lclcc}
+\hline
+\multicolumn{3}{c}{Reaction} & \multicolumn{2}{c}{Reference} \\
+& & & Data & Fit \\
+\hline
+${\rm H + e^{-}}$ & $\rightarrow$ & ${\rm H^{-} + \gamma}$ & 1 & 2 \\
+${\rm H^{-} + H}$ & $\rightarrow$ & ${\rm H_{2} + e^{-}}$ & 3 & 3 \\
+${\rm H + H^{+}}$ & $\rightarrow$ & ${\rm H_{2}^{+} + \gamma}$ & 4 & 5 \\
+${\rm H_{2}^{+} + H}$ & $\rightarrow$ & ${\rm H_{2} + H^{+}}$ & 6 & 6 \\
+${\rm H_{2} + H^{+}}$ & $\rightarrow$ & ${\rm H_{2}^{+} + H}$ & 7 & 8 \\
+${\rm H_{2} + e^{-}}$ & $\rightarrow$ & ${\rm H + H + e^{-}}$ & 9 & 9 \\
+${\rm H_{2} + H}$ & $\rightarrow$ & ${\rm H + H + H}$ & 10 & 10 \\
+${\rm H^{-} + e^{-}}$ & $\rightarrow$ & ${\rm H + e^{-} + e^{-}}$ & 11 & 12 \\
+${\rm H^{-} + H}$ & $\rightarrow$ & ${\rm H + e^{-} + H}$ & 11 & 12 \\
+${\rm H^{-} + H^{+}}$ & $\rightarrow$ & ${\rm H + H}$ & 13 & 14 \\
+${\rm H^{-} + H^{+}}$ & $\rightarrow$ & ${\rm H_{2}^{+} + e^{-}}$ & 15 & 12, 16 \\
+${\rm H_{2}^{+} + e^{-}}$ & $\rightarrow$ & ${\rm H + H}$ & 17 & 12 \\
+${\rm H_{2}^{+} + H^{-}}$ & $\rightarrow$ & ${\rm H_{2} + H}$ & 18 & 18 \\ 
+${\rm H + H + H}$ & $\rightarrow$ & ${\rm H_{2} + H}$ & 19  & 19  \\
+${\rm H + H + H_{2}}$ & $\rightarrow$ & ${\rm H_{2} + H_{2}}$ & 20, 21 & 22 \\
+${\rm H^{-} + \gamma}$ & $\rightarrow$ & ${\rm H + e^{-}}$ & 23 & --- \\
+${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H + H^{+}}$ & 23 & --- \\
+${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H_{2}^{+} + e^{-}}$ & 23 & --- \\
+${\rm H_{2}^{+} + \gamma}$ & $\rightarrow$ & ${\rm H^{+} + H^{+} + e^{-}}$ & 23 & --- \\
+${\rm H_{2} + \gamma}$ & $\rightarrow$ & ${\rm H + H}$ & 23 & --- \\
+\hline
+\end{tabular}
+\\ Note: the nine species network also includes all of the reactions listed in Table~\ref{tab:six}.
+\\ Key: 1 -- \citet{1979MNRAS.187P..59W}; 2 -- \citet{1998ApJ...509....1S}; 3 -- \citet{2010Sci...329...69K}; 4 -- \citet{1976PhRvA..13...58R}; 5 -- \citet{2015MNRAS.446.3163L}; 6 -- \citet{1979JChPh..70.2877K}; 7 -- \citet{2002PhRvA..66d2717K}; 8 --- \citet{2004ApJ...606L.167S,2004ApJ...607L.147S}; 9 -- \citet{2002PPCF...44.1263T}; 10 -- \citet{1996ApJ...461..265M}; 11 -- \citet{1987ephh.book.....J}; 12 -- \citet{1997NewA....2..181A}; 13 -- \citet{1986JPhB...19L..31F}; 14 -- \citet{1999MNRAS.304..327C}; 15 -- \citet{1978JPhB...11L.671P}; 16 -- \citet{1987ApJ...318...32S}; 17 -- \citet{1994ApJ...424..983S}; 18 -- \citet{1987IAUS..120..109D}; 19 -- See text; 20 -- \citet{1962JChPh..36.2923S}; 21 -- \citet{1970JChPh..53.4395H}; 22 -- \citet{1983JPCRD..12..531C}; 23 -- see Section~\ref{section:radback}.
+\end{table}
+
+The nine species network includes all of the reactions in Table~\ref{tab:six} plus the additional reactions listed in Table~\ref{tab:nine}. Again,
+a couple of reactions deserve further discussion:
+\begin{enumerate}
+\item[(i)] The treatment of H$_{2}$ collisional dissociation by H atom collisions now used in Grackle is taken from \citet{1996ApJ...461..265M} and 
+accounts for both the temperature and the density dependence of this process. It therefore remains valid in the high density limit, where the H$_{2}$
+level populations approach their local thermodynamical equilibrium (LTE) values. This is important, because H$_{2}$ is far more susceptible to
+collisional dissociation in this limit than when it is solely in the vibrational ground state. It should also be noted that the treatment of this process
+in Grackle accounts for effects of dissociative tunneling as well as direct collisional dissociation; previously, Enzo only accounted for the latter
+process and hence underestimated the dissociation rate at low temperatures \citep{2014MNRAS.443.1979L,2015MNRAS.451.2082G}
+\item[(ii)] In view of the considerable uncertainty in the rate of the three-body reaction
+\begin{equation}
+{\rm H + H + H} \rightarrow {\rm H_{2} + H},
+\end{equation}
+discussed in detail in \citet{2008AIPC..990...25G} and \citet{2011ApJ...726...55T}, Grackle provides several different rate coefficients for this process. The user can
+select which of these rate coefficients to adopt by means of the three\_body\_rate parameter. The options are
+\begin{enumerate}
+\item[{\bf 0}:]  Rate coefficient from \citet{2002Sci...295...93A}, based on an extrapolation from low temperature calculations by \citet{1987JChPh..87..314O}. This is the default option.
+\item[{\bf 1}:]  Rate coefficient from \citet{1983ApJ...271..632P}, derived using detailed balance applied to the H$_{2}$ collisional dissociation rate measured by \citet{1967JChPh..47...54J}.
+\item[{\bf 2}:]  Rate coefficient recommended by \citet{1983JPCRD..12..531C}, based on a survey of the experimental data available at that time. 
+\item[{\bf 3}:]  Rate coefficient from \citet{2007MNRAS.377..705F}, also derived from \citet{1967JChPh..47...54J} using detailed balance, but with a different treatment of the H$_{2}$ partition
+function. 
+\item[{\bf 4}:]  Rate coefficient from \citet{2008AIPC..990...25G}, derived from the \citet{1996ApJ...461..265M} high-density H$_2$ collisional dissociation rate using detailed balance
+\item[{\bf 5}:]  Rate coefficient computed directly by \citet{2013ApJ...773L..25F}.
+\end{enumerate}
+\end{enumerate}
+
+Finally, the twelve species network includes the reactions in Tables~\ref{tab:six} and \ref{tab:nine}, plus a small number of additional reactions involving
+D$^{+}$, D and HD, listed in Table~\ref{tab:12}. The intent of the twelve species network is to allow the HD abundance of the gas to be tracked accurately,
+since in cold gas HD can become a more effective coolant than H$_{2}$ despite its much lower fractional abundance \citep[see e.g.][]{2006MNRAS.366..247J,2008ApJ...685....8M}. It is therefore necessary to include only a small number of reactions, as the direct conversion of H$_{2}$ to HD by collisions with D$^{+}$ and D, together with the
+corresponding inverse reactions generally dominate the production and destruction of HD.
+
+Two reactions in the twelve species network require further discussion:
+\begin{enumerate}
+\item[(i)] The rate coefficient that we adopt for the reaction
+\begin{equation}
+{\rm HD + H} \rightarrow {\rm H_{2} + D}
+\end{equation}
+is an analytical fit presented in \citet{2002P&SS...50.1197G}, based on data from \citet{1959JChPh..31.1359S}. However, this fit blows up
+at temperatures $T < 100$~K, yielding an unphysically large value for the rate coefficient. We therefore follow \citet{2007MNRAS.376..709R}
+and \citet{2008ApJ...685....8M} and assume that the rate at $T < 100$~K is the same as the rate at $T = 100$~K. Note that as this reaction
+proceeds extremely slowly at temperatures below as few hundred K, this is unlikely to be a significant source of error. 
+\item[(ii)] We assume that the rate coefficient for the associative detachment of H$^{-}$ by D
+\begin{equation}
+{\rm D + H^{-} \rightarrow  HD + e^{-}}
+\end{equation}
+is the same as for the corresponding reaction between H and H$^{-}$, since measurements by \citet{2012PhRvA..86c2714M} suggest that
+there is not a significant isotope effect for this reaction. However, in the solver, we multiply the rate coefficient by a factor of two when
+computing the HD formation rate to account approximately for the contribution from the reaction
+\begin{equation}
+{\rm H + D^{-} \rightarrow  HD + e^{-}}.
+\end{equation}
+Note that we do not explicitly include this reaction in our network because it would require us to track the abundance of the D$^{-}$ ion,
+thereby adding significant additional complexity to the model for only a marginal increase in accuracy.
+\end{enumerate}
+
+\begin{table}
+\caption{Additional reactions included in the twelve species network \label{tab:12}}
+\begin{tabular}{lclcc}
+\hline
+\multicolumn{3}{c}{Reaction} & \multicolumn{2}{c}{Reference} \\
+& & & Data & Fit \\
+\hline
+${\rm H^{+} + D}$ & $\rightarrow$ & ${\rm H + D^{+}}$ & 1, 2 & 3 \\
+${\rm D^{+} + H}$ & $\rightarrow$ & ${\rm D + H^{+}}$ & 1, 2 & 3 \\
+${\rm H_{2} + D^{+}}$ & $\rightarrow$ & ${\rm HD + H^{+}}$ & 4 & 5 \\
+${\rm HD + H^{+}}$ & $\rightarrow$ & ${\rm H_{2} + D^{+}}$ & 4 & 5 \\
+${\rm H_{2} + D}$ & $\rightarrow$ & ${\rm HD + H}$ & 6 & 7 \\
+${\rm HD + H}$ & $\rightarrow$ & ${\rm H_{2} + D}$ & 8 & 5, 9 \\
+${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
+\hline
+\end{tabular}
+\\ Note: the twelve species network also includes all of the reactions listed in Tables~\ref{tab:six} \& \ref{tab:nine}.
+\\ Key: 1 -- \citet{1999PhRvL..83.4041I}; 2 -- \citet{2000PhRvA..62d2706Z}; 3 -- \citet{2002ApJ...566..599S};
+4 -- \citet{1982sasp.nasa..304G}; 5 -- \citet{2002P&SS...50.1197G}; 6 -- \citet{2003PhRvL..91f3201M}; 7 -- \citet{2011ApJ...727..110C}; 
+8 -- \citet{1959JChPh..31.1359S}; 9 -- \citet{2007MNRAS.376..709R}; 10 -- \citet{2010Sci...329...69K}; 11 -- \citet{2012PhRvA..86c2714M}
+\end{table}
 
 \subsubsection{Solving and Updating the Network}
 
@@ -69,6 +231,7 @@ $\mu(T)$
 
 
 \subsection{Radiation Backgrounds}
+\label{section:radback}
 - available models
 
 - including in the solver
