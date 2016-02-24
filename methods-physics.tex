@@ -1,6 +1,7 @@
 \section{Chemistry and Cooling Methods} \label{sec:physics}
 
 
+% ========== Primoridal Chemistry =========
 
 \subsection{Primordial Chemistry}
 The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
@@ -170,9 +171,31 @@ ${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 8 -- \citet{1959JChPh..31.1359S}; 9 -- \citet{2007MNRAS.376..709R}; 10 -- \citet{2010Sci...329...69K}; 11 -- \citet{2012PhRvA..86c2714M}
 \end{table}
 
+% ----------------------------------
+
 \subsubsection{Solving and Updating the Network}
 
+Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR (Hindmarsh 1983); however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
 
+Our kinetic network for solving the rate of change of species density $n_i$ has the general form
+\begin{equation}
+\frac{\partial n_i}{\partial t} = \sum_j \sum_l k_{jl} n_j n_l + \sum_j I_j n_j
+\label{eq:rate_general}
+\end{equation}
+where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may an additional term for three-body reactions.   To solve this kinetic network, Grackle follows closely the procedure described in Anninos et al. 1997 and Bryan et al. 2014 by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+\begin{equation}
+\frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
+\label{eq:rateCD}
+\end{equation}
+where $C_i$ represents the total creation rate of species $i$ (given the temperature $T$ and other species densities) while $D_i n_i$ is the destruction rate of the same species (which must be proportional to $n_i$), including both radiative and collisional processes.  Ideally, we would solve these ordinary differential equations using a higher order method; however, here we adopt a very simple low order backwards difference formula (BDF) due to its stability.  Anninos et al. (1997) explored a wide variety of higher-order solution techniques but found that this simple BDF scheme was generally more stable and competitive for the level of accuracy required.  In particular, the BDF version of Equation~\ref{eq:rateCD} is:
+\begin{equation}
+n^{t + \Delta t} = \frac{C^{t+\Delta t} \Delta t + n^t}{1 + D^{t+\Delta t} \Delta t}
+\label{eq:rate_BDF}
+\end{equation}
+Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in Anninos et al. (1997) based on extensive tests and is as follows:
+
+
+% ============ Cooling =============
 
 \subsection{Cooling} \label{Cooling}
 
