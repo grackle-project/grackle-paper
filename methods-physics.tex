@@ -182,12 +182,36 @@ ${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 \paragraph{Non-equilibrium}
 
 \paragraph{Tabulated}
+In the simplest mode, the cooling and heating due to the primordial
+elements can be calculated using tables of pre-computed values under
+the assumption of ionization equilibrium.  When the gas is assumed to
+have no incident radiation, this is the case of collisional ionization
+equilibrium (CIE), and the cooling rate is solely a function of
+temperature.  If radiation is present, the cooling rate under
+ionization equilibrium for a fixed spectral shape and intensity is a
+function of density and temperature.  The process by which they are
+created is discussed in Section \ref{sec:cooling-tables}.  For the
+primordial elements, tables exist for the cooling rate, $\Lambda$;
+the heating rate, $\Gamma$; and the mean molecular weight, $\mu$, of
+the gas as a function of temperature and, optionally, density.  Since
+simulation codes typically solve for the internal energy of the gas
+instead of the temperature, it is necessary to convert one to the
+other by
+\begin{equation} \label{eqn:e-T}
+e = \frac{k T}{(\gamma - 1)\ \mu m_{H}},
+\end{equation}
+where $k$ is the Boltzmann constant, $T$ is the temperature, $e$ is
+the specific internal energy, $\gamma$ is the adiabatic index of an
+ideal gas, and $m_{H}$ is the Hydrogen mass.  Since $\mu$ is also a
+function of temperature, we solve Equation \ref{eqn:e-T} iteratively
+with an initial guess of $\mu = 1$.  The temperature calculated using
+the initial guess for $\mu$ is then used as an input to the table of
+$\mu(T)$ 
 
 
 \subsubsection{Metal Cooling}
-- making the tabulated data
 
-- including in the network
+\paragraph{Constructing Cooling Tables} \label{sec:cooling-tables}
 
 
 \subsection{Heating}
