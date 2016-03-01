@@ -11,7 +11,7 @@ originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..
 modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
 included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
 
-\subsubsection{Chemistry Network}
+\subsubsection{Chemistry Network} \label{sec:network}
 Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
 The choice of chemical network is controlled by the primordial\_chemistry parameter. Setting primordial\_chemistry = 1 selects the
 six species network, which tracks the abundances of the species H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$ and is 
@@ -202,9 +202,9 @@ Unfortunately, we are not able to fully implement a BDF scheme due to the diffic
 
 \subsubsection{Primordial Cooling}
 
-\paragraph{Non-equilibrium}
+\paragraph{Non-equilibrium} \label{sec:pri-neq}
 
-\paragraph{Tabulated}
+\paragraph{Tabulated} \label{sec:pri-tab}
 In the simplest mode, the cooling and heating due to the primordial
 elements can be calculated using tables of pre-computed values under
 the assumption of ionization equilibrium.  When the gas is assumed to
@@ -259,6 +259,28 @@ within the code are discussed further in section
 \ref{section:radback}.
 
 \subsubsection{Metal Cooling}
+
+Solving for the cooling from metals using a non-equilibrium network
+akin to that discussed in section \ref{sec:network} is computationally
+prohibitive since the number of species and reactions that must be
+considered rises steeply with each additional element.  For this
+reason, Grackle computes the cooling from metals using tables of
+heating and cooling analagous to those discussed in section
+\ref{sec:pri-tab}.  This method was first described by
+\citet{2008MNRAS.385.1443S}.  Other packages, such as \texttt{KROME}
+\citep{2014MNRAS.439.2386G}, offer the ability to perform
+non-equilibrium chemistry calculations including metals, but at the
+proportional computational cost.
+
+The cooling from metals can be added to the cooling from the
+primordial species as calculated by either the non-equilibrium network
+(\S \ref{sec:pri-neq}) or the tabulated solver (\S
+\ref{sec:pri-tab}).  As in the tabulated primordial cooling, the
+heating and cooling tables have the dimensions of $z$, $\rho$, and
+$T$ to account for the effects of the UV background models.  The
+values stored in the tables correspond to those of solar metallicity
+and the cooling rate applied to the gas is scaled by the local
+metallicity.
 
 \paragraph{Constructing Cooling Tables} \label{sec:cooling-tables}
 
