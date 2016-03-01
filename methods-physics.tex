@@ -229,8 +229,34 @@ ideal gas, and $m_{H}$ is the Hydrogen mass.  Since $\mu$ is also a
 function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
-$\mu(T)$ 
+$\mu(\rho, T)$, from which a new value of $\mu$ is calculated via
+linear interpolation.  To prevent the solution of $mu$ and $T$ from
+oscillating, we apply a dampener such that the new value of $\mu$ is
+the average of the old value and the value from the table.  For
+iteration, $i$, of this procedure, $\mu_{i}$ is then given by
+\begin{equation}
+\mu_{i} = \frac{1}{2} (\mu_{i-1} + \mu(\rho, T_{i-1})).
+\end{equation}
+To account for the presence of metals, we then apply an additional
+correction such that the value with metals included, $\mu_{i, Z}$ is
+\begin{equation}
+\frac{\rho}{\mu_{i, Z}} = \frac{\rho}{\mu_{i}} +
+\frac{\rho_{Z}}{\mu_{Z}},
+\end{equation}
+where $\rho_{Z}$ is the metal density and $\mu_{Z} \equiv 16$, which
+is consistent with a solar abundance pattern.  In practice, this
+process arrives at a solution for $\mu$ and $T$ that converges to
+within 1\% in just a few iterations.
 
+Once the gas temperature has been calculated, the cooling and heating
+due to the primordial species is then computed via interpolating over
+the multidimensional tables.  In the most commonly used mode, heating
+comes from a model UV background, which is spatially uniform and
+varies as a function of redshift.  In this case, the tables for
+$\Lambda$, $\Gamma$, and $\mu$ have dimensions of $z$, $\rho$, and
+$T$.  The effects of the UV background models and their implementation
+within the code are discussed further in section
+\ref{section:radback}.
 
 \subsubsection{Metal Cooling}
 
