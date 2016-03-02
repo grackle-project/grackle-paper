@@ -229,13 +229,13 @@ ideal gas, and $m_{H}$ is the Hydrogen mass.  Since $\mu$ is also a
 function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
-$\mu(\rho, T)$, from which a new value of $\mu$ is calculated via
+$\mu(T,...)$, from which a new value of $\mu$ is calculated via
 linear interpolation.  To prevent the solution of $mu$ and $T$ from
 oscillating, we apply a dampener such that the new value of $\mu$ is
 the average of the old value and the value from the table.  For
 iteration, $i$, of this procedure, $\mu_{i}$ is then given by
 \begin{equation}
-\mu_{i} = \frac{1}{2} (\mu_{i-1} + \mu(\rho, T_{i-1})).
+\mu_{i} = \frac{1}{2} (\mu_{i-1} + \mu(T_{i-1},...)).
 \end{equation}
 To account for the presence of metals, we then apply an additional
 correction such that the value with metals included, $\mu_{i, Z}$ is
@@ -280,10 +280,45 @@ heating and cooling tables have the dimensions of $z$, $\rho$, and
 $T$ to account for the effects of the UV background models.  The
 values stored in the tables correspond to those of solar metallicity
 and the cooling rate applied to the gas is scaled by the local
-metallicity.
+metallicity.  All of the available metal cooling tables assume a solar
+abundance pattern and consider all elements heavier than He up to
+atomic number 30 (Zn).
 
-\paragraph{Constructing Cooling Tables} \label{sec:cooling-tables}
+\subsubsection{Constructing Cooling Tables} \label{sec:cooling-tables}
 
+The Grackle comes with three different model input files that can be
+used to calculated the tabulated cooling from primordial species and
+metals under different conditions.  The three available models are the
+UV background model of \citet{2009ApJ...703.1416F}, that of
+\citet{2012ApJ...746..125H}, and a model assuming no incident
+radiation, i.e., collisional ionization only.  For the two UV
+background models, the input files also contain tables of
+photo-ionization, photo-dissociation, photo-detachment, and
+photo-heating rates as a function of redshift for various atomic and
+molecular H/He species.  These are used in conjunction with the
+non-equilibrium primordial chemistry solver.
+
+The cooling tables are
+created using the method originally described by
+\citet{2008MNRAS.385.1443S}.  Cooling, heating, and mean molecular
+weight values are computed using the photoionization simulation code, 
+\texttt{Cloudy}\footnote{http://nublado.org/}
+\citep{2013RMxAA..49..137F}.  We use the
+\texttt{CIALoop}\footnote{https://bitbucket.org/brittonsmith/cloudy\_cooling\_tools}
+code of \citet{2008MNRAS.385.1443S} to loop over the appropriate
+parameter space, call \texttt{Cloudy}, and collate the results.  To
+expedite this process, \texttt{CIALoop} runs in parallel by managing
+multiple instances of \texttt{Cloudy} simultaneously.  To calculate
+the cooling and heating contribution from metals, we run each of the
+above models twice, once with the full complement of elements and once
+with only H and He.  For every point in each version of the model, we
+extract all cooling/heating components contributing at least
+10$^{-10}$ of the total rate.  We then remove all components that
+appear in both the full and H/He models, leaving only the
+contributions of the metals.  All of the data are organized in
+\texttt{HDF5} files.  The structure and discoverability of
+\texttt{HDF5} files allows the data to be easily used for other
+applications.
 
 \subsection{Heating}
 
