@@ -210,10 +210,23 @@ In some cases, particularly close to equilibrium, we slightly modify this.  Afte
 
 \subsection{Cooling} \label{Cooling}
 
+Grackle can evolve the Lagragian energy equation, taking into account a wide range of radiative cooling and heating processes:
+\begin{equation}
+\frac{de}{dt} = - \dot{e}_{\rm cool} + \dot{e_{\rm heat}}
+\end{equation}
+In this paper, we split our discussion of radiative cooling and heating, but in the code, they are solved together, along with the chemical evolution (described above) using a simple first-order integrator.  To enhance accuracy, the integrator is sub-cycled with a timestep constraint $\Delta t \leq 0.1 \dot{e} / e$.  If both chemistry and cooling/heating are turned on, these are integrated at the same time, using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling options.
 
 \subsubsection{Primordial Cooling}
 
+We begin with radiative cooling and heating due solely to Hydrogen and Helium, and then turn to heavier elements (``metals").
+
 \paragraph{Non-equilibrium} \label{sec:pri-neq}
+
+We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): (1) collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); (2) collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., and (3) recombination cooling: $n_e n_H^+$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978), (4) Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), (5) Compton cooling/heating off the CMB (Peebles 1971), and (6) photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).
+
+
+
+
 
 \paragraph{Tabulated} \label{sec:pri-tab}
 In the simplest mode, the cooling and heating due to the primordial
