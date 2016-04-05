@@ -353,12 +353,74 @@ applications.
 \subsubsection{Photo-electric Heating}
 
 
-\subsubsection{Chemical Heating and Cooling}
+\subsubsection{Chemical Heating and Cooling} \label{sec:chemheat}
 
 
-\subsubsection{Dust Heating}
+\subsubsection{Dust Heating and Cooling}
 
-
+Dust grains transfer heat to and from a gas through elastic collisions
+with the atoms and molecules in that gas.  The surfaces of dust grains
+also provide a site for efficient formation of molecules, particularly
+H$_{2}$.  Both heat transfer and molecular formation rates depend very
+sensitively on the dust temperature, $T_{gr}$.  The dust temperature
+is determined by balancing the relevant heating and cooling terms.
+Dust grains are heated by incident radiation and cool through thermal
+radiation.  Heat flows between gas and dust in the direction of
+whichever has the lower temperature.  The implementation of
+dust-related chemistry here follows very closely the work of
+\citet{2000ApJ...534..809O} and \citet{2005ApJ...626..627O}.  As in
+these works, we currently assume that heating radiation comes only
+from the CMB.  Future versions of the code will allow for the
+inclusion of additional radiative heating terms.  This heat balance
+equation is, therefore, given by
+\begin{equation} \label{eqn:tdust}
+4 \sigma T_{gr}^{4} \kappa_{gr} = \Lambda_{gas/grain} + 4 \sigma
+T_{rad}^{4} \kappa_{gr},
+\end{equation}
+where $\sigma$ is the Stefan-Boltzmann constant, $T_{rad}$ is the
+radiation temperature, and $\kappa_{gr}$ is the grain opacity.  The
+left-hand side of Equation \ref{eqn:tdust} represents cooling by
+thermal radiation and the second term on the right-hand side
+represents the incident radiation field characterized by a radiation
+temperature, $T_{rad}$.  The dust/gas heat transfer rate per unit dust
+mass, $\Lambda_{gas/grain}$, is given by
+\begin{equation} \label{eqn:gasdust}
+\Lambda_{gas/grain} = 1.2\times10^{-31}~\frac{n_{H}^{2}}{\rho_{gr}}
+\left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T}) (T -
+T_{gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
+\end{equation}
+\citep{1989ApJ...342..306H}, where n$_{H}$ is the
+H number density and $\rho_{gr}$ is the dust mass density.  Currently,
+the dust to gas mass ratio is assumed to scale with metallicity, i.e.,
+the dust to metal mass ratio is constant.  In the future, the user
+will have the option to provide the dust density independently of the
+metal density.  For the grain opacity, we use the piece-wise
+polynomial of \citet{2011ApJ...729L...3D}, which is given by
+\begin{equation}
+\kappa(T_{gr}) \propto \left\{ \begin{array}{ll}
+T_{gr}^{2} & \textrm{, $T_{gr}$ $<$ 200~K,}\\
+constant & \textrm{, 200~K $<$ $T_{gr}$ $<$ 1500~K,}\\
+T_{gr}^{-12} & \textrm{, $T_{gr}$ $>$ 1500~K},
+\end{array} \right.
+\end{equation}
+with a normalization of $\kappa_{gr}(T_{gr} = 200~K) = 16$ cm$^{2}$ g$^{-1}$
+\citep{1994ApJ...421..615P, 2000ApJ...534..809O}.  The steep power-law
+for $T > 1500$ K is designed to mimic the effect of grains melting.
+The timescale for dust to reach thermal equilibrium is extremely
+short and, thus, we assume it to be in instantaneous equilibrium.  We
+calculate the dust temperature by solving Equation \ref{eqn:tdust} for
+$T_{gr}$ using Newton's method.  From this solution, a corresponding
+heating/cooling term is added to the gas following Equation
+\ref{eqn:gasdust}.  The dust temperature is then used to calculate the
+rate coefficient for H$_{2}$ formation on dust, which is a function of
+both the gas and dust temperatures as well as the number density of
+grains.  The exact form of this rate is given by
+\citet{2000ApJ...534..809O}, who derive it from that of
+\citet{1985ApJ...291..722T}.  This reaction can be extremely
+efficient and the heating resulting from molecule formation can
+significantly heat the gas.  For this reason, we also include the
+appropriate chemical heating term, as described in Section
+\ref{sec:chemheat}.
 
 \subsection{Radiation Backgrounds}
 \label{section:radback}
