@@ -452,10 +452,42 @@ appropriate chemical heating term, as described in Section
 
 \subsection{Radiation Backgrounds}
 \label{section:radback}
-- available models
 
-- including in the solver
+The Universe was reionized during the epoch of $z \sim 6-10$ by the
+buildup of radiation from stars and active galactic nuclei (AGN).
+This radiation heated the intergalactic medium (IGM) to $\sim10^{5}$
+K, inhibiting the collapse of halos with virial temperatures below
+this.  Reproducing these effects directly in simulations requires 
+large box sizes, extremely high resolution, as well as radiative
+transfer, and is, thus, prohibitively expensive.  A simpler approach
+is to make use of a spatially uniform, redshift dependent model for
+the evolution of UV background radiation, such as those introduced by
+\citet{1996ApJ...461...20H}.  These models produce time/redshift
+dependent spectra from which photo-heating and photo-chemical reaction
+rates can be derived.  These rates can then be used in the reactions
+shown in Tables \ref{tab:six} and \ref{tab:nine}.  More simply, the
+spectra from UV background models can be used as inputs to
+photoionization codes, like \texttt{Cloudy}, to calculate the
+heating/cooling rates as a function of density, temperature, and
+redshift.
 
+As discussed in Section \ref{sec:cooling-tables}, Grackle makes use of
+data files which store tables of all relevant chemistry and cooling
+rates as a function of redshift for each UV background model.  For the
+six and nine species primordial chemistry networks, we store
+photo-heating rates for H, He, and He$^{+}$; photo-ionization rates
+for H, He, He$^{+}$, H$_{2}$; photo-dissociation of H$_{2}$ and
+H$_{2}^{+}$; and photo-dettachment of H$^{-}$.  For the tabulated
+cooling method, we store the total heating and cooling rates for the
+primordial and metal species as well as the mean molecular weight.
+These tables are also functions of density and temperature as they are
+created under the assumption of ionization equilibrium.
+
+Currently, two UV background models are available for use with
+Grackle.  These are the models of \citet{2009ApJ...703.1416F} and
+\citet{2012ApJ...746..125H}.  Data tables for new models can be
+created following the method described in Section
+\ref{sec:cooling-tables}.
 
 \subsection{Applicability and Limitations}
 - Density ranges, temperature ranges, optically thin condition
