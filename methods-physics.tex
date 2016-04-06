@@ -197,7 +197,7 @@ Our kinetic network for solving the rate of change of species density $n_i$ has 
 \frac{\partial n_i}{\partial t} = \sum_j \sum_l k_{jl} n_j n_l + \sum_j I_j n_j
 \label{eq:rate_general}
 \end{equation}
-where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may an additional term for three-body reactions.   To solve this kinetic network, Grackle follows closely the procedure described in Anninos et al. 1997 and Bryan et al. 2014 by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may an additional term for three-body reactions.   To solve this kinetic network, Grackle follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
 \begin{equation}
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
@@ -237,9 +237,13 @@ We begin with radiative cooling and heating due solely to Hydrogen and Helium, a
 
 \paragraph{Non-equilibrium} \label{sec:pri-neq}
 
-We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): (1) collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); (2) collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., and (3) recombination cooling: $n_e n_H^+$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978), (4) Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), (5) Compton cooling/heating off the CMB (Peebles 1971), and (6) photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).
+We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): (1) collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); (2) collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., (3) recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978), (4) Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), (5) Compton cooling/heating off the CMB (Peebles 1971), and (6) photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).   Most of these rates are tabulated in Appendix B of \citet{1997NewA....2..209A}.
 
+For the 9 species version, we add molecular cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and we for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
 
+In the 12-species mode, which adds Deuterium chemistry, the code includes cooling from HD.  This is a combination of a fit from Coppola et al (2011) for the high-density limit, and \citet{1998A&A...335..403G} for the low density limit.
+
+Finally, there are a number of other optional heating and cooling terms.  These include: (A) X-ray Compton heating (or cooling) using eq. (4) and (11) of Madau \& Efstathiou (1999).  Add photoelectric heating by UV-irradiated dust.  [Move to radiation section?]
 
 
 
