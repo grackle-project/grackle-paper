@@ -297,6 +297,19 @@ $T$.  The effects of the UV background models and their implementation
 within the code are discussed further in section
 \ref{section:radback}.
 
+In a cosmological simulation, the CMB acts as a temperature floor,
+below which the gas cannot cool.  We approximate this effect by
+subtracting the cooling rate at the CMB temperature, $T_{CMB}$, from
+the calculated cooling rate such that the final cooling rate that is
+applied is given by
+\begin{equation}
+\Lambda_{final}(T) = \Lambda(T) - \Lambda(T_{CMB}).
+\end{equation}
+This allows the cooling rate to smoothly approach zero at the
+temperature approaches $T_{CMB}$ and also for the CMB to heat the gas
+when $T < T_{CMB}$.  We take the same approach when calculating the
+cooling from metals.
+
 \subsubsection{Metal Cooling}
 
 Solving for the cooling from metals using a non-equilibrium network
