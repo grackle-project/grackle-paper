@@ -1,9 +1,101 @@
 \section{Implementation} \label{methods:code}
 
-
+In this section, we discuss details of the code, itself, including the
+available application program interfaces (APIs), code layout, and how
+the existing models and networks may be extended.  For more detailed
+information, users should consult online documentation available at
+\texttt{https://grackle.readthedocs.org}.
 
 \subsection{Simulation Code API}
 
+The Grackle library provides five main functions to the user for use
+in simulation codes: solving the chemistry and cooling (i.e.,
+updating the chemical species and internal energy) and calculating the
+cooling time, temperature, pressure, and ratio of specific heats.
+Before these functions can be called, the code must be initialized
+with various user-specified settings.  This initialization process is
+also responsible for loading data from external files and calculating
+chemistry and cooling rate tables used by the solvers.  The
+initialization process can be carried out in two different ways.
+\begin{enumerate}
+\item[(i)] The Grackle stores all configuration parameters and data
+  tables within a single \texttt{C} struct that exists within the
+  primary grackle header file, \texttt{grackle.h}.  In the first
+  method, the user initializes this structure by calling the function,
+  \texttt{set\_default\_chemistry\_parameters}.  All parameters can
+  then be set by accessing them directly from the struct, called
+  \texttt{grackle\_data}.  Once all parameters are properly set, the
+  user must call \texttt{initialize\_chemistry\_data} to finalize the
+  initialization process.  This method is advantageous as it allows
+  the user to access all configurable parameters directly, including
+  ones that may be added in the future, without additional function
+  calls.  An example of this procedure is shown below:
+
+\vspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\begin{verbatim}
+
+int rval;
+rval = set_default_chemistry_parameters();
+
+grackle_data.use_grackle = 1;
+grackle_data.with_radiative_cooling = 1;
+grackle_data.primordial_chemistry = 3;
+grackle_data.metal_cooling = 1;
+grackle_data.UVbackground = 1;
+grackle_data.grackle_data_file = 
+  "CloudyData_UVB=HM2012.h5";
+
+rval = 
+  initialize_chemistry_data(&my_units, a_value);
+
+\end{verbatim}
+\end{minipage}
+
+In the above example, the variable \texttt{my\_units} is a C
+\texttt{struct} that holds unit conversions from internal code units
+to the CGS unit system for quantities such as density, length, and
+time.  The variable, \texttt{a\_value}, holds the current value of the
+expansion factor ($a \equiv 1/(1+z)$, where z is the redshift).  These
+are required in order to set up the internal unit system for the
+chemistry and cooling rate tables.
+
+\item[(ii)] The above method can be combersome to work with in a
+  simulation code written in \texttt{Fortran} because of the necessity
+  of dealing with \texttt{C} structs.  For this reason, the Grackle
+  offers a second initialization procedure involving only a call to
+  the function, \texttt{initialize\_grackle}.  All arguments to this
+  function are simple scalar integers and floats.  Internally, this
+  function follows the procedure outlined above.  The disadvantage of
+  this method is that it only provides access to the most frequently
+  used parameters as making all parameters available would constitute
+  a overly long list of arguments.
+
+\end{enumerate}
+
+Once the Grackle has been initialized, the functionality described
+above can be called by the simulation code.  The available functions
+are: 1) \texttt{solve\_chemistry} to integrate chemistry and cooling
+equations over a specified time step, 2)
+\texttt{calculate\_cooling\_time} to calculate the cooling time
+($e/(de/dt)$) for each computational element, 3)
+\texttt{calculate\_temperature} to calculate the temperature from the
+internal energy and chemical species densities, 4)
+\texttt{calculate\_pressure} to calculate the gas pressure, and 5)
+\texttt{calculate\_gamma} to calculate the ratio of specific heats.
+In the Grackle, the ratio of specific heats is only altered from that
+of an ideal gas by the presence of H$_{2}$.  For each of these
+functions, the required arguments are the various unit conversion
+factors, arrays of internal energy, total density, densities of each chemical
+species (if the non-equilibrium solver is used), and arrays describing
+the size and shape of the primary data arrays.  The Grackle can be
+compiled to either accept the data arrays as single or double
+precision floating point type.  Both the non-equilibrium and fully
+tabulated functionality are available through the above functions.
+When the fully tabulated mode is used, the chemical species arrays may
+simply be \texttt{NULL} pointers.  For simplicity, the Grackle also
+provides tabulated-only functions appended with \texttt{\_table} which
+only require the total density field to be given.
 
 \subsection{Python API}
 
@@ -18,7 +110,6 @@
 
 
 \subsection{Code Structure} \label{Code_Structure}
-
 
 \subsection{\jr{Adding New Models/Rates}}
 
