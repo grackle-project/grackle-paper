@@ -3,7 +3,7 @@
 
 % ========== Primoridal Chemistry =========
 
-\subsection{Primordial Chemistry}
+\subsection{Primordial Chemistry} \label{sec:primordial_chemistry}
 The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
 treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
 in the latest version of Enzo available at the time of writing (version 2.4). The Enzo primordial chemistry itself is based 
@@ -214,41 +214,64 @@ n_{ {\rm H}_2^+} = \frac{k_9 n_H n_{H^+} + k_{11} n_{H_2} n_{H^+} + k_{17} n_{H^
 \end{equation}
 Finally, for 15-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
 
-Since the time step based to Grackle (often the hydrodynamic timestep) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\%.
+Since the time step passed to Grackle (often the hydrodynamic timestep of a parent simulation) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\% in any sub-cycle step of length $\Delta t$:
 \begin{equation}
-\Delta t = 0.5 \min \left( \frac{\dot{n}_H}{n_H} , \frac{\dot{n}_{e^-}}{n_{e^-}} \right)
+\Delta t = 0.1 \min \left( \frac{\dot{n}_H}{n_H} , \frac{\dot{n}_{e^-}}{n_{e^-}} \right)
 \end{equation}
 In some cases, particularly close to equilibrium, we slightly modify this.  After more than 50 subcycle steps (if we have not yet integrated a full hydro timestep), we replace the analytically calculated time time derivatives in the above expression with numerical time derivatives (i.e. change from the previous sub-cycle step).  This is helpful when we are close to equilibrium and the integrator is taking very small steps and regularly overshooting the equilibrium value.  
 %Finally, when the density is high $n_H > 10^8$ cm$^{-3}$, and the net cooling/heating term is positive (see below), we replace use an estimate of the rate of change of H based on the H equilibrium solution.
 
-% ============ Cooling =============
+% ============ Cooling/Heating =============
 
-\subsection{Cooling} \label{Cooling}
+\subsection{Heating and Cooling} \label{Cooling}
 
-Grackle can evolve the Lagragian energy equation, taking into account a wide range of radiative cooling and heating processes:
+Grackle can evolve the Lagrangian energy equation, taking into account a wide range of radiative cooling and heating processes:
 \begin{equation}
-\frac{de}{dt} = - \dot{e}_{\rm cool} + \dot{e_{\rm heat}}
+\frac{de}{dt} = - \dot{e}_{\rm cool} + \dot{e}_{\rm heat}
 \end{equation}
-In this paper, we split our discussion of radiative cooling and heating, but in the code, they are solved together, along with the chemical evolution (described above) using a simple first-order integrator.  To enhance accuracy, the integrator is sub-cycled with a timestep constraint $\Delta t \leq 0.1 \dot{e} / e$.  If both chemistry and cooling/heating are turned on, these are integrated at the same time, using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling options.
+In this paper, we split our discussion of radiative cooling/heating and chemistry, but in the code, they are solved together, using a simple first-order integrator.  To enhance accuracy, the integrator is sub-cycled with a timestep constraint 
+\begin{equation}
+\Delta t \leq 0.1 \frac{\dot{e}}{e}.
+\end{equation}
+If both chemistry and cooling/heating are turned on, these are integrated at the same time, with the  using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling and heating options.  We begin with radiative cooling and heating due solely to Hydrogen and Helium, and then turn to heavier atomic elements (``metals"), and finally dust. 
 
-\subsubsection{Primordial Cooling}
+\subsubsection{Primordial Heating and Cooling}
 
-We begin with radiative cooling and heating due solely to Hydrogen and Helium, and then turn to heavier elements (``metals").
+To solve for the effects of primordial (H and He only) heating and cooling, Grackle includes two options: (1) a non-equilibrium solver, the chemistry part of which is described in detail in Section~\ref{sec:primordial_chemistry}, and (2) a tabulated version, which assumes ionization equilibrium to compute the cooling and heating rates due to primordial chemistry.  In both cases, photo-heating from an external radiation source can be important -- this is described in Section~\ref{sec:radback}.
 
 \paragraph{Non-equilibrium} \label{sec:pri-neq}
 
-We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): (1) collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); (2) collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., (3) recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978), (4) Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), (5) Compton cooling/heating off the CMB (Peebles 1971), and (6) photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).   Most of these rates are tabulated in Appendix B of \citet{1997NewA....2..209A}.
+We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): 
 
-For the 9 species version, we add molecular cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and we for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
+\begin{enumerate}
+\item collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); 
+\item collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., 
+\item recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978),
+\item Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), 
+\item Compton cooling/heating off the CMB (Peebles 1971), and 
+\item photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).   
+\end{enumerate}
+In addition to the sources referenced above, we note that most of these rates were tabulated in Appendix B of \citet{1997NewA....2..209A}.
+
+For the 9 species version, we add molecular $H_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
+
+\label{sec:chemheat}
+{\bf chemical cooling/heating}
+
+In addition to H$_2$ radiative cooling, the gas temperature can be increased or decreased due to the energy required to form or destroy molecular hydrogen.  To account for this, we add...
 
 In the 12-species mode, which adds Deuterium chemistry, the code includes cooling from HD.  This is a combination of a fit from Coppola et al (2011) for the high-density limit, and \citet{1998A&A...335..403G} for the low density limit.
 
-Finally, there are a number of other optional heating and cooling terms.  These include: (A) X-ray Compton heating (or cooling) using eq. (4) and (11) of Madau \& Efstathiou (1999).  Add photoelectric heating by UV-irradiated dust.  [Move to radiation section?]
-
+Finally, there are a number of other optional heating and cooling terms.  These include:  
+\begin{enumerate}
+\item Collisionally induced excitation of H$_2$ at high densities, with rates as described in Ripamonti \& Abel (2004). 
+\item X-ray Compton heating (or cooling) using eq. (4) and (11) of Madau \& Efstathiou (1999).  
+\end{enumerate}
 
 
 \paragraph{Tabulated} \label{sec:pri-tab}
-In the simplest mode, the cooling and heating due to the primordial
+
+In the other (simplier) mode, the cooling and heating due to the primordial
 elements can be calculated using tables of pre-computed values under
 the assumption of ionization equilibrium.  When the gas is assumed to
 have no incident radiation, this is the case of collisional ionization
@@ -273,7 +296,7 @@ function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
 $\mu(T,...)$, from which a new value of $\mu$ is calculated via
-linear interpolation.  To prevent the solution of $mu$ and $T$ from
+linear interpolation.  To prevent the solution of $\mu$ and $T$ from
 oscillating, we apply a dampener such that the new value of $\mu$ is
 the average of the old value and the value from the table.  For
 iteration, $i$, of this procedure, $\mu_{i}$ is then given by
@@ -314,21 +337,22 @@ temperature approaches $T_{CMB}$ and also for the CMB to heat the gas
 when $T < T_{CMB}$.  We take the same approach when calculating the
 cooling from metals.
 
-\subsubsection{Metal Cooling}
+\subsubsection{Metal Heating and Cooling}
 
+Next we turn to the impact of metals on the thermal evolution of the gas.
 Solving for the cooling from metals using a non-equilibrium network
 akin to that discussed in section \ref{sec:network} is computationally
 prohibitive since the number of species and reactions that must be
 considered rises steeply with each additional element.  For this
-reason, Grackle computes the cooling from metals using tables of
-heating and cooling analagous to those discussed in section
+reason, Grackle computes the impact from metals using tables of
+heating and cooling rates in way analogous to those discussed in section
 \ref{sec:pri-tab}.  This method was first described by
 \citet{2008MNRAS.385.1443S}.  Other packages, such as \texttt{KROME}
 \citep{2014MNRAS.439.2386G}, offer the ability to perform
 non-equilibrium chemistry calculations including metals, but at the
 proportional computational cost.
 
-The cooling from metals can be added to the cooling from the
+The cooling or heating from metals can be added to the rate from the
 primordial species as calculated by either the non-equilibrium network
 (\S \ref{sec:pri-neq}) or the tabulated solver (\S
 \ref{sec:pri-tab}).  As in the tabulated primordial cooling, the
@@ -340,7 +364,7 @@ metallicity.  All of the available metal cooling tables assume a solar
 abundance pattern and consider all elements heavier than He up to
 atomic number 30 (Zn).
 
-\subsubsection{Constructing Cooling Tables} \label{sec:cooling-tables}
+\paragraph{Constructing Cooling Tables} \label{sec:cooling-tables}
 
 The Grackle comes with three different model input files that can be
 used to calculated the tabulated cooling from primordial species and
@@ -375,18 +399,6 @@ contributions of the metals.  All of the data are organized in
 \texttt{HDF5} files.  The structure and discoverability of
 \texttt{HDF5} files allows the data to be easily used for other
 applications.
-
-\subsection{Heating}
-
-
-\subsubsection{Photo-ionization Heating}
-
-
-\subsubsection{Photo-electric Heating}
-
-
-\subsubsection{Chemical Heating and Cooling} \label{sec:chemheat}
-
 
 \subsubsection{Dust Heating and Cooling}
 
@@ -453,6 +465,8 @@ efficient and the heating resulting from molecule formation can
 significantly heat the gas.  For this reason, we also include the
 appropriate chemical heating term, as described in Section
 \ref{sec:chemheat}.
+
+Finally, 
 
 \subsection{Radiation Backgrounds}
 \label{section:radback}
