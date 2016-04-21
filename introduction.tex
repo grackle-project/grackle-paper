@@ -3,57 +3,56 @@
 \subsection{Why is chemistry/radiative cooling necessary in
   simulations?}
 
-\bwo{I will fix the refererences later, ADS is painfully slow right now.}
-
-Modeling of chemistry and radiative cooling is absolutely essential in
-a wide range of astrophysical phenomena.  At a fundamental level,
-virtually all astrophysical objects begin as a cloud of diffuse plasma
-in a gravitational potential that is created primarily either by the
-plasma itself (i.e., stars) or by a dark matter halo (i.e.,
-cosmologial structure).  In these situations, in the absense of any
-additional physical processes the plasma will arrange itself so that
-pressure is in rough equilibrium with gravity, and no further
-evolution will occur without some external influence.  Some physical
-process that allows this plasma to lose energy is necessary in order
-to break this stalemate, thus allowing the formation of stars and
-galaxies.  The process that typically enables this energy loss is
-radiative cooling, often facilitated by a series of chemical reactions
-that further
-enhance the plasma's ability to lose energy.
+Modeling of plasma chemistry and radiative cooling is absolutely
+essential in a wide range of astrophysical phenomena.  At a
+fundamental level, virtually all astrophysical objects begin as a
+cloud of diffuse plasma in a gravitational potential that is created
+primarily either by the plasma itself (i.e., stars) or by a dark
+matter halo (i.e., cosmological structure).  In these situations, in
+the absense of any additional physical processes the plasma will
+arrange itself so that pressure is in rough equilibrium with gravity,
+and no further evolution will occur without some external influence.
+Some physical process that allows this plasma to lose energy is
+necessary in order to break this stalemate, thus allowing the
+formation of stars and galaxies.  The process that typically enables
+this energy loss is radiative cooling, often facilitated by a series
+of chemical reactions that further enhance the plasma's ability to
+lose energy.
 
 Radiative cooling plays a critical role in several important
 astrophysical processes.  There is a complex interplay of gas- and
 dust-phase chemistry in star formation, which completely dominates the
 dynamics of the evolving pre-stellar cloud, and may strongly influence
-the resulting stellar initial mass function.  \addcite{ABN02; Turk
-2011; Glover+} At a smaller physical scale, radiative cooling can
-profoundly affect the structure and behavior of accretion disks around
-stars and compact objects.  \addcite{Shakura+Sunyaev 1973}.  The shape
-of the `cooling curve' of diffuse astrophysical plasmas -- i.e., the
-cooling rate as a function of density and temperature -- is
-responsible for the thermal instability that generates a multiphase
-interstellar medium \addcite{McKee and Ostriker 1974; Spitzer ISM
-book}.  In cosmological structure formation, gas collapsing into dark
-matter halos generally experiences a strong shock at roughly the
-virial radius, which heats the gas to roughly the virial temperature.
-Optically-thin radiative cooling of this plasma allows gas to
-concentrate at the center of dark matter halos, and ultimately to form
-molecular clouds and stars.  \addcite{Rees+Ostriker 1977; White and
-Frenk 1991}
+the resulting stellar initial mass function.
+\citep{2002Sci...295...93A,2011ApJ...726...55T,2008AIPC..990...25G} At
+a smaller physical scale, radiative cooling can profoundly affect the
+structure and behavior of accretion disks around stars and compact
+objects.  \citep{1973A&A....24..337S} The shape of the `cooling curve'
+of diffuse astrophysical plasmas -- i.e., the cooling rate as a
+function of density and temperature -- is responsible for the thermal
+instability that generates a multiphase interstellar medium
+\citep{1977ApJ...218..148M,1978ppim.book.....S}.  In cosmological
+structure formation, gas collapsing into dark matter halos generally
+experiences a strong shock at roughly the virial radius, which heats
+the gas to roughly the virial temperature.  Optically-thin radiative
+cooling of this plasma allows gas to concentrate at the center of dark
+matter halos, and ultimately to form molecular clouds and stars.
+\citep{1977MNRAS.179..541R,1991ApJ...379...52W}
 
 Chemistry is often an important component of the evolution of
 astrophysical plasmas.  The creation of simple molecules via gas- and
 dust-phase chemical reactions can greatly enhance the efficacy of
-cooling. \addcite{e.g., Hollenbach \& McKee 1979; Omukai+ 2005} The
-formation and destruction of simple molecules can be energetically
-important in some circumstances, such as Population III star
-formation.  \addcite{Glover+Abel} And, from a dynamical perspective,
-the non-equilibrium evolution of particular ions can have a strong
-effect on the ability of gas to cool \addcite{Abel, Anninos, etc.} and
-on common observational quantities such as the column density of OVI
-absorption line systems in the intergalactic medium that are used to
-estimate the metal content of the intergalactic medium and to trace
-the ``missing baryons.''  \addcite{Smith+2011; Shull+ something; some
-paper on non-eq OVI} 
+cooling. \citep{1979ApJS...41..555H,2005ApJ...626..627O} The formation
+and destruction of simple molecules can be energetically important in
+some circumstances, such as Population III star formation.
+\citep{1998ApJ...508..141O,2002Sci...295...93A,2008MNRAS.388.1627G,2009Sci...325..601T}
+And, from a dynamical perspective, the non-equilibrium evolution of
+particular ions can have a strong effect on the ability of gas to cool
+\citep{1997NewA....2..181A,1997NewA....2..209A} and on common
+observational quantities such as the column density of OVI absorption
+line systems in the intergalactic medium that are used to estimate the
+metal content of the intergalactic medium and to trace the ``missing
+baryons.'' \citep{2006ApJ...650..573C,2011ApJ...731....6S,2013MNRAS.434.1043O,2014ApJ...796...49S}
+
 
 \subsection{Why is a multi-code library a good thing?}
