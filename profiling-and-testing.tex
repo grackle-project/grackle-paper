@@ -4,14 +4,52 @@
 
 \subsection{Testing Framework}
 
+Testing a library like Grackle, with its mix of Fortran, C, and C++ code, can be
+difficult. In the interest of ultimately improving test coverage and make it
+easier to prototype tests, Grackle employs a python-based testing framework that
+makes heavy use of the \texttt{pygrackle} python wrapper for the Grackle.
+
+Currently there are two different types of tests in the Grackle test suite: unit
+tests and answer tests. A unit test in Grackle compares the results of a
+calculation using Grackle to some set of ``correct'' answers that are known
+\textot{a priori}. The unit tests currently implemented in grackle test that the
+unit system is behaving correctly (see Section~\ref{sec:unit-test}) and that the
+ionization equilibrium for a primordial gas agrees with the analytic prediction
+using the rates implemented in Grackle (see Section~\ref{sec:primordial-test}).
+
+The answer tests consist of a set of example calculations where each calculation
+writes out a summary plot as well as an \texttt{hdf5} dataset that is loadable
+by the \texttt{yt} package. Known ``correct'' answers for the summary plot and
+\textit{yt}-loadable dataset are saved in the repository so that code changes in
+Grackle can be tested to ensure that andwers produced by the library do not
+change. This process does not prevent *incorrect* answers from being generated
+initially, but it does prevent the answers from changing as the code is
+developed. Incorrect answers are prevented by manually inspecting test answers
+when the test is first added to the codebase. If subsequently a bug is
+discovered and the test output changes, then the test answer must also be
+manually updated. Currently Grackle contains answer tests calculations for the
+cooling rate (see Section~\ref{sec:cooling-rate-test}) in a uniform density
+cloud at a fixed time, a calculation of the density and temperature of a gas
+cloud undergoing free-fall collapse (see Section~\ref{free-fall-test}), and a
+calculation for the temperature evolution of a uniform-density cloud (see
+Section~\ref{sec:uniform-cooling-test}.  The answers test are run several times
+using different input physics to ensure Grackle's solvers are well-exercised by
+the tests.
 
 \subsubsection{unit test: units}
+\label{sec:unit-test}
 
-\subsubsection{Answer test: Equilibrium}
+\subsubsection{unit test: ionization equailibrium of a primordial gas}
+\label{sec:primordial-test}
+
+\subsubsection{Answer test: cooling rate test}
+\label{sec:cooling-rate-test}
 
 \subsubsection{Answer test: free-fall cooling test}
+\label{sec:free-fall-test}
 
 \subsubsection{Answer test: uniform cooling test}
+\label{sec:uniform-cooling-test}
 
 \subsubsection{Other tests?}
 
