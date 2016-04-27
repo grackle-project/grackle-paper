@@ -202,12 +202,12 @@ where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
 \end{equation}
-where $C_i$ represents the total creation rate of species $i$ (given the temperature $T$ and other species densities) while $D_i n_i$ is the destruction rate of the same species (which must be proportional to $n_i$), including both radiative and collisional processes.  Ideally, we would solve these ordinary differential equations using a higher order method; however, here we adopt a very simple low order backwards difference formula (BDF) due to its stability.  Anninos et al. (1997) explored a wide variety of higher-order solution techniques but found that this simple BDF scheme was generally more stable and competitive for the level of accuracy required.  In particular, the BDF version of Equation~\ref{eq:rateCD} is:
+where $C_i$ represents the total creation rate of species $i$ (given the temperature $T$ and other species densities) while $D_i n_i$ is the destruction rate of the same species (which must be proportional to $n_i$), including both radiative and collisional processes.  Ideally, we would solve these ordinary differential equations using a higher order method; however, here we adopt a very simple low order backwards difference formula (BDF) due to its stability.  \citet{1997NewA....2..209A} explored a variety of higher-order solution techniques but found that this simple BDF scheme was generally more stable and competitive for the level of accuracy required.  In particular, the BDF version of Equation~\ref{eq:rateCD} is:
 \begin{equation}
 n^{t + \Delta t} = \frac{C^{t+\Delta t} \Delta t + n^t}{1 + D^{t+\Delta t} \Delta t}
 \label{eq:rate_BDF}
 \end{equation}
-Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in Anninos et al. (1997) based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, when then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
+Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in \citet{1997NewA....2..209A} based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, when then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
 \begin{equation}
 n_{ {\rm H}_2^+} = \frac{k_9 n_H n_{H^+} + k_{11} n_{H_2} n_{H^+} + k_{17} n_{H^-} n_{H^+} + k_{29} n_{H_2}}
    {k_{10} n_H + k_{18} n_e + k_{19} n_{H^-} + k_{28} + k_{30}}
@@ -233,7 +233,7 @@ In this paper, we split our discussion of radiative cooling/heating and chemistr
 \begin{equation}
 \Delta t \leq 0.1 \frac{\dot{e}}{e}.
 \end{equation}
-If both chemistry and cooling/heating are turned on, these are integrated at the same time, with the  using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling and heating options.  We begin with radiative cooling and heating due solely to Hydrogen and Helium, and then turn to heavier atomic elements (``metals"), and finally dust. 
+If both chemistry and cooling/heating are turned on, these are integrated at the same time, using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling and heating options.  We begin with radiative cooling and heating due solely to hydrogen and helium, and then turn to heavier atomic elements (``metals"), and finally dust. 
 
 % ----------------------------------
 
@@ -246,34 +246,34 @@ To solve for the effects of primordial (H and He only) heating and cooling, Grac
 We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): 
 
 \begin{enumerate}
-\item collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ (Black 1981; Cen 1992); 
-\item collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ (Shapiro \& Kang 1987; Cen 1992, Abel 1996)., 
-\item recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ (Black 1981; Spitzer 1978),
-\item Bremsstrahlung cooling for all ionized species (Black 1981; Spitzer \& Hart 1979), 
+\item Collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ \citep{1981MNRAS.197..553B, 1992ApJS...78..341C};
+\item Collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ \citep{1987ApJ...318...32S, 1992ApJS...78..341C, 1997NewA....2..181A};
+\item Recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ \citep{1981MNRAS.197..553B, 1978ppim.book.....S};
+\item Bremsstrahlung cooling for all ionized species \citep{1981MNRAS.197..553B};
 \item Compton cooling/heating off the CMB (Peebles 1971), and 
-\item photoionization heating for H, He and He$^+$, depending on the ionizing radiation field, with cross sections from Osterbrock (1974).   
+\item Photoionization heating for H, He and He$^+$, depending on the ionizing radiation field -- see section~\ref{section:radback} for more details.
 \end{enumerate}
 In addition to the sources referenced above, we note that most of these rates were tabulated in Appendix B of \citet{1997NewA....2..209A}.
 
-For the 9 species version, we add molecular $H_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
+For the 9 species version (Multispecies = 2), we add molecular $H_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
 
 \label{sec:chemheat}
-{\bf chemical cooling/heating}
 
-In addition to H$_2$ radiative cooling, the gas temperature can be increased or decreased due to the energy required to form or destroy molecular hydrogen.  To account for this, we add...
+In addition to H$_2$ radiative cooling, we include the impact of chemical heating or cooling due to the formation or destruction of molecular hydrogen.  Following \citet{2000ApJ...534..809O}, we add $4.48 (1 + n_{\rm cr}/n)^{-1}$ eV for H$_2$ formation by the 3-body reaction, and $0.2 + 4.1(1 + n_{\rm cr}/n)^{-1}$ eV for H$_2$ formation on dust grain surfaces.  The critical density $n_{\rm cr}$ is given by eq. (23) of  \citet{2000ApJ...534..809O}.  For H$_2$ destruction, we remove 4.48 eV per H$_2$ molecule dissociated.
 
-In the 12-species mode, which adds Deuterium chemistry, the code includes cooling from HD.  This is a combination of a fit from Coppola et al (2011) for the high-density limit, and \citet{1998A&A...335..403G} for the low density limit.
+Finally, In the 12-species mode (Multispeces = 3), which adds Deuterium chemistry, the code includes (radiative) cooling from HD.  This is a combination of a fit from Coppola et al (2011) for the high-density limit, and \citet{1998A&A...335..403G} for the low density limit.
 
-Finally, there are a number of other optional heating and cooling terms.  These include:  
+There are a number of other optional heating and cooling terms that the code includes, some of which are not strictly primordial, but are included as part of this cooling package.  These include:  
 \begin{enumerate}
 \item Collisionally induced excitation of H$_2$ at high densities, with rates as described in Ripamonti \& Abel (2004). 
 \item X-ray Compton heating (or cooling) using eq. (4) and (11) of Madau \& Efstathiou (1999).  
+\item A photoelectric heating rate, equal to $\Gamma_{\rm eff} n_H$, where $\Gamma_{\rm eff}$ is a fixed input parameter.  Although not strictly primordial, we include this rate here as it is distinct from the dust model described later.
 \end{enumerate}
 
 
 \subsubsection{Tabulated} \label{sec:pri-tab}
 
-In the other (simplier) mode, the cooling and heating due to the primordial
+In the other (simpler) mode, the cooling and heating due to the primordial
 elements can be calculated using tables of pre-computed values under
 the assumption of ionization equilibrium.  When the gas is assumed to
 have no incident radiation, this is the case of collisional ionization
@@ -434,11 +434,11 @@ thermal radiation and the second term on the right-hand side
 represents the incident radiation field characterized by a radiation
 temperature, $T_{rad}$.  The dust/gas heat transfer rate per unit dust
 mass, $\Lambda_{gas/grain}$, is given by
-\begin{equation} \label{eqn:gasdust}
-\Lambda_{gas/grain} = 1.2\times10^{-31}~\frac{n_{H}^{2}}{\rho_{gr}}
-\left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T}) (T -
-T_{gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
-\end{equation}
+\begin{eqnarray} \label{eqn:gasdust}
+\Lambda_{gas/grain} & = & 1.2\times10^{-31}~\frac{n_{H}^{2}}{\rho_{gr}}
+\left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T})  \nonumber \\
+& & (T - T_{gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
+\end{eqnarray}
 \citep{1989ApJ...342..306H}, where n$_{H}$ is the
 H number density and $\rho_{gr}$ is the dust mass density.  Currently,
 the dust to gas mass ratio is assumed to scale with metallicity, i.e.,
