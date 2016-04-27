@@ -1,9 +1,9 @@
-\section{Chemistry and Cooling Methods} \label{sec:physics}
+%\section{Chemistry and Cooling Methods} \label{sec:physics}
 
 
 % ========== Primoridal Chemistry =========
 
-\subsection{Primordial Chemistry} \label{sec:primordial_chemistry}
+\section{Primordial Chemistry} \label{sec:primordial_chemistry}
 The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
 treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
 in the latest version of Enzo available at the time of writing (version 2.4). The Enzo primordial chemistry itself is based 
@@ -11,7 +11,7 @@ originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..
 modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
 included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
 
-\subsubsection{Chemistry Network} \label{sec:network}
+\subsection{Chemistry Network} \label{sec:network}
 Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
 The choice of chemical network is controlled by the primordial\_chemistry parameter. Setting primordial\_chemistry = 1 selects the
 six species network, which tracks the abundances of the species H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$ and is 
@@ -188,7 +188,7 @@ ${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 
 % ----------------------------------
 
-\subsubsection{Solving and Updating the Network}
+\subsection{Solving and Updating the Network}
 
 Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR (Hindmarsh 1983); however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
 
@@ -223,7 +223,7 @@ In some cases, particularly close to equilibrium, we slightly modify this.  Afte
 
 % ============ Cooling/Heating =============
 
-\subsection{Heating and Cooling} \label{Cooling}
+\section{Heating and Cooling} \label{Cooling}
 
 Grackle can evolve the Lagrangian energy equation, taking into account a wide range of radiative cooling and heating processes:
 \begin{equation}
@@ -235,11 +235,13 @@ In this paper, we split our discussion of radiative cooling/heating and chemistr
 \end{equation}
 If both chemistry and cooling/heating are turned on, these are integrated at the same time, with the  using a timestep which is a minimum of the chemistry and cooling constraints.  In the following sections, we describe the various supported cooling and heating options.  We begin with radiative cooling and heating due solely to Hydrogen and Helium, and then turn to heavier atomic elements (``metals"), and finally dust. 
 
-\subsubsection{Primordial Heating and Cooling}
+% ----------------------------------
+
+\subsection{Primordial Heating and Cooling}
 
 To solve for the effects of primordial (H and He only) heating and cooling, Grackle includes two options: (1) a non-equilibrium solver, the chemistry part of which is described in detail in Section~\ref{sec:primordial_chemistry}, and (2) a tabulated version, which assumes ionization equilibrium to compute the cooling and heating rates due to primordial chemistry.  In both cases, photo-heating from an external radiation source can be important -- this is described in Section~\ref{section:radback}.
 
-\paragraph{Non-equilibrium} \label{sec:pri-neq}
+\subsubsection{Non-equilibrium} \label{sec:pri-neq}
 
 We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): 
 
@@ -269,7 +271,7 @@ Finally, there are a number of other optional heating and cooling terms.  These 
 \end{enumerate}
 
 
-\paragraph{Tabulated} \label{sec:pri-tab}
+\subsubsection{Tabulated} \label{sec:pri-tab}
 
 In the other (simplier) mode, the cooling and heating due to the primordial
 elements can be calculated using tables of pre-computed values under
@@ -337,7 +339,9 @@ temperature approaches $T_{CMB}$ and also for the CMB to heat the gas
 when $T < T_{CMB}$.  We take the same approach when calculating the
 cooling from metals.
 
-\subsubsection{Metal Heating and Cooling}
+% ----------------------------------
+
+\subsection{Metal Heating and Cooling}
 
 Next we turn to the impact of metals on the thermal evolution of the gas.
 Solving for the cooling from metals using a non-equilibrium network
@@ -364,7 +368,7 @@ metallicity.  All of the available metal cooling tables assume a solar
 abundance pattern and consider all elements heavier than He up to
 atomic number 30 (Zn).
 
-\paragraph{Constructing Cooling Tables} \label{sec:cooling-tables}
+\subsubsection{Constructing Cooling Tables} \label{sec:cooling-tables}
 
 The Grackle comes with three different model input files that can be
 used to calculated the tabulated cooling from primordial species and
@@ -400,7 +404,9 @@ contributions of the metals.  All of the data are organized in
 \texttt{HDF5} files allows the data to be easily used for other
 applications.
 
-\subsubsection{Dust Heating and Cooling}
+% ----------------------------------
+
+\subsection{Dust Heating and Cooling}
 
 Dust grains transfer heat to and from a gas through elastic collisions
 with the atoms and molecules in that gas.  The surfaces of dust grains
@@ -466,9 +472,11 @@ significantly heat the gas.  For this reason, we also include the
 appropriate chemical heating term, as described in Section
 \ref{sec:chemheat}.
 
-Finally, 
+%Finally, 
 
-\subsection{Radiation Backgrounds}
+% =============== Radiation =================
+
+\section{Radiation Backgrounds}
 \label{section:radback}
 
 The Universe was reionized during the epoch of $z \sim 6-10$ by the
@@ -508,6 +516,7 @@ created following the method described in Section
 \ref{sec:cooling-tables}.
 
 \subsection{Applicability and Limitations}
+{\bf To be moved into summary?}
 - Density ranges, temperature ranges, optically thin condition
 
 - Remind reader that cooling lengths are potentially very short and
