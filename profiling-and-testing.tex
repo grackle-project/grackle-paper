@@ -39,8 +39,55 @@ Section~\ref{sec:uniform-cooling-test}).  The answers test are run several times
 using different input physics to ensure Grackle's solvers are well-exercised by
 the tests.
 
-\subsubsection{unit test: units}
+\subsubsection{Unit Test: Unit Systems}
 \label{sec:unit-test}
+
+For a given set of physical conditions, (i.e., densities and internal
+energies), the results of Grackle-related calculations should be
+independent of the choice of reference frame (comoving or proper) and
+internal unit system.  However, because chemistry and cooling
+calculations involve numeric values that span many orders of
+magnitude, round-off error will eventually lead to significant
+differences when the internal unit systems are varied beyond a certain
+degree.  The unit systems unit tests set up two fluid container
+objects with the same physical conditions but different internal unit
+systems.  In each instance, the chemical species fractions are evolved
+until ionization equilibrium has been reached (see \S
+\ref{sec:pyfluid}), after which time the cooling time is calculated.
+The tests assert that the cooling time values agree to within 4
+decimal places between the two unit systems.
+
+Three variants of this unit test exist.  In the first two, a
+comoving-frame unit system appropriate for a cosmological simulations
+is compared with a proper-frame unit system drawn from a random number
+generator that allows the density, time, and length units to vary by 4
+orders of magnitude.  A cosmologically appropriate unit system is
+roughly defined as one with density units equal to the average
+comoving matter density of the Universe, $\bar{\rho}_{m}$; time units
+proportional to 1/$\sqrt{G\ \bar{\rho}_{m}}$; and length units on the
+scale of Mpc.  One of the two of these type is performed with the
+non-equilibrium chemistry solver and the other with the fully
+tabulated solver.  In both cases, we compare a randomly generated
+proper-frame unit system with a comoving-frame unit system at z = 0
+and z $>$ 0, where the proper and comoving frames differ.  In these
+tests, a UV background model is also used as the radiative heating
+rate is proportional to $\rho$, whereas collisional heating/cooling
+rates are proportional to $\rho^{2}$ (or $\rho^{3}$ for three-body
+reactions).  Including heating/cooling terms with different density
+scaling is useful for exposing errors in adjusting between comoving
+and proper reference frames.
+
+The final variant of the unit system test compares two randomly
+generated proper-frame unit systems whose density units differ by as
+much as possible while maintaining equivalency to 4 decimal places.
+In practice, we find that the density units can differ by roughly 31
+orders of magnitude before the threshold level of accuracy is lost.
+With this in mind, we allow the two randomly generated unit systems to
+span 2 orders of magnitude with the center of each random distribution
+chosen such that the unit system will differ by 27-31 orders of
+magnitude.  By comparing unit systems that differ by the maximally
+allowed amount, we are able to measure the degree to which new terms
+added to the network suffer from round-off error.
 
 \subsubsection{unit test: ionization equailibrium of a primordial gas}
 \label{sec:primordial-test}
