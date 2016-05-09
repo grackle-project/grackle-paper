@@ -111,3 +111,32 @@ added to the network suffer from round-off error.
 
 
 \subsubsection{Speed Test}
+
+Grackle supports OpenMP parallelization and thus can easily work with
+applications adopting a hybrid MPI/OpenMP model.
+Figure \ref{fig:omp-perf} shows an OpenMP performance benchmark for both the
+non-equilibrium and tabulated functionality, where parallel efficiency is
+defined as the ratio of multi-thread and single-thread performance. We
+conduct this benchmark on the Campus Cluster of the University of Illinois
+at Urbana-Champaign using 20 threads on two Intel Xeon E5-2670 v2 CPUs
+at 2.50 GHz, each of which has ten cores. For all time-consuming routines
+(i.e., calculating cooling, cooling time, and temperature with the tabulated
+solver, and calculating chemistry, cooling, and cooling time with the
+non-equilibrium chemistry solver), the parallel efficiency reaches
+$\sim 60\%\,\text{--}\,90\%$ for $16^3$ cells and
+$\sim 80\%\,\text{--}\,90\%$ for $64^3$ cells. For other computationally cheap
+routines, such as calculating pressure, the parallel efficiency is relatively
+low. This is not an issue since they take negligible time compared to other
+computationally expensive routines.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.84\textwidth]{fig__openmp_performance.pdf}
+  \caption{
+    OpenMP parallel efficiency using 20 threads as a function of the size of
+    the input array. The solid and dashed lines are for the tabulated and
+    non-equilibrium functionality, respectively. For all time-consuming
+    routines, the parallel efficiency reaches $\sim 60\%\,\text{--}\,90\%$
+    for $16^3$ cells and $\sim 80\%\,\text{--}\,90\%$ for $64^3$ cells.
+  } \label{fig:omp-perf}
+\end{figure*}
