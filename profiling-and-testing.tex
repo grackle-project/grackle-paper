@@ -109,11 +109,15 @@ added to the network suffer from round-off error.
 
 \subsubsection{Optimization Strategy}
 
+Optimization in the Grackle has two components.  We begin with single processor optimizations.  
 
-\subsubsection{Speed Test}
+The ordinary differential equations that describe chemical and thermal evolution did not involve spatial information and so each discretization point (particle or cell) can be evolved independently of the others.  Because of this, the Grackle can be used with a wide variety of codes and applications, and optimization is relatively straightforward.  Our primary technique for single processor optimization is to make good use of cache and (single processor) vectorization.  The API is built around the idea of ``fields" of points rather than a single point for this reason.  The field can be a single-dimensional contiguous list as might be used for particle-based codes, or a three dimensional grid with inactive ("ghost") points as would be appropriate for grid-based codes.  By taking an entire field, and operating on the field in an order corresponding to the way it is laid out in memory, the code tries to minimize cache misses.  In particular, multi-dimensional arrays are assumed to be fortran-ordered (column-major) and operations are performed in loops over the most rapidly varying index.  Loops are generally also written in a way which facilitates unrolling so that compilers can easily make use of vector operations and prefetching.  Much of the computationally intensive part of the code is written in FORTRAN (in part for historical reasons but in part to take advantage of well-tested FORTRAN compiler loop optimizations).
 
-Grackle supports OpenMP parallelization and thus can easily work with
-applications adopting a hybrid MPI/OpenMP model.
+The second optimization involves taking advantage of parallel computation.  Grackle itself requires no communication and so can easily work as part of a code that uses MPI or some other message passing library to achieve distributed parallelization.  In addition, Grackle supports OpenMP parallelization and thus can easily work with applications adopting a hybrid MPI/OpenMP model.  The OpenMP is implemented by parallelizing over outer j,k loops and giving a thread an i ``slice" to operate on.  This is a natural model for grid-based codes, but some work may be required to get good performance this way with particle based codes (e.g. by artificially splitting a 1D list of particle quantities into a 2D grid).
+
+\subsubsection{OpenMP Performance}
+
+
 Figure \ref{fig:omp-perf} shows an OpenMP performance benchmark for both the
 non-equilibrium and tabulated functionality, where parallel efficiency is
 defined as the ratio of multi-thread and single-thread performance. We
