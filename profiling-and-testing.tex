@@ -16,9 +16,9 @@ Currently there are two different types of tests in the Grackle test suite: unit
 tests and answer tests. A unit test in Grackle compares the results of a
 calculation using Grackle to some set of ``correct'' answers that are known
 \textit{a priori}. The unit tests currently implemented in grackle test that the
-unit system is behaving correctly (see Section~\ref{sec:unit-test}) and that the
+unit system is behaving correctly (see Section~\ref{sec:test-units}) and that the
 ionization equilibrium for a primordial gas agrees with the analytic prediction
-using the rates implemented in Grackle (see Section~\ref{sec:primordial-test}).
+using the rates implemented in Grackle (see Section~\ref{sec:test-cie}).
 
 The answer tests consist of a set of example calculations where each calculation
 writes out a summary plot as well as an \texttt{hdf5} dataset that is loadable
@@ -40,7 +40,7 @@ using different input physics to ensure Grackle's solvers are well-exercised by
 the tests.
 
 \subsubsection{Unit Test: Unit Systems}
-\label{sec:unit-test}
+\label{sec:test-units}
 
 For a given set of physical conditions, (i.e., densities and internal
 energies), the results of Grackle-related calculations should be
@@ -89,8 +89,35 @@ magnitude.  By comparing unit systems that differ by the maximally
 allowed amount, we are able to measure the degree to which new terms
 added to the network suffer from round-off error.
 
-\subsubsection{unit test: ionization equailibrium of a primordial gas}
-\label{sec:primordial-test}
+\subsubsection{Unit Test: Collisional Ionization Equilibrium}
+\label{sec:test-cie}
+
+The equilibrium ionization state of a gas is determined solely by its
+temperature when only collisional ionization is considered, (i.e.,
+when photo-ionization is neglected).  Thus, a density-independent
+equilibrium solution can be calculated for any ion by equating the
+creation terms (recombination from a higher ionization state and 
+ionization from a lower state) with the destruction terms
+(recombination into a lower state and ionization into a higher
+state).  For example, this yields a CIE solution for neutral H given
+by
+\begin{equation} \label{eqn:hcie}
+f_{\rm H,CIE} = \frac{\alpha_{\rm H^{+}}(T)}{\alpha_{\rm H^{+}}(T) +
+  \Gamma_{\rm H}(T)},
+\end{equation}
+where $\alpha_{\rm H^{+}}$ is the recombination rate of H$^{+}$ and
+$\Gamma_{\rm H}$ is the collisional ionization rate of H.
+
+In order to test that Grackle arrives at the correct CIE solution
+for the atomic primordial network, we initialize a fluid container at
+a constant density with temperature varying smoothing in log-space
+from 10$^{4}$ K to 10$^{9}$ K.  The gas is initialized fully neutral
+and the chemistry solver is called repeatedly with cooling processes
+deactivated (to keep each cell at its original temperature) until
+convergence has been reached in all cells.  These values are then
+compared to the analytical solutions (as in Equation \ref{eqn:hcie})
+for the ionization states of all H and He species and the total
+electron fraction.
 
 \subsubsection{Answer test: cooling rate test}
 \label{sec:cooling-rate-test}
