@@ -4,6 +4,7 @@
 
 
 \subsection{Testing Framework}
+\label{sec:testing}
 
 Testing a library like Grackle, with its mix of \texttt{Fortran}, and
 \texttt{C++} code, can be difficult. In the interest of ultimately improving
@@ -37,7 +38,10 @@ cloud undergoing free-fall collapse (see Section~\ref{sec:free-fall-test}), and
 a calculation for the temperature evolution of a uniform-density cloud (see
 Section~\ref{sec:uniform-cooling-test}).  The answers test are run several times
 using different input physics to ensure Grackle's solvers are well-exercised by
-the tests.
+the tests.  The answer tests are presented as sample scripts that can
+be run manually by the user, producing a figure.  For each answer
+test, we show the corresponding figure exactly as produced by each
+script.
 
 \subsubsection{Unit Test: Unit Systems}
 \label{sec:test-units}
@@ -122,11 +126,60 @@ electron fraction.
 \subsubsection{Answer test: cooling rate test}
 \label{sec:cooling-rate-test}
 
+Similar to the CIE unit test (Section \ref{sef:test-cie}), the cooling
+rate answer test initializes a fluid container with a constant density
+and smoothly varying temperature from 10 K to 10$^{9}$ K, then
+iterates the chemistry solver until all species have reached
+equilibrium.  Unlike the CIE unit test, metal cooling and a
+\citet{2012ApJ...746..125H} UV background at z = 0 are also included.
+After reaching equilibrium, the total cooling rate is calculated and
+compared with stored answers, as described in Section
+\ref{sec:testing} above.  This test is performed for all versions of
+the primordial solver as well as the fully tabulated cooling solver.
+The figure produced by the default configuration of this test
+(H,D,He non-equilibrium solver) is shown in Figure
+\ref{fig:cooling-rate-test}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{cooling_rate.pdf}
+  \caption{
+    Figure output by the default configuration of the cooling rate
+    answer test, described in Section \ref{sec:cooling-rate-test},
+    showing the equilibrium cooling rate as a function of temperature
+    for a solar metallicity gas at a density of 1 amu/cm$^{3}$ with an
+    incident radiation field described by the
+    \citet{2012ApJ...746..125H} model at z = 0.
+  } \label{fig:cooling-rate-test}
+\end{figure}
+
 \subsubsection{Answer test: free-fall cooling test}
 \label{sec:free-fall-test}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{freefall.pdf}
+  \caption{
+    Figure output by the default configuration of the free-fall answer
+    test, described in Section \ref{sec:free-fall-test}, showing the
+    temperature (black) and H$_{2}$ fraction (red) as a function of
+    density for a free-fall collapse model of a metal-free gas.
+  } \label{fig:free-fall-test}
+\end{figure}
+
 \subsubsection{Answer test: uniform cooling test}
 \label{sec:uniform-cooling-test}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{cooling_cell.pdf}
+  \caption{
+    Figure output by the uniform cooling answer test, described in
+    Section \ref{sec:uniform-cooling-test}, showing the temperature
+    (black) and mean molecular weight (red) as a function of time for
+    a parcel of gas cooling at constant density.
+  } \label{fig:uniform-cooling-test}
+\end{figure}
 
 \subsubsection{Other tests?}
 
