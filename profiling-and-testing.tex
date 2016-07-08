@@ -32,16 +32,23 @@ is developed. Incorrect answers are prevented by manually inspecting test
 answers when the test is first added to the codebase. If subsequently a bug is
 discovered and the test output changes, then the test answer must also be
 manually updated. Currently Grackle contains answer tests calculations for the
-cooling rate (see Section~\ref{sec:cooling-rate-test}) in a uniform density
-cloud at a fixed time, a calculation of the density and temperature of a gas
-cloud undergoing free-fall collapse (see Section~\ref{sec:free-fall-test}), and
-a calculation for the temperature evolution of a uniform-density cloud (see
-Section~\ref{sec:uniform-cooling-test}).  The answers test are run several times
-using different input physics to ensure Grackle's solvers are well-exercised by
-the tests.  The answer tests are presented as sample scripts that can
-be run manually by the user, producing a figure.  For each answer
-test, we show the corresponding figure exactly as produced by each
-script.
+instantaneous cooling rate (see Section~\ref{sec:cooling-rate-test})
+at a constant density, the temperature evolution of a uniform-density cloud (see
+Section~\ref{sec:uniform-cooling-test}), and the density and
+temperature evolution of a gas cloud undergoing free-fall collapse
+(see Section~\ref{sec:free-fall-test}). The answer tests are run
+several times using different input physics to ensure Grackle's
+solvers are well-exercised by the tests.  The answer tests are
+presented as sample scripts that can be run manually by the user,
+producing a figure.  For each answer test, we show the corresponding
+figure exactly as produced by each script.
+
+In addition to the unit and answer tests, which monitor functionality
+of the solvers, we also employ tests to ensure that all Python source
+code conforms to PEP 8 style
+standards\footnote{https://www.python.org/dev/peps/pep-0008/} and that
+all instructional sample codes compile and run without producing
+errors.
 
 \subsubsection{Unit Test: Unit Systems}
 \label{sec:test-units}
@@ -126,7 +133,7 @@ electron fraction.
 \subsubsection{Answer test: cooling rate test}
 \label{sec:cooling-rate-test}
 
-Similar to the CIE unit test (Section \ref{sef:test-cie}), the cooling
+Similar to the CIE unit test (Section \ref{sec:test-cie}), the cooling
 rate answer test initializes a fluid container with a constant density
 and smoothly varying temperature from 10 K to 10$^{9}$ K, then
 iterates the chemistry solver until all species have reached
@@ -153,22 +160,21 @@ The figure produced by the default configuration of this test
   } \label{fig:cooling-rate-test}
 \end{figure}
 
-\subsubsection{Answer test: free-fall cooling test}
-\label{sec:free-fall-test}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.45\textwidth]{freefall.pdf}
-  \caption{
-    Figure output by the default configuration of the free-fall answer
-    test, described in Section \ref{sec:free-fall-test}, showing the
-    temperature (black) and H$_{2}$ fraction (red) as a function of
-    density for a free-fall collapse model of a metal-free gas.
-  } \label{fig:free-fall-test}
-\end{figure}
-
 \subsubsection{Answer test: uniform cooling test}
 \label{sec:uniform-cooling-test}
+
+The uniform cooling answer test simulates the thermal evolution of a
+parcel of gas cooling at constant density.  This test ensures that the
+solver properly evolves the internal energy over a period of time.
+The test initializes a single-cell fluid container with a density of
+0.1 amu/cm$^{3}$ and a temperature of 10$^{6}$ K.  The cell is evolved
+for 100 Myr with timesteps of 1\% of the free-fall time ($\sim$67 kyr
+for this density), where the free-fall time is
+\begin{equation}
+t_{ff} = \sqrt{\frac{3 \pi}{32 G \rho}}.
+\end{equation}
+The resulting evolution is shown in Figure
+\ref{fig:uniform-cooling-test}.
 
 \begin{figure}
   \centering
@@ -181,8 +187,79 @@ The figure produced by the default configuration of this test
   } \label{fig:uniform-cooling-test}
 \end{figure}
 
-\subsubsection{Other tests?}
+\subsubsection{Answer test: free-fall collapse test}
+\label{sec:free-fall-test}
 
+The free-fall collapse answer test simulates the thermal evolution of
+a cloud of gas collapsing due to self-gravity.  This test is useful
+for ensuring that the non-equilibrium chemistry solver is functioning
+properly over a large range in density.  The setup of this test
+closely follows the one-zone free-fall collapse model introduced by
+\citet{2000ApJ...534..809O} and modified by
+\citet{2005ApJ...626..627O} to include the effects of thermal pressure
+support.  The test creates a single-cell fluid container with an
+initial density of 0.1 amu/cm$^{3}$ and an initial temperature of
+50,000 K.  Before beginning the free-fall collapse phase, the cloud is
+allowed to cool at a constant density to a temperature of 100 K in the
+manner described in Section \ref{sec:uniform-cooling-test}.  This
+allows the gas to settle into an ionization state that is roughly
+appropriate for the temperature.  From there, we evolve the density of
+the cloud following the modified collapse model of
+\citet{2005ApJ...626..627O}, given by
+\begin{equation}
+\frac{d \rho}{dt} = \frac{\rho}{t_{col}},
+\end{equation}
+where $t_{\rm col}$ is the collapse time-scale expressed as
+\begin{equation}
+t_{col} = \frac{t_{ff}}{\sqrt{1-f}}.
+\end{equation}
+Thermal pressure forces, which act to slow the collapse of the cloud,
+are modeled by the factor $f$, which is expressed as
+\begin{equation}
+f = \left\{
+\begin{array}{lr}
+0, & \gamma < 0.83,\\
+0.6 + 2.5(\gamma - 1) - 6.0(\gamma - 1)^2, & 0.83 < \gamma < 1,\\
+1.0 + 0.2(\gamma - 4/3) - 2.9(\gamma - 4/3)^2, & \gamma > 1,
+\end{array}
+ \right.
+\end{equation}
+where the effective adiabatic index, $\gamma$, is
+\begin{equation}
+\gamma \equiv \frac{\partial \ln p}{\partial \ln \rho}.
+\end{equation}
+As the density increases, the internal energy is altered by a
+combination of adiabatic compression and radiative cooling, computed
+by Grackle, and is given by
+\begin{equation}
+\frac{de}{dt}= -p \frac{d}{dt} \frac{1}{\rho} - {\Lambda},
+\label{eq:energy}
+\end{equation}
+where the pressure is given by
+\begin{equation}
+p = \frac{\rho k T}{\mu m_{\rm H}},
+\end{equation}
+the specific internal energy is
+\begin{equation}
+e = \frac{1}{\gamma_{\rm ad} -1} \frac{k T}{\mu m_{\rm H}},
+\label{eq:defen}
+\end{equation}
+$\gamma_{\rm ad}$ is the true adiabatic index, and $\Lambda$ is the
+radiative cooling rate.  This test is performed using the full
+non-equilibrium chemistry solver, once at zero metallicity (Figure
+\ref{fig:free-fall-test} and once with a metallicity of 10$^{-3}$
+Z$_{\odot}$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{freefall.pdf}
+  \caption{
+    Figure output by the default configuration of the free-fall answer
+    test, described in Section \ref{sec:free-fall-test}, showing the
+    temperature (black) and H$_{2}$ fraction (red) as a function of
+    density for a free-fall collapse model of a metal-free gas.
+  } \label{fig:free-fall-test}
+\end{figure}
 
 \subsection{Performance}
 
