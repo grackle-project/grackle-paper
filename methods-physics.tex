@@ -472,7 +472,15 @@ significantly heat the gas.  For this reason, we also include the
 appropriate chemical heating term, as described in Section
 \ref{sec:chemheat}.
 
-%Finally, 
+\subsection{Constant Heating Rates}
+
+Additionally, the user has the option to supply arrays of constant
+heating rates that will be added to the total heating/cooling rate
+of each computational element due to the processes described above.
+These heating rates can be either volumetric (units of
+erg/s/cm$^{3}$) to mimic heat input from a radiation field or
+specific (erg/s/g), corresponding to a uniform temperature change that
+is independent of density.
 
 % =============== Radiation =================
 
@@ -514,11 +522,3 @@ Grackle.  These are the models of \citet{2009ApJ...703.1416F} and
 \citet{2012ApJ...746..125H}.  Data tables for new models can be
 created following the method described in Section
 \ref{sec:cooling-tables}.
-
-\subsection{Applicability and Limitations}
-{\bf To be moved into summary?}
-- Density ranges, temperature ranges, optically thin condition
-
-- Remind reader that cooling lengths are potentially very short and
-having a fancy model is perhaps not very relevant at 1kpc
-resolution. Can give some guidance of how to apply this.
