@@ -207,16 +207,16 @@ where $C_i$ represents the total creation rate of species $i$ (given the tempera
 n^{t + \Delta t} = \frac{C^{t+\Delta t} \Delta t + n^t}{1 + D^{t+\Delta t} \Delta t}
 \label{eq:rate_BDF}
 \end{equation}
-Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in \citet{1997NewA....2..209A} based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, when then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
+Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in \citet{1997NewA....2..209A} based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, we then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
 \begin{equation}
-n_{ {\rm H}_2^+} = \frac{k_9 n_H n_{H^+} + k_{11} n_{H_2} n_{H^+} + k_{17} n_{H^-} n_{H^+} + k_{29} n_{H_2}}
-   {k_{10} n_H + k_{18} n_e + k_{19} n_{H^-} + k_{28} + k_{30}}
+n_{ {\rm H}_2^+} = \frac{k_9 n_{\rm H} n_{\rm H^+} + k_{11} n_{\rm H_2} n_{\rm H^+} + k_{17} n_{\rm H^-} n_{\rm H^+} + k_{29} n_{\rm H_2}}
+   {k_{10} n_{\rm H} + k_{18} n_{\rm e} + k_{19} n_{\rm H^-} + k_{28} + k_{30}}
 \end{equation}
-Finally, for 15-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
+Finally, for 12-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
 
 Since the time step passed to Grackle (often the hydrodynamic timestep of a parent simulation) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\% in any sub-cycle step of length $\Delta t$:
 \begin{equation}
-\Delta t = 0.1 \min \left( \frac{\dot{n}_H}{n_H} , \frac{\dot{n}_{e^-}}{n_{e^-}} \right)
+\Delta t = 0.1 \min \left( \frac{\dot{n}_{\rm H}}{n_{\rm H}} , \frac{\dot{n}_{\rm e^-}}{n_{\rm e^-}} \right)
 \end{equation}
 In some cases, particularly close to equilibrium, we slightly modify this.  After more than 50 subcycle steps (if we have not yet integrated a full hydro timestep), we replace the analytically calculated time time derivatives in the above expression with numerical time derivatives (i.e. change from the previous sub-cycle step).  This is helpful when we are close to equilibrium and the integrator is taking very small steps and regularly overshooting the equilibrium value.  
 %Finally, when the density is high $n_H > 10^8$ cm$^{-3}$, and the net cooling/heating term is positive (see below), we replace use an estimate of the rate of change of H based on the H equilibrium solution.
