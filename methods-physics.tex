@@ -190,7 +190,7 @@ ${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 
 \subsection{Solving and Updating the Network}
 
-Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR (Hindmarsh 1983); however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
+Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR \citep{Hindmarsh83}; however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
 
 Our kinetic network for solving the rate of change of species density $n_i$ has the general form
 \begin{equation}
