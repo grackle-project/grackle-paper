@@ -8,6 +8,18 @@
 having a fancy model is perhaps not very relevant at 1kpc
 resolution. Can give some guidance of how to apply this.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.48\textwidth]{valid_range.pdf}
+  \caption{
+    The appropriate density range for different versions of the
+    Grackle solver.  The high density metal cooling table (bottom)
+    explicitly spans the density range, 10$^{-6}$ cm $^{-3}$ $< n <$
+    10$^{12}$ cm $^{-3}$, but extrapolation down to $n = 10^{-10}$ cm
+    $^{-3}$ is still valid, as indicated by the dashed line.
+  } \label{fig:valid-range}
+\end{figure}
+
 \begin{figure*}
   \centering
   \includegraphics[width=0.84\textwidth]{cooling_length.pdf}
@@ -27,9 +39,6 @@ resolution. Can give some guidance of how to apply this.
 
 
 \subsection{Future Directions} \label{Future_Directions}
-
-\subsubsection{Future API changes} 
-Replace the 18 array pointers to a single pointer to a struct of arrays?
 
 \subsubsection{Including new rates and models in Grackle}
 \jr{} The current code structure is highly integrated. This makes introducing new rates for the 
