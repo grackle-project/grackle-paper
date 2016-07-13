@@ -13,11 +13,11 @@ included in Grackle and discuss how the resulting set of chemical rate equations
 
 \subsection{Chemistry Network} \label{sec:network}
 Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
-The choice of chemical network is controlled by the primordial\_chemistry parameter. Setting primordial\_chemistry = 1 selects the
+The choice of chemical network is controlled by the \texttt{primordial\_chemistry} parameter. Setting \texttt{primordial\_chemistry = 1} selects the
 six species network, which tracks the abundances of the species H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$ and is 
-designed for modelling atomic and/or ionized gas. Setting primordial\_chemistry = 2 selects the nine species network. This
+designed for modelling atomic and/or ionized gas. Setting \texttt{primordial\_chemistry = 2} selects the nine species network. This
 includes all of the species and reactions included in the six species network, but adds molecular hydrogen (H$_2$), plus the
-two ions primarily responsible for its formation in primordial gas (H$^{-}$ and H$_{2}^{+}$). Finally, setting primordial\_chemistry = 3
+two ions primarily responsible for its formation in primordial gas (H$^{-}$ and H$_{2}^{+}$). Finally, setting \texttt{primordial\_chemistry = 3}
 selects the twelve species network, which is an extension of the nine species model that includes D, D$^{+}$ and HD.
 
 \begin{table}
@@ -190,7 +190,7 @@ ${\rm D + H^{-}}$ & $\rightarrow$ & ${\rm HD + e^{-}}$ & 10, 11 & 10  \\
 
 \subsection{Solving and Updating the Network}
 
-Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR (Hindmarsh 1983); however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
+Chemical networks such as the ones described above are often challenging to evolve due to the very different time scales that various rates may have -- creation and destruction time scales can differ by orders of magnitude among the different species.   Such ``stiff" sets of equations are often solved with implicit methods, which permit longer timesteps.  Several packages exist to do this, and can even switch between methods for solving stiff and non-stiff equations, such as LSODAR \citep{Hindmarsh83}; however, for multi-dimensional simulations it is useful to have an implementation which is optimized for the case at hand.
 
 Our kinetic network for solving the rate of change of species density $n_i$ has the general form
 \begin{equation}
@@ -207,16 +207,16 @@ where $C_i$ represents the total creation rate of species $i$ (given the tempera
 n^{t + \Delta t} = \frac{C^{t+\Delta t} \Delta t + n^t}{1 + D^{t+\Delta t} \Delta t}
 \label{eq:rate_BDF}
 \end{equation}
-Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in \citet{1997NewA....2..209A} based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, when then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
+Unfortunately, we are not able to fully implement a BDF scheme due to the difficulty of evaluating the $C_i$ and $D_i$ at the advanced time.  Instead, we attempt to mimic a BDF method through a set of partial updates combined with sub-cycling.  The partial forwarding updating is done by solving the the various species in a specified order and using the updated species densities in the following partial step.  The ordering was developed by in \citet{1997NewA....2..209A} based on empirical tests under a wide range of conditions and is as follows for the 6-species model: H, H$^+$, e$^-$, He, He$^+$, He$^{++}$.  For the 9-species model, we then add H$_2$, H$^-$, and H$_2^+$.  The H$_2^+$ timescale is sufficiently short that it can be decoupled and we use instead the equilibrium value:
 \begin{equation}
-n_{ {\rm H}_2^+} = \frac{k_9 n_H n_{H^+} + k_{11} n_{H_2} n_{H^+} + k_{17} n_{H^-} n_{H^+} + k_{29} n_{H_2}}
-   {k_{10} n_H + k_{18} n_e + k_{19} n_{H^-} + k_{28} + k_{30}}
+n_{ {\rm H}_2^+} = \frac{k_9 n_{\rm H} n_{\rm H^+} + k_{11} n_{\rm H_2} n_{\rm H^+} + k_{17} n_{\rm H^-} n_{\rm H^+} + k_{29} n_{\rm H_2}}
+   {k_{10} n_{\rm H} + k_{18} n_{\rm e} + k_{19} n_{\rm H^-} + k_{28} + k_{30}}
 \end{equation}
-Finally, for 15-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
+Finally, for 12-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
 
 Since the time step passed to Grackle (often the hydrodynamic timestep of a parent simulation) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\% in any sub-cycle step of length $\Delta t$:
 \begin{equation}
-\Delta t = 0.1 \min \left( \frac{\dot{n}_H}{n_H} , \frac{\dot{n}_{e^-}}{n_{e^-}} \right)
+\Delta t = 0.1 \min \left( \frac{\dot{n}_{\rm H}}{n_{\rm H}} , \frac{\dot{n}_{\rm e^-}}{n_{\rm e^-}} \right)
 \end{equation}
 In some cases, particularly close to equilibrium, we slightly modify this.  After more than 50 subcycle steps (if we have not yet integrated a full hydro timestep), we replace the analytically calculated time time derivatives in the above expression with numerical time derivatives (i.e. change from the previous sub-cycle step).  This is helpful when we are close to equilibrium and the integrator is taking very small steps and regularly overshooting the equilibrium value.  
 %Finally, when the density is high $n_H > 10^8$ cm$^{-3}$, and the net cooling/heating term is positive (see below), we replace use an estimate of the rate of change of H based on the H equilibrium solution.
@@ -243,30 +243,30 @@ To solve for the effects of primordial (H and He only) heating and cooling, Grac
 
 \subsubsection{Non-equilibrium} \label{sec:pri-neq}
 
-We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the 6-species solver (MultiSpecies = 1): 
+We include a variety of cooling rates due to transitions of the non-equilibrium species.  We begin with a list appropriate for the six species network (\texttt{primordial\_chemistry = 1}): 
 
 \begin{enumerate}
-\item Collisional excitation cooling rates involving the following species: $n_e n_H$, $n_e^2 n_{He}$, and $n_e n_{He^+}$ \citep{1981MNRAS.197..553B, 1992ApJS...78..341C};
-\item Collisional ionization cooling for $n_e n_H$, $n_e n_{He}$, $n_e n_{He^+}$ and $n_e^2 n_{He^+}$ \citep{1987ApJ...318...32S, 1992ApJS...78..341C, 1997NewA....2..181A};
-\item Recombination cooling: $n_e n_{H^+}$, $n_e n_{He^+}$, $n_e n_{He^{++}}$ \citep{1981MNRAS.197..553B, 1978ppim.book.....S};
+\item Collisional excitation cooling rates involving the following species: $n_{\rm e} n_{\rm H}$, $n_{\rm e}^2 n_{\rm He}$, and $n_{\rm e} n_{\rm He^+}$ \citep{1981MNRAS.197..553B, 1992ApJS...78..341C};
+\item Collisional ionization cooling for $n_{\rm e} n_{\rm H}$, $n_{\rm e} n_{\rm He}$, $n_{\rm e} n_{\rm He^+}$ and $n_{\rm e}^2 n_{\rm He^+}$ \citep{1987ApJ...318...32S, 1992ApJS...78..341C, 1997NewA....2..181A};
+\item Recombination cooling: $n_{\rm e} n_{\rm H^+}$, $n_{\rm e} n_{\rm He^+}$, $n_{\rm e} n_{\rm He^{++}}$ \citep{1981MNRAS.197..553B, 1978ppim.book.....S};
 \item Bremsstrahlung cooling for all ionized species \citep{1981MNRAS.197..553B};
 \item Compton cooling/heating off the CMB (Peebles 1971), and 
 \item Photoionization heating for H, He and He$^+$, depending on the ionizing radiation field -- see section~\ref{section:radback} for more details.
 \end{enumerate}
 In addition to the sources referenced above, we note that most of these rates were tabulated in Appendix B of \citet{1997NewA....2..209A}.
 
-For the 9 species version (Multispecies = 2), we add molecular $H_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and independent of detailed collisions, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
+For the nine species version (\texttt{primordial\_chemistry = 2}), we add H$_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and hence depend only on temperature, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1984ApJ...280..465L}.
 
 \label{sec:chemheat}
 
 In addition to H$_2$ radiative cooling, we include the impact of chemical heating or cooling due to the formation or destruction of molecular hydrogen.  Following \citet{2000ApJ...534..809O}, we add $4.48 (1 + n_{\rm cr}/n)^{-1}$ eV for H$_2$ formation by the 3-body reaction, and $0.2 + 4.1(1 + n_{\rm cr}/n)^{-1}$ eV for H$_2$ formation on dust grain surfaces.  The critical density $n_{\rm cr}$ is given by eq. (23) of  \citet{2000ApJ...534..809O}.  For H$_2$ destruction, we remove 4.48 eV per H$_2$ molecule dissociated.
 
-Finally, In the 12-species mode (Multispeces = 3), which adds Deuterium chemistry, the code includes (radiative) cooling from HD.  This is a combination of a fit from Coppola et al (2011) for the high-density limit, and \citet{1998A&A...335..403G} for the low density limit.
+Finally, in twelve species mode (\texttt{primordial\_chemistry = 3}), which adds deuterium chemistry, the code includes (radiative) cooling from HD.  This is a combination of a fit from \citet{2011MNRAS.415..487C} for the high-density limit, and \citet{2007MNRAS.382..133W} for the low density limit.
 
 There are a number of other optional heating and cooling terms that the code includes, some of which are not strictly primordial, but are included as part of this cooling package.  These include:  
 \begin{enumerate}
-\item Collisionally induced excitation of H$_2$ at high densities, with rates as described in Ripamonti \& Abel (2004). 
-\item X-ray Compton heating (or cooling) using eq. (4) and (11) of Madau \& Efstathiou (1999).  
+\item Collisionally induced excitation of H$_2$ at high densities, with rates as described in \citet{2004MNRAS.348.1019R}.
+\item X-ray Compton heating (or cooling) using eq. (4) and (11) of \citet{1999ApJ...517L...9M}.
 \item A photoelectric heating rate, equal to $\Gamma_{\rm eff} n_H$, where $\Gamma_{\rm eff}$ is a fixed input parameter.  Although not strictly primordial, we include this rate here as it is distinct from the dust model described later.
 \end{enumerate}
 
