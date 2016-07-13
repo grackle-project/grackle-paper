@@ -15,28 +15,26 @@ cooling time, temperature, pressure, and ratio of specific heats.
 Before these functions can be called, the code must be initialized
 with various user-specified settings.  This initialization process is
 also responsible for loading data from external files and calculating
-chemistry and cooling rate tables used by the solvers.  The
-initialization process can be carried out in two different ways.
-\begin{enumerate}
-\item[(i)] The Grackle stores all configuration parameters and data
-  tables within a single \texttt{C} struct that exists within the
-  primary grackle header file, \texttt{grackle.h}.  In the first
-  method, the user initializes this structure by calling the function,
-  \texttt{set\_default\_chemistry\_parameters}.  All parameters can
-  then be set by accessing them directly from the struct, called
-  \texttt{grackle\_data}.  Once all parameters are properly set, the
-  user must call \texttt{initialize\_chemistry\_data} to finalize the
-  initialization process.  This method is advantageous as it allows
-  the user to access all configurable parameters directly, including
-  ones that may be added in the future, without additional function
-  calls.  An example of this procedure is shown below:
+the chemistry and cooling rate tables used by the solvers.  All
+Grackle run-time parameters are stored within a C \texttt{struct} of type,
+\texttt{chemistry\_data}.  The user initializes this structure by
+calling the function, \texttt{set\_default\_chemistry\_parameters}
+and supplying a pointer to a \texttt{chemistry\_data}.  The
+\texttt{chemistry\_data} pointer is then attached to a globally
+viewable pointer called \texttt{grackle\_data}, allowing all run-time
+parameters to be accessible without having to store the struct
+manually.  Once all parameters are properly set, the user must call
+\texttt{initialize\_chemistry\_data} to finalize the initialization
+process.  An example of this procedure is shown below:
 
 \vspace{0.5cm}
 \begin{minipage}[b]{0.5\linewidth}
 \begin{verbatim}
 
 int rval;
-rval = set_default_chemistry_parameters();
+chemistry_data my_pars;
+rval =
+  set_default_chemistry_parameters(&my_pars);
 
 grackle_data.use_grackle = 1;
 grackle_data.with_radiative_cooling = 1;
@@ -46,8 +44,7 @@ grackle_data.UVbackground = 1;
 grackle_data.grackle_data_file = 
   "CloudyData_UVB=HM2012.h5";
 
-rval = 
-  initialize_chemistry_data(&my_units, a_value);
+rval = initialize_chemistry_data(&my_units);
 
 \end{verbatim}
 \end{minipage}
@@ -55,23 +52,8 @@ rval =
 In the above example, the variable \texttt{my\_units} is a C
 \texttt{struct} that holds unit conversions from internal code units
 to the CGS unit system for quantities such as density, length, and
-time.  The variable, \texttt{a\_value}, holds the current value of the
-expansion factor ($a \equiv 1/(1+z)$, where z is the redshift).  These
-are required in order to set up the internal unit system for the
-chemistry and cooling rate tables.
-
-\item[(ii)] The above method can be combersome to work with in a
-  simulation code written in \texttt{Fortran} because of the necessity
-  of dealing with \texttt{C} structs.  For this reason, the Grackle
-  offers a second initialization procedure involving only a call to
-  the function, \texttt{initialize\_grackle}.  All arguments to this
-  function are simple scalar integers and floats.  Internally, this
-  function follows the procedure outlined above.  The disadvantage of
-  this method is that it only provides access to the most frequently
-  used parameters as making all parameters available would constitute
-  a overly long list of arguments.
-
-\end{enumerate}
+time.  These are required in order to set up the internal unit system
+for the chemistry and cooling rate tables.
 
 Once the Grackle has been initialized, the functionality described
 above can be called by the simulation code.  The available functions
@@ -84,18 +66,70 @@ internal energy and chemical species densities, 4)
 \texttt{calculate\_pressure} to calculate the gas pressure, and 5)
 \texttt{calculate\_gamma} to calculate the ratio of specific heats.
 In the Grackle, the ratio of specific heats is only altered from that
-of an ideal gas by the presence of H$_{2}$.  For each of these
-functions, the required arguments are the various unit conversion
-factors, arrays of internal energy, total density, densities of each chemical
-species (if the non-equilibrium solver is used), and arrays describing
-the size and shape of the primary data arrays.  The Grackle can be
-compiled to either accept the data arrays as single or double
-precision floating point type.  Both the non-equilibrium and fully
-tabulated functionality are available through the above functions.
-When the fully tabulated mode is used, the chemical species arrays may
-simply be \texttt{NULL} pointers.  For simplicity, the Grackle also
-provides tabulated-only functions appended with \texttt{\_table} which
-only require the total density field to be given.
+of an ideal gas by the presence of H$_{2}$.
+
+For efficiency, Grackle's functions are designed to operate on
+multiple computational elements simultaneously.  The user provides
+arrays of the required fields to Grackle and their values will be
+updated by the chemistry and cooling solvers.  Because the number of
+required fields depends on the specific solver being used, Grackle
+makes use of another C \texttt{struct} as a means of passing field
+arrays to the Grackle functions.  The \texttt{grackle\_field\_data}
+\texttt{struct} contains pointers to which can be attached the arrays
+of density, internal energy, and any optional fields, such as
+individual species densities or the arrays of constant heating rates
+(Section \ref{section:constant-heating}).  Since arrays of the
+optional fields are only accessed based on run-time parameter
+settings, the user has the option of only providing the fields they
+wish to use.  The field arrays can be one, two, or three-dimensional,
+allowing both Lagrangian particle-based codes and Eulerian mesh-based
+codes to provide fields in their native layout.  The
+\texttt{grackle\_field\_data} \texttt{struct} contains entries to
+specify the field dimensionality as well as to flag certain array
+elements as boundary cells which are to be ignored.  An example of
+calling the main chemistry solver function on a 16$^{3}$ grid with 3
+boundary zones on each side is shown below:
+
+\vspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\begin{verbatim}
+
+grackle_field_data my_fields;
+
+my_fields.grid_rank = 3;
+my_fields.grid_dimension = new int[3];
+my_fields.grid_start = new int[3];
+my_fields.grid_end = new int[3];
+for (int i = 0;i < 3;i++) {
+  my_fields.grid_dimension[i] = 10;
+  my_fields.grid_start[i] = 3;
+  my_fields.grid_end[i] = 12;
+}
+
+my_fields.density = density_array;
+my_fields.internal_energy = energy_array;
+my_fields.HI_density = HI_array;
+...
+
+// 1 Myr in internal units
+double dt = 3.15e7 * 1e6 /
+  my_units.time_units;
+
+rval =
+  solve_chemistry(&my_units, &my_fields, dt);
+
+\end{verbatim}
+\end{minipage}
+
+An added benefit of this approach is that adding new
+features which use additional fields will not require a change in the
+function signature.  This will, in theory, allow Grackle to maintain
+backward compatibility indefinitely.  We note that versions of Grackle
+prior to 3.0 did not make use of the \texttt{grackle\_field\_data}
+\texttt{struct} and instead required all fields to be provided as
+individual arguments.  We acknowledge that the release of
+\texttt{Grackle} 3.0 constitutes a significant change to the API, but
+one that will ultimately provide more stability moving forward.
 
 \subsection{Pygrackle - Grackle's Python API}
 
