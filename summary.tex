@@ -38,9 +38,25 @@ thickness will become very short as density increases.
   } \label{fig:valid-range}
 \end{figure}
 
-- Remind reader that cooling lengths are potentially very short and
-having a fancy model is perhaps not very relevant at 1kpc
-resolution. Can give some guidance of how to apply this.
+The addition of radiative cooling to a simulation creates another
+relevant length scale which must be kept in mind.  The cooling length,
+defined as the product of the local sound speed and the cooling time,
+sets the approximate size of objects as they cool and condense
+\citep{2009A&A...508..725I}.  The cooling length is inversely
+proportional to density, effectively setting a density limit for
+any given spatial resolution.  When this scale becomes unresolved,
+radiative losses will be overpredicted, leading to unphysically high
+densities and further exacerbating the resolution problem in a runaway
+cycle.  This effect is likely related to the over-cooling problem that
+has classicly plagued cosmological simulations
+\citep[e.g.][]{1996ApJS..105...19K, 2001MNRAS.326.1228B}.
+In Figure \ref{fig:cooling-length}, we show an estimate of the
+cooling length for the scenario of a gas at solar metallicity in a
+\citet{2012ApJ...746..125H} radiation background at z = 0, noting how
+quickly the cooling length drops below 1 kpc, and even 1 pc, for
+densities relevant to galaxy formation simulations.  This
+length scale should be taken into consideration when choosing the
+density threshold above which sub-grid models are applied.
 
 \begin{figure*}
   \centering
