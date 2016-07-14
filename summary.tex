@@ -2,11 +2,27 @@
 
 \subsection{Applicability and Limitations}
 
-- Density ranges, temperature ranges, optically thin condition
-
-- Remind reader that cooling lengths are potentially very short and
-having a fancy model is perhaps not very relevant at 1kpc
-resolution. Can give some guidance of how to apply this.
+It is important to remember that the range of physical conditions in
+which Grackle can be considered valid is not unlimited.  In Figure
+\ref{fig:valid_range}, we show the rough density range over which
+different components of the solver is valid.  The high density limit
+of the non-equilibrium solver is set roughly by the reactions present
+in the network and the range over which their rate coefficents are
+trusted.  The limits on the cooling tables correspond to the density
+range over which they were calculated with.  Users are especially
+cautioned against exceding the upper density limit of the tabulated
+cooling solver.  The critical density above which energy levels are
+populated according to LTE exceeds the upper limit of the tables for
+many metal coolants \citep{2008MNRAS.385.1443S}.  Thus, these tables
+do not capture the NLTE to LTE transition where the cooling rates
+change from scaling as $\rho^{2}$ to $\rho$.  Hence, extrapolation
+beyond the upper limit will result in vast overprediction of the
+cooling rate.  If the use-case requires exceeding this limit, then the
+high density metal table should be used in conjunction with the
+non-equilibrium solver.  It is also extremely important to remember
+that all Grackle calculations are based on the assumption that the
+medium is optically thin.  In practice, the length scale of optical
+thickness will become very short as density increases.
 
 \begin{figure}
   \centering
@@ -16,9 +32,15 @@ resolution. Can give some guidance of how to apply this.
     Grackle solver.  The high density metal cooling table (bottom)
     explicitly spans the density range, 10$^{-6}$ cm $^{-3}$ $< n <$
     10$^{12}$ cm $^{-3}$, but extrapolation down to $n = 10^{-10}$ cm
-    $^{-3}$ is still valid, as indicated by the dashed line.
+    $^{-3}$ is still valid, as indicated by the dashed line.  For each
+    of these, the valid temperature range is roughly 1 K to 10$^{9}$
+    K.
   } \label{fig:valid-range}
 \end{figure}
+
+- Remind reader that cooling lengths are potentially very short and
+having a fancy model is perhaps not very relevant at 1kpc
+resolution. Can give some guidance of how to apply this.
 
 \begin{figure*}
   \centering
