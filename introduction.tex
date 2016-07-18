@@ -58,6 +58,24 @@ baryons.'' \citep{2006ApJ...650..573C,2011ApJ...731....6S,2013MNRAS.434.1043O,20
 \subsection{Why is a multi-code library a good thing?}
 
 
-\subsection{Where did the Grackle come frame?}
+\subsection{Origins of the code}
 
-The origins of the original Grackle code dates back to work done in the 1995 by Peter Anninos and collaborators \citep{1997NewA....2..209A} who developed a static Eulerian code focused on primordial gas (e.g. Lyman alpha forest, first stars).  This code was then incorporated into the {\it Enzo} codebase in 2000 and modified to include more rates and physical processes.  Eventually, metal-line cooling based on Cloudy \citep{2008MNRAS.385.1443S} was added in 2007.  {\bf Britton to add more here ...}
+The original Grackle code dates back to work done in
+the 1995 by Peter Anninos and collaborators
+\citep{1997NewA....2..209A} who developed a static Eulerian code
+focused on primordial gas (e.g. Lyman alpha forest, first stars).
+This code was then incorporated into the {\it Enzo} codebase in 2000
+and modified to include more rates and physical processes.  Metal
+cooling using tables from \texttt{Cloudy} was added in 2007
+\citep{2008MNRAS.385.1443S}.  In 2012, the AGORA simulation comparison
+project \citep{2014ApJS..210...14K} was first organized with the goal
+of using a ``common physics package'' to eliminate differences in
+results due to the use of cooling solvers that were specific to each
+simulation code.  The modularity of {\it Enzo's} cooling solver made
+it relatively straightforward to extract it from the {\it Enzo}
+source.  The initial commit to the \textit{Grackle} repository,
+marking the extraction of the core chemistry and cooling machinery,
+was made on October 2, 2012.  The first official release
+(\texttt{Grackle} 1.0) occurred on January 10, 2014.  A summary of
+\texttt{Grackle's} development history can be found at
+\url{https://www.openhub.net/p/thegrackle}.
