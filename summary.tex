@@ -9,14 +9,14 @@ different components of the solver is valid.  The high density limit
 of the non-equilibrium solver is set roughly by the reactions present
 in the network and the range over which their rate coefficients are
 trusted.  The limits on the cooling tables correspond to the density
-range over which they were calculated with.  Users are especially
+range over which they were calculated.  Users are especially
 cautioned against exceeding the upper density limit of the tabulated
 cooling solver.  The critical density above which energy levels are
 populated according to LTE exceeds the upper limit of the tables for
 many metal coolants \citep{2008MNRAS.385.1443S}.  Thus, these tables
 do not capture the NLTE to LTE transition where the cooling rates
 change from scaling as $\rho^{2}$ to $\rho$.  Hence, extrapolation
-beyond the upper limit will result in vast overprediction of the
+beyond the upper limit may result in vast over-prediction of the
 cooling rate.  If the use-case requires exceeding this limit, then the
 high density metal table should be used in conjunction with the
 non-equilibrium solver.  It is also extremely important to remember
