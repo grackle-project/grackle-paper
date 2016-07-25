@@ -4,19 +4,19 @@
 
 It is important to remember that the range of physical conditions in
 which Grackle can be considered valid is not unlimited.  In Figure
-\ref{fig:valid_range}, we show the rough density range over which
+\ref{fig:valid-range}, we show the rough density range over which
 different components of the solver is valid.  The high density limit
 of the non-equilibrium solver is set roughly by the reactions present
-in the network and the range over which their rate coefficents are
+in the network and the range over which their rate coefficients are
 trusted.  The limits on the cooling tables correspond to the density
-range over which they were calculated with.  Users are especially
-cautioned against exceding the upper density limit of the tabulated
+range over which they were calculated.  Users are especially
+cautioned against exceeding the upper density limit of the tabulated
 cooling solver.  The critical density above which energy levels are
 populated according to LTE exceeds the upper limit of the tables for
 many metal coolants \citep{2008MNRAS.385.1443S}.  Thus, these tables
 do not capture the NLTE to LTE transition where the cooling rates
 change from scaling as $\rho^{2}$ to $\rho$.  Hence, extrapolation
-beyond the upper limit will result in vast overprediction of the
+beyond the upper limit may result in vast over-prediction of the
 cooling rate.  If the use-case requires exceeding this limit, then the
 high density metal table should be used in conjunction with the
 non-equilibrium solver.  It is also extremely important to remember
@@ -48,7 +48,7 @@ any given spatial resolution.  When this scale becomes unresolved,
 radiative losses will be overpredicted, leading to unphysically high
 densities and further exacerbating the resolution problem in a runaway
 cycle.  This effect is likely related to the over-cooling problem that
-has classicly plagued cosmological simulations
+has classically plagued cosmological simulations
 \citep[e.g.][]{1996ApJS..105...19K, 2001MNRAS.326.1228B}.
 In Figure \ref{fig:cooling-length}, we show an estimate of the
 cooling length for the scenario of a gas at solar metallicity in a
@@ -77,6 +77,8 @@ density threshold above which sub-grid models are applied.
 To date, the following codes are known to have \texttt{Grackle}
 implemented:
 \begin{itemize}
+
+\item AREPO \citep{2010MNRAS.401..791S}
 
 \item ART-I \citep{1999PhDT........25K, 2002ApJ...571..563K}
 
@@ -107,7 +109,7 @@ The current code structure is highly integrated. This makes introducing new rate
 chemical network or cooling network a rather intricate task requiring multiple changes throughout the code. 
 Apart from the fact that this is more time consuming it is also much more error prone. In a future release of the 
 code the modularity of the code will be increased greatly. There will be a function to populate the species 
-rate coefficients and a function to populate the cooling coefficients. Seperate template files can then be 
+rate coefficients and a function to populate the cooling coefficients. Separate template files can then be 
 updated by a developer wishing to use their own rates. This file can then be included in the build and a flag
 set to indicate the new rates be used in place of the old rates. Furthermore, a similar method will be 
 implemented for solving the network. A template network solver will be available which the developer can use to 
@@ -116,6 +118,36 @@ updating only three files to achieve a solution to their own chemical network.
 
 \subsubsection{Connection to Radiative Transfer}
 
+As discussed in \S\ref{section:radback}, Grackle includes the effects
+of a radiation background that can ionize, heat, and dissociate atoms
+and molecules through the radiative reaction and destruction rates in
+Equations (\ref{eq:rate_general}) and (\ref{eq:rateCD}), respectively.
+Because photo-effects are already implemented into the network, it will
+be relatively trivial to couple Grackle with a radiation transport
+solver.  Here, Grackle would accept additional spatially-varying
+fields of photoionization rates, photoheating rates, and
+photodissociation rates to add to or replace the background radiation
+values.  All of the heavy computation calculating these radiation
+fields is accomplished by the transport solver, whether it be through
+a Monte Carlo or moment method.  Grackle can be called in radiative
+transfer codes that are either called in post-processing, usually for
+cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I,
+  2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is
+becoming more commonplace in galaxy and star formation simulations
+\citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,
+  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.
+Additional connections to radiative transfer models could use the
+local radiation intensity instead of spatially invariant values.  Some
+examples include a more accurate computation of (i) the photoelectric
+effect, (ii) the heating and cooling rates from metals, where the
+local UV/X-ray flux would be an additional interpolation variable in
+the lookup table, and (iii) the self-shielding of a UV background.
+
 \subsubsection{Multiple element cooling}
 
 \subsubsection{Other heating sources?}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "ms"
+%%% End:
