@@ -57,6 +57,46 @@ baryons.'' \citep{2006ApJ...650..573C,2011ApJ...731....6S,2013MNRAS.434.1043O,20
 
 \subsection{Why is a multi-code library a good thing?}
 
+Utilizing identical implementations of microphysical solvers, such as
+chemistry, provides several distinct advantages to the developers and users of
+simulation codes as well as the broader community of researchers who synthesize
+results of those simulation codes.
+
+Firstly, and most importantly, the development of a microphysical solver that
+can be applied to multiple independent simulation codes reduces the technical,
+social and cognitive overhead for collaboration amongst simulators.
+This collaboration is a positive benefit in and of itself (particularly as it
+reduces duplication of effort) but also provides opportunities to share
+understanding, propagate bug fixes, and also to collaboratively implement 
+algorithms that provide higher-fidelity results.  Increasing the ability of
+researchers to directly collaborate around technology will increase overall
+productivity.
+
+With libraries such as \textit{Grackle}, where there is a set of reference
+physical values (such as chemical kinetic rate coefficients, drawn from
+experimentation or detailed theoretical calculation), the existence of such a
+library provides a fixed reference point for calculations that utilize those
+reference values.  For instance, by citing a particular version of
+\textit{Grackle} in a simulation paper, researchers can indicate which set of
+values were used in the calculation.  In cases where results are found to
+sensitively depend on these values, or when these reference values are updated,
+this can guide deeper physical understanding.
+
+An often underrecognized benefit of portable libraries such as \textit{Grackle}
+is the impact they have on education and training of early-stage researchers.
+For researchers at early stages in their career (such as graduate students and
+postdocs) where changing institutions may mean utilizing a different simulation
+platform, a shared chemistry package enables them to immediately transfer
+developed code to new projects, rather than having to reimplement in a new
+system.  Additionally, exposure to code such as \textit{Grackle} that is a mix
+of legacy and modern development styles, from several different maintainers,
+provides insight into practices in computational science.
+
+Perhaps the most obvious benefit to utilizing a library such as
+\textit{Grackle}, particularly in domains such as galaxy formation (where
+controlled comparisons are necessary to decouple effects of star formation
+prescriptions), is the simplification of directly comparing and reducing the
+number of potential sources of difference between multiple calculations.
 
 \subsection{Origins of the code}
 
