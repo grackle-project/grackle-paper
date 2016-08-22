@@ -168,12 +168,9 @@ parcel of gas cooling at constant density.  This test ensures that the
 solver properly evolves the internal energy over a period of time.
 The test initializes a single-cell fluid container with a density of
 0.1 amu/cm$^{3}$ and a temperature of 10$^{6}$ K.  The cell is evolved
-for 100 Myr with timesteps of 1\% of the free-fall time ($\sim$67 kyr
-for this density), where the free-fall time is
-\begin{equation}
-t_{ff} = \sqrt{\frac{3 \pi}{32 G \rho}}.
-\end{equation}
-The resulting evolution is shown in Figure
+for 100 Myr using the \texttt{evolve\_constant\_density} convenience
+function with timesteps of 1\% of the cooling time time.  The
+resulting evolution is shown in Figure
 \ref{fig:uniform-cooling-test}.
 
 \begin{figure}
@@ -193,62 +190,19 @@ The resulting evolution is shown in Figure
 The free-fall collapse answer test simulates the thermal evolution of
 a cloud of gas collapsing due to self-gravity.  This test is useful
 for ensuring that the non-equilibrium chemistry solver is functioning
-properly over a large range in density.  The setup of this test
-closely follows the one-zone free-fall collapse model introduced by
-\citet{2000ApJ...534..809O} and modified by
-\citet{2005ApJ...626..627O} to include the effects of thermal pressure
-support.  The test creates a single-cell fluid container with an
-initial density of 0.1 amu/cm$^{3}$ and an initial temperature of
+properly over a large range in density.  The test creates a
+single-cell fluid container with an initial density of 0.1
+amu/cm$^{3}$ and an initial temperature of
 50,000 K.  Before beginning the free-fall collapse phase, the cloud is
-allowed to cool at a constant density to a temperature of 100 K in the
-manner described in Section \ref{sec:uniform-cooling-test}.  This
-allows the gas to settle into an ionization state that is roughly
-appropriate for the temperature.  From there, we evolve the density of
-the cloud following the modified collapse model of
-\citet{2005ApJ...626..627O}, given by
-\begin{equation}
-\frac{d \rho}{dt} = \frac{\rho}{t_{col}},
-\end{equation}
-where $t_{\rm col}$ is the collapse time-scale expressed as
-\begin{equation}
-t_{col} = \frac{t_{ff}}{\sqrt{1-f}}.
-\end{equation}
-Thermal pressure forces, which act to slow the collapse of the cloud,
-are modeled by the factor $f$, which is expressed as
-\begin{equation}
-f = \left\{
-\begin{array}{lr}
-0, & \gamma < 0.83,\\
-0.6 + 2.5(\gamma - 1) - 6.0(\gamma - 1)^2, & 0.83 < \gamma < 1,\\
-1.0 + 0.2(\gamma - 4/3) - 2.9(\gamma - 4/3)^2, & \gamma > 1,
-\end{array}
- \right.
-\end{equation}
-where the effective adiabatic index, $\gamma$, is
-\begin{equation}
-\gamma \equiv \frac{\partial \ln p}{\partial \ln \rho}.
-\end{equation}
-As the density increases, the internal energy is altered by a
-combination of adiabatic compression and radiative cooling, computed
-by Grackle, and is given by
-\begin{equation}
-\frac{de}{dt}= -p \frac{d}{dt} \frac{1}{\rho} - {\Lambda},
-\label{eq:energy}
-\end{equation}
-where the pressure is given by
-\begin{equation}
-p = \frac{\rho k T}{\mu m_{\rm H}},
-\end{equation}
-the specific internal energy is
-\begin{equation}
-e = \frac{1}{\gamma_{\rm ad} -1} \frac{k T}{\mu m_{\rm H}},
-\label{eq:defen}
-\end{equation}
-$\gamma_{\rm ad}$ is the true adiabatic index, and $\Lambda$ is the
-radiative cooling rate.  This test is performed using the full
-non-equilibrium chemistry solver, once at zero metallicity (Figure
-\ref{fig:free-fall-test} and once with a metallicity of 10$^{-3}$
-Z$_{\odot}$.
+allowed to cool at a constant density to a temperature of 100 K using
+the \texttt{evolve\_constant\_density} function described in Section
+\ref{sec:pyevolve}.  This allows the gas to settle into an ionization
+state that is roughly appropriate for the temperature.  From there, we
+evolve the density of the cloud using the \texttt{evolve\_freefall}
+function, also discussed in Section \ref{sec:pyevolve}.  This test is
+performed using the full non-equilibrium chemistry solver, once at
+zero metallicity (Figure \ref{fig:free-fall-test}) and once with a
+metallicity of 10$^{-3}$ Z$_{\odot}$.
 
 \begin{figure}
   \centering

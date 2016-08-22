@@ -137,12 +137,78 @@ one that will ultimately provide more stability moving forward.
 
 \subsubsection{Evolution Models} \label{sec:pyevolve}
 
-- constant density model
+In addition to providing access to \texttt{Grackle}'s primary
+functionality, Pygrackle also features a set of convenience functions
+to evolve a fluid container forward in time following simple models.
+These functions return a dictionary of arrays of all fluid quantities
+(i.e., species densities, internal energy, temperature, etc.) for time
+values of the evolution.  These functions can be used in semi-analytic
+models that require knowledge of the thermal evolution of gas under
+different conditions.  Examples of use of are discussed in
+\ref{sec:testing}.
 
-- free-fall model
+The simplest of these evolves a fluid container assuming a constant
+density model.  The \texttt{evolve\_constant\_density} function takes
+an initialized fluid container and repeatedly calls \texttt{Grackle}'s
+\texttt{solve\_chemistry} function until a specified stopping time or
+temperature has been reached.  For each iteration, the timestep is
+taken to be a fraction of the local cooling time, specifiable by the
+user and defaulting to 0.01.
 
-These are both discussed in the testing section.  We should probably
-just move that text here and refer to it in testing.
+The second of these functions models the evolution of a parcel of gas
+collapsing due to self-gravity.  The \texttt{evolve\_freefall} function
+closely follows the one-zone free-fall collapse model introduced by
+\citet{2000ApJ...534..809O} and modified by
+\citet{2005ApJ...626..627O} to include the effects of thermal pressure
+support.  The gas density evolves following the modified collapse
+model of \citet{2005ApJ...626..627O}, given by
+\begin{equation}
+\frac{d \rho}{dt} = \frac{\rho}{t_{col}},
+\end{equation}
+where $t_{\rm col}$ is the collapse time-scale expressed as
+\begin{equation}
+t_{col} = \frac{t_{ff}}{\sqrt{1-f}},
+\end{equation}
+and the free-fall time is given by
+\begin{equation}
+t_{ff} = \sqrt{\frac{3 \pi}{32 G \rho}}.
+\end{equation}
+Thermal pressure forces, which act to slow the collapse of the cloud,
+are modeled by the factor $f$, which is expressed as
+\begin{equation}
+f = \left\{
+\begin{array}{lr}
+0, & \gamma < 0.83,\\
+0.6 + 2.5(\gamma - 1) - 6.0(\gamma - 1)^2, & 0.83 < \gamma < 1,\\
+1.0 + 0.2(\gamma - 4/3) - 2.9(\gamma - 4/3)^2, & \gamma > 1,
+\end{array}
+ \right.
+\end{equation}
+where the effective adiabatic index, $\gamma$, is
+\begin{equation}
+\gamma \equiv \frac{\partial \ln p}{\partial \ln \rho}.
+\end{equation}
+As the density increases, the internal energy is altered by a
+combination of adiabatic compression and radiative cooling, computed
+by Grackle, and is given by
+\begin{equation}
+\frac{de}{dt}= -p \frac{d}{dt} \frac{1}{\rho} - {\Lambda},
+\label{eq:energy}
+\end{equation}
+where the pressure is given by
+\begin{equation}
+p = \frac{\rho k T}{\mu m_{\rm H}},
+\end{equation}
+the specific internal energy is
+\begin{equation}
+e = \frac{1}{\gamma_{\rm ad} -1} \frac{k T}{\mu m_{\rm H}},
+\label{eq:defen}
+\end{equation}
+$\gamma_{\rm ad}$ is the true adiabatic index, and $\Lambda$ is the
+radiative cooling rate.  For each iteration of this function, the
+timestep is taken to be a fraction of the local free-fall time,
+specifiable by the user and defaulting to 0.01.  An example use of
+this function is shown in Section \ref{sec:free-fall-test}.
 
 \subsection{Code Structure} \label{Code_Structure}
 
