@@ -145,7 +145,18 @@ the lookup table, and (iii) the self-shielding of a UV background.
 
 \subsubsection{Multiple element cooling}
 
-\subsubsection{Other heating sources?}
+Currently, \texttt{Grackle} only considers a single metallicity field
+for the calculation of the cooling due to heavy elements.  However,
+more sophisticated feedback models now consider feedback from multiple
+sources, like type Ia and type II supernova and winds from AGB stars,
+each of this producing distinct abundance patterns.  In the future, we
+will look to create additional cooling tables that consider varying
+abundance patterns.  As an intermediate step before creating cooling
+tables for every metal species, as in \citet{2009MNRAS.393...99W}, we
+will likely begin with a two-element model distinguishing between type
+Ia and II supernovae, such as that of \citet{2013MNRAS.433.3005D}.
+
+
 
 %%% Local Variables:
 %%% mode: latex
