@@ -231,9 +231,22 @@ The second optimization involves taking advantage of parallel computation.  Grac
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{performance.pdf}
-  \caption{Caption.
-  } \label{fig:performance}
+  \caption{Top panel: Total time to compute the cooling rate test
+    (\S\ref{sec:cooling-rate-test}) in $64^3$ fluid containers, using
+    the tabulated equilibrium cooling model (left), 6-species
+    non-equilibrium model (middle), and 9-species non-equilibrium
+    model (right).  The different bars show the time needed for the
+    complete solve (blue), the temperature calculation (red), the
+    $\dot{e}$ computation due to primordial chemistry (black) and
+    metals (magneta), the interpolation of rate coefficients (cyan),
+    and the update of the species fractions with backward
+    differencing.  Bottom panel: Total time but normalized by the
+    average number of subcycles per cell, which demonstrates the
+    performance of a single iteration in each solver
+    mode.} \label{fig:performance}
 \end{figure}
+
+
 
 \subsubsection{OpenMP Performance}
 
