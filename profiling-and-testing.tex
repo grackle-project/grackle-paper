@@ -246,6 +246,18 @@ The second optimization involves taking advantage of parallel computation.  Grac
     mode.} \label{fig:performance}
 \end{figure}
 
+We utilize the cooling rate test (\S\ref{sec:cooling-rate-test}) to
+assess the performance of Grackle.  We set up the test with $64^3$
+fluid containers with hydrogen number density $n_{\rm H}$, temperature
+$T$, and metallicity $Z$ varying in each dimension.  These quantities
+are equally log-spaced in the range $\log (n_{\rm H} /
+\textrm{cm}^{-3}) = [-1, 3]$, $\log (T/\textrm{K}) = [1, 8]$, and
+$\log (Z/Z_\odot) = [-4, 0]$.  We run each test with the tabulated
+solver in ionization equilibrium and the non-equilibrium solver with
+the 6-species and 9-species networks on a single core of a desktop
+computer with dual Intel Xeon ``Westmere'' E5645 CPUs at 2.4 GHz, each
+of which has six cores.
+
 
 
 \subsubsection{OpenMP Performance}
