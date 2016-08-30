@@ -252,13 +252,65 @@ fluid containers with hydrogen number density $n_{\rm H}$, temperature
 $T$, and metallicity $Z$ varying in each dimension.  These quantities
 are equally log-spaced in the range $\log (n_{\rm H} /
 \textrm{cm}^{-3}) = [-1, 3]$, $\log (T/\textrm{K}) = [1, 8]$, and
-$\log (Z/Z_\odot) = [-4, 0]$.  We run each test with the tabulated
-solver in ionization equilibrium and the non-equilibrium solver with
-the 6-species and 9-species networks on a single core of a desktop
+$\log (Z/Z_\odot) = [-4, 0]$.  All of the fluid containers are
+initially neutral.  We run each test with the tabulated solver in
+ionization equilibrium and the non-equilibrium solver with the
+6-species and 9-species networks on a single core of a desktop
 computer with dual Intel Xeon ``Westmere'' E5645 CPUs at 2.4 GHz, each
-of which has six cores.
+of which has six cores.  The tests are evolved for 500 yr, which in
+most cases is shorter than the cooling time, however, it provides an
+ample test for the performance of Grackle.  Because the fluid
+containers are initialized not in ionization equilibrium, the first
+timestep in the non-equilibrium solvers requires hundreds of subcycles
+for the system to converge.  Because the non-equilibrium solver
+performance is directly tied to the number of subcycles, we do not
+include the first three cycles of the tests.
 
+% Something about this is an ideal solve, but performance can diminish
+% if more difficult (high densities, shocks, or ionization) conditions
+% exist.
 
+The top panel of Figure \ref{fig:performance} shows the total time
+(blue bars) required for this $64^3$ performance test in each solver
+mode.  This is further divided into the time spent in each major
+component of Grackle: the calculation of the temperature (red),
+$\dot{e}$ from primordial (black) and metal (magenta) species, rate
+coefficient interpolation (cyan), and the update of the species
+fractions (green).  From a total performance standpoint, the
+non-equilibrium solver in the 6-species and 9-species primordial
+models require 50\% and 164\% more time than the equilibrium solver,
+respectively.  In this test, Grackle can update $8.6 \times 10^5$,
+$5.7 \times 10^5$, and $3.2 \times 10^5$ fluid containers per second
+for the equilibrium, 6-species and 9-species solvers, respectively.
+The computational expense in the equilibrium solver is almost evenly
+split between the equilibrium temperature calculation and metal
+cooling rates.  The metal cooling rate and rate coefficient
+interpolation consume the most compute cycles in the 6-species and
+9-species solvers, respectively.  The temperature calculation in the
+non-equilibrium solver takes relatively little computation because it
+is simply calculated from the pressure and total number density with
+no iterative processes.
+
+The cooling rate test represents a fluid in many different
+chemo-thermal states, which converge to some equilibrium.  However in
+production simulations, there are many ``difficult'' situations, such
+as high densities, strong shocks, and strong radiation fields, in
+which the equations become stiff and require many subcycles to
+complete an entire solve.  Therefore to better gauge the performance
+of a single iteration, we show the average time elapsed {\it per
+  subcycle} for the same test in the bottom panel of Figure
+\ref{fig:performance}.  The equilibrium and non-equilibrium solvers
+take an average of 1.01 and 2.67 subcycles per solve, respectively.
+Grackle can perform $8.7 \times 10^5$, $1.5 \times 10^6$, and $8.7
+\times 10^5$ subcycles per second for the equilibrium, 6-species and
+9-species solvers, respectively.  Here we see that the equilibrium
+solver actually requires 75\% more time per subcycle as the 6-species
+non-equilibrium solver and is equivalent to the performance (per
+subcycle) of the 9-species non-equilibrium solver.  In practice, if
+any cells require many subcycles to converge to a solution, the call
+to Grackle will require additional time per cell than this ideal test,
+because the total performance is entirely dependent on the total
+number of subcycles performed in one solve, not the number of cells.
 
 \subsubsection{OpenMP Performance}
 
