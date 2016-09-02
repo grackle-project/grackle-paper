@@ -116,32 +116,6 @@ implemented for solving the network. A template network solver will be available
 implement a new network with a developer determined number of species. The developer will be responsible for
 updating only three files to achieve a solution to their own chemical network. 
 
-\subsubsection{Connection to Radiative Transfer}
-
-As discussed in \S\ref{section:radback}, Grackle includes the effects
-of a radiation background that can ionize, heat, and dissociate atoms
-and molecules through the radiative reaction and destruction rates in
-Equations (\ref{eq:rate_general}) and (\ref{eq:rateCD}), respectively.
-Because photo-effects are already implemented into the network, it will
-be relatively trivial to couple Grackle with a radiation transport
-solver.  Here, Grackle would accept additional spatially-varying
-fields of photoionization rates, photoheating rates, and
-photodissociation rates to add to or replace the background radiation
-values.  All of the heavy computation calculating these radiation
-fields is accomplished by the transport solver, whether it be through
-a Monte Carlo or moment method.  Grackle can be called in radiative
-transfer codes that are either called in post-processing, usually for
-cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I,
-  2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is
-becoming more commonplace in galaxy and star formation simulations
-\citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,
-  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.
-Additional connections to radiative transfer models could use the
-local radiation intensity instead of spatially invariant values.  Some
-examples include a more accurate computation of (i) the photoelectric
-effect, (ii) the heating and cooling rates from metals, where the
-local UV/X-ray flux would be an additional interpolation variable in
-the lookup table, and (iii) the self-shielding of a UV background.
 
 \subsubsection{Multiple element cooling}
 
