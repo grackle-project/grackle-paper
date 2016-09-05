@@ -4,15 +4,15 @@
 % ========== Primoridal Chemistry =========
 
 \section{Primordial Chemistry} \label{sec:primordial_chemistry}
-The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in Grackle is closely based on the
-treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although Grackle accounts for a few processes that are not included 
+The treatment of primordial chemistry (i.e.\ the chemistry of metal-free gas) used in \texttt{Grackle} is closely based on the
+treatment in the Enzo AMR code \citep{2014ApJS..211...19B}, although \texttt{Grackle} accounts for a few processes that are not included 
 in the latest version of Enzo available at the time of writing (version 2.4). The Enzo primordial chemistry itself is based 
 originally on the work of \citet{1997NewA....2..181A} and \citet{1997NewA....2..209A}, although the current version has been
 modified substantially compared to the original Abel~et~al.\ network. In this section, we describe in detail the chemistry 
-included in Grackle and discuss how the resulting set of chemical rate equations is solved. 
+included in \texttt{Grackle} and discuss how the resulting set of chemical rate equations is solved. 
 
 \subsection{Chemistry Network} \label{sec:network}
-Grackle provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
+\texttt{Grackle} provides three different primordial chemistry networks, differing in the number of chemical species that they include. 
 The choice of chemical network is controlled by the \texttt{primordial\_chemistry} parameter. Setting \texttt{primordial\_chemistry = 1} selects the
 six species network, which tracks the abundances of the species H, H$^{+}$, He, He$^{+}$, He$^{++}$ and e$^{-}$ and is 
 designed for modelling atomic and/or ionized gas. Setting \texttt{primordial\_chemistry = 2} selects the nine species network. This
@@ -44,7 +44,7 @@ ${\rm He^{+} + \gamma}$ & $\rightarrow$ & ${\rm He^{++} + e^{-}}$ & 13 & --- \\
 \end{table}
 
 The reactions included in the six species network are listed in Table~\ref{tab:six}. The rate coefficients for these reactions are implemented in
-Grackle using simple temperature-dependent analytical fits. In the Table, we list the references from which we take these fits, and also the 
+\texttt{Grackle} using simple temperature-dependent analytical fits. In the Table, we list the references from which we take these fits, and also the 
 references that are the original sources of the theoretical or experimental  data on which these fits are based.
 
 A few of the reactions listed in Table~\ref{tab:six} deserve further comment:
@@ -54,9 +54,9 @@ H$^{+}$, He$^{+}$ and He$^{++}$ is modelled using the case A recombination rate 
 rate coefficients can instead be selected by setting casebrates = 1. The additional complication that photons from the recombination of
 He$^{+}$ can bring about the photoionization of hydrogen \citep[discussed in some detail in][]{1989agna.book.....O} is not accounted
 for, but in most circumstances this will only lead to a small error in the H$^{+}$ and He$^{+}$ abundances. 
-\item[(ii)] The rates of the photoionization reactions are not calculated internally by Grackle, but instead are specified in an input data file,
+\item[(ii)] The rates of the photoionization reactions are not calculated internally by \texttt{Grackle}, but instead are specified in an input data file,
 as described in more detail in Section~\ref{section:radback}.
-\item[(iii)] The six species network implemented in Grackle includes two additional reactions that were not part of the original \citet{1997NewA....2..181A}
+\item[(iii)] The six species network implemented in \texttt{Grackle} includes two additional reactions that were not part of the original \citet{1997NewA....2..181A}
 six species network: the collisional ionization of H by collisions with H and He atoms. Often, these reactions are unimportant. However, they 
 can become competitive with the collisional ionization of H by electrons if the fractional ionization of the gas is very low \citep[see e.g.][for an example of when this can be important]{2015MNRAS.451.2082G}.
 \end{enumerate}
@@ -112,17 +112,17 @@ option when metals are present.
 The nine species network includes all of the reactions in Table~\ref{tab:six} plus the additional reactions listed in Table~\ref{tab:nine}. Again,
 a couple of reactions deserve further discussion:
 \begin{enumerate}
-\item[(i)] The treatment of H$_{2}$ collisional dissociation by H atom collisions now used in Grackle is taken from \citet{1996ApJ...461..265M} and 
+\item[(i)] The treatment of H$_{2}$ collisional dissociation by H atom collisions now used in \texttt{Grackle} is taken from \citet{1996ApJ...461..265M} and 
 accounts for both the temperature and the density dependence of this process. It therefore remains valid in the high density limit, where the H$_{2}$
 level populations approach their local thermodynamical equilibrium (LTE) values. This is important, because H$_{2}$ is far more susceptible to
 collisional dissociation in this limit than when it is solely in the vibrational ground state. It should also be noted that the treatment of this process
-in Grackle accounts for effects of dissociative tunneling as well as direct collisional dissociation; previously, Enzo only accounted for the latter
+in \texttt{Grackle} accounts for effects of dissociative tunneling as well as direct collisional dissociation; previously, Enzo only accounted for the latter
 process and hence underestimated the dissociation rate at low temperatures \citep{2014MNRAS.443.1979L,2015MNRAS.451.2082G}
 \item[(ii)] In view of the considerable uncertainty in the rate of the three-body reaction
 \begin{equation}
 {\rm H + H + H} \rightarrow {\rm H_{2} + H},
 \end{equation}
-discussed in detail in \citet{2008AIPC..990...25G} and \citet{2011ApJ...726...55T}, Grackle provides several different rate coefficients for this process. The user can
+discussed in detail in \citet{2008AIPC..990...25G} and \citet{2011ApJ...726...55T}, \texttt{Grackle} provides several different rate coefficients for this process. The user can
 select which of these rate coefficients to adopt by means of the three\_body\_rate parameter. The options are
 \begin{enumerate}
 \item[{\bf 0}:]  Rate coefficient from \citet{2002Sci...295...93A}, based on an extrapolation from low temperature calculations by \citet{1987JChPh..87..314O}. This is the default option.
@@ -197,7 +197,7 @@ Our kinetic network for solving the rate of change of species density $n_i$ has 
 \frac{\partial n_i}{\partial t} = \sum_j \sum_l k_{jl} n_j n_l + \sum_j I_j n_j
 \label{eq:rate_general}
 \end{equation}
-where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may an additional term for three-body reactions.   To solve this kinetic network, Grackle follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may an additional term for three-body reactions.   To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
 \begin{equation}
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
@@ -214,7 +214,7 @@ n_{ {\rm H}_2^+} = \frac{k_9 n_{\rm H} n_{\rm H^+} + k_{11} n_{\rm H_2} n_{\rm H
 \end{equation}
 Finally, for 12-species model, we add D, D$^+$ and HD.  In each case, the updated species of the previous step are used in the next.  
 
-Since the time step passed to Grackle (often the hydrodynamic timestep of a parent simulation) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\% in any sub-cycle step of length $\Delta t$:
+Since the time step passed to \texttt{Grackle} (often the hydrodynamic timestep of a parent simulation) can be quite large, which would cause large errors in our low-order chemical integrator.  To get around this issue, we sub-cycle the BDF step described above, constraining the chemical timestep such that the H and e$^-$ abundances change by no more than 10\% in any sub-cycle step of length $\Delta t$:
 \begin{equation}
 \Delta t = 0.1 \min \left( \frac{\dot{n}_{\rm H}}{n_{\rm H}} , \frac{\dot{n}_{\rm e^-}}{n_{\rm e^-}} \right)
 \end{equation}
@@ -225,7 +225,7 @@ In some cases, particularly close to equilibrium, we slightly modify this.  Afte
 
 \section{Heating and Cooling} \label{Cooling}
 
-Grackle can evolve the Lagrangian energy equation, taking into account a wide range of radiative cooling and heating processes:
+\texttt{Grackle} can evolve the Lagrangian energy equation, taking into account a wide range of radiative cooling and heating processes:
 \begin{equation}
 \frac{de}{dt} = - \dot{e}_{\rm cool} + \dot{e}_{\rm heat}
 \end{equation}
@@ -239,7 +239,7 @@ If both chemistry and cooling/heating are turned on, these are integrated at the
 
 \subsection{Primordial Heating and Cooling}
 
-To solve for the effects of primordial (H and He only) heating and cooling, Grackle includes two options: (1) a non-equilibrium solver, the chemistry part of which is described in detail in Section~\ref{sec:primordial_chemistry}, and (2) a tabulated version, which assumes ionization equilibrium to compute the cooling and heating rates due to primordial chemistry.  In both cases, photo-heating from an external radiation source can be important -- this is described in Section~\ref{section:radback}.
+To solve for the effects of primordial (H and He only) heating and cooling, \texttt{Grackle} includes two options: (1) a non-equilibrium solver, the chemistry part of which is described in detail in Section~\ref{sec:primordial_chemistry}, and (2) a tabulated version, which assumes ionization equilibrium to compute the cooling and heating rates due to primordial chemistry.  In both cases, photo-heating from an external radiation source can be important -- this is described in Section~\ref{section:radback}.
 
 \subsubsection{Non-equilibrium} \label{sec:pri-neq}
 
@@ -284,7 +284,7 @@ ionization equilibrium for a fixed spectral shape and intensity is a
 function of density and temperature, resulting in a two-dimensional table
 look-up.  The process by which these tables are
 created is discussed in Section \ref{sec:cooling-tables}.  For the
-primordial elements, grackle provides pre-computed tables for the cooling rate, $\Lambda$;
+primordial elements, \texttt{Grackle} provides pre-computed tables for the cooling rate, $\Lambda$;
 the heating rate, $\Gamma$; and the mean molecular weight, $\mu$, of
 the gas as a function of temperature and density, if required.  All rates
 are computed using linear interpolation in log-space.
@@ -352,7 +352,7 @@ Solving for the cooling from metals using a non-equilibrium network`
 akin to that discussed in section \ref{sec:network} is computationally
 challenging since the number of species and reactions that must be
 considered rises steeply with each additional element.  For this
-reason, Grackle computes the impact from metals using tables of
+reason, \texttt{Grackle} computes the impact from metals using tables of
 heating and cooling rates in a way analogous to that discussed in section
 \ref{sec:pri-tab}.  This method was first described by
 \citet{2008MNRAS.385.1443S}.  Other packages, such as \texttt{KROME}
@@ -374,7 +374,7 @@ atomic number 30 (Zn).
 
 \subsubsection{Constructing Cooling Tables} \label{sec:cooling-tables}
 
-The Grackle comes with three different model input files that can be
+The \texttt{Grackle} comes with three different model input files that can be
 used to calculated the tabulated cooling from primordial species and
 metals under different conditions.  The three available models are the
 UV background model of \citet{2009ApJ...703.1416F}, that of
@@ -511,7 +511,7 @@ photoionization codes, like \texttt{Cloudy}, to calculate the
 heating/cooling rates as a function of density, temperature, and
 redshift.
 
-As discussed in Section \ref{sec:cooling-tables}, Grackle makes use of
+As discussed in Section \ref{sec:cooling-tables}, \texttt{Grackle} makes use of
 data files which store tables of all relevant chemistry and cooling
 rates as a function of redshift for each UV background model.  For the
 six and nine species primordial chemistry networks, we store
@@ -524,7 +524,7 @@ These tables are also functions of density and temperature as they are
 created under the assumption of ionization equilibrium.
 
 Currently, two UV background models are available for use with
-Grackle.  These are the models of \citet{2009ApJ...703.1416F} and
+\texttt{Grackle}.  These are the models of \citet{2009ApJ...703.1416F} and
 \citet{2012ApJ...746..125H}.  Data tables for new models can be
 created following the method described in Section
 \ref{sec:cooling-tables}.
@@ -546,11 +546,11 @@ All three available methods are various applications of equations \ref{eq:nssh} 
 
 By default self-shielding is off; these methods should be used with care, as these equations may not be applicable in all situations. This is particularly true in regimes where the ionization rate becomes dominated by collisional excitation \citep{2013MNRAS.430.2427R}, as is the case at high densities or for low UV background ionizing rates.  Finally, we note that no shielding correction is applied to the metals, although it is, in principle, possible to address this shortcoming by generating Cloudy tables including shielding effects.
 
-While equations \ref{eq:nssh} and \ref{eq:gamma_shield} are redshift independent fitting formulae, the gray-averaged cross section, $\bar{\sigma}_{\nu}$, depends on the evolving spectrum of the UV background. Included in the Grackle data files are the pre-computed $\bar{\sigma}_{\nu}$ for H, He, and He$^+$ at each redshift for both the \citet{2009ApJ...703.1416F} and \citet{2012ApJ...746..125H} UV background models using the frequency dependent photoionization cross sections from \citet{1996ApJ...465..487V}.\footnote{Source code containing the analytic fits given in \citet{1996ApJ...465..487V} was obtained from \texttt{http://www.pa.uky.edu/~verner/photo.html}}
+While equations \ref{eq:nssh} and \ref{eq:gamma_shield} are redshift independent fitting formulae, the gray-averaged cross section, $\bar{\sigma}_{\nu}$, depends on the evolving spectrum of the UV background. Included in the \texttt{Grackle} data files are the pre-computed $\bar{\sigma}_{\nu}$ for H, He, and He$^+$ at each redshift for both the \citet{2009ApJ...703.1416F} and \citet{2012ApJ...746..125H} UV background models using the frequency dependent photoionization cross sections from \citet{1996ApJ...465..487V}.\footnote{Source code containing the analytic fits given in \citet{1996ApJ...465..487V} was obtained from \texttt{http://www.pa.uky.edu/~verner/photo.html}}
 
 
 \subsection{Ionization and Heating from Radiative Transfer Simulations}
 \label{section:radiative-transfer}
 
-Although Grackle itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-disassociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table.
+Although \texttt{Grackle} itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-disassociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table.
 
