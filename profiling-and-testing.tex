@@ -335,10 +335,12 @@ computationally expensive routines.
   \includegraphics[width=0.84\textwidth]{fig__openmp_performance.pdf}
   \caption{
     OpenMP parallel efficiency using 20 threads as a function of the size of
-    the input array. The solid and dashed lines are for the tabulated and
-    non-equilibrium functionality, respectively. For all time-consuming
-    routines, the parallel efficiency reaches $\sim 60\%\,\text{--}\,90\%$
-    for $16^3$ cells and $\sim 80\%\,\text{--}\,90\%$ for $64^3$ cells.
+    the input array. The solid lines show the use of the
+    non-equilibrium solver with \texttt{primordial\_chemistry} = 2 and
+    the dashed lines show the analogous functions using the tabulated
+    solver.  For all time-consuming
+    routines, the parallel efficiency reaches $\sim$60\% to 90\% for
+    $16^3$ cells and $\sim$80\% to 90\% for $64^3$ cells.
   } \label{fig:omp-perf}
 \end{figure*}
 
