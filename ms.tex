@@ -42,15 +42,12 @@
 
 % Title of the paper, and the short title which is used in the headers.
 % Keep the title short and informative.
-\title[The Grackle]{What is the Grackle?  A Chemistry and Cooling
+\title[The Grackle]{Introducing Grackle: a Chemistry and Cooling
   Library for Everyone}
 
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
-\author[Britton D. Smith, Greg Bryan, Simon Glover, Nathan Goldbaum,
-  Matthew Turk, John Regan, John Wise, Tom Abel, Andrew
-  Emerick, Brian O'Shea, Peter Anninos, Cameron Hummels, and Sadegh
-  Khochfar]
+\author[B.D. Smith et al.]
        {Britton D. Smith,$^{1}$\thanks{E-mail: brittonsmith@gmail.com
            (BDS)},
         Greg Bryan,
@@ -84,13 +81,26 @@ Observatory, Edinburgh EH9 3HJ, UK\\
 
 % Abstract of the paper
 \begin{abstract}
-This is the Grackle.
+We present the \texttt{Grackle} chemistry and cooling library for
+astrophysical simulations and models.  \texttt{Grackle} provides
+a non-equilibrium primordial chemistry and cooling for H, D, and He
+species, including H$_{2}$ formation on dust grains; tabulated
+primordial and metal cooling; multiple UV background models; and
+support for radiation transfer and arbitrary heat sources.  The
+library has an easily implementable interface for simulation codes
+written in C, C++, and Fortran as well as a Python interface with
+added convenience functions for semi-analytical models.  As an
+open-source project, \texttt{Grackle} provides a community resource
+for accessing and disseminating astrochemical data and numerical
+methods.  We present the full details of the core functionality, the
+simulation and Python interfaces, testing infrastructure, performance,
+and range of applicability.
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
 % Don't make up new ones.
 \begin{keywords}
-keyword1 -- keyword2 -- keyword3
+astrochemistry -- methods: numerical -- galaxies: formation
 \end{keywords}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
