@@ -8,7 +8,7 @@ information, users should consult online documentation available at
 
 \subsection{Simulation Code API}
 
-The Grackle library provides five main functions to the user for use
+The \texttt{Grackle} library provides five main functions to the user for use
 in simulation codes: solving the chemistry and cooling (i.e.,
 updating the chemical species and internal energy) and calculating the
 cooling time, temperature, pressure, and ratio of specific heats.
@@ -16,7 +16,7 @@ Before these functions can be called, the code must be initialized
 with various user-specified settings.  This initialization process is
 also responsible for loading data from external files and calculating
 the chemistry and cooling rate tables used by the solvers.  All
-Grackle run-time parameters are stored within a C \texttt{struct} of type
+\texttt{Grackle} run-time parameters are stored within a C \texttt{struct} of type
 \texttt{chemistry\_data}.  The user initializes this structure by
 calling the function, \texttt{set\_default\_chemistry\_parameters}
 and supplying a pointer to a \texttt{chemistry\_data} structure.  The
@@ -55,7 +55,7 @@ to the CGS unit system for quantities such as density, length, and
 time.  These are required in order to set up the internal unit system
 for the chemistry and cooling rate tables.
 
-Once the Grackle has been initialized, the functionality described
+Once the \texttt{Grackle} has been initialized, the functionality described
 above can be called by the simulation code.  The available functions
 are: 1) \texttt{solve\_chemistry} to integrate chemistry and cooling
 equations over a specified time step, 2)
@@ -65,16 +65,16 @@ equations over a specified time step, 2)
 internal energy and chemical species densities, 4)
 \texttt{calculate\_pressure} to calculate the gas pressure, and 5)
 \texttt{calculate\_gamma} to calculate the ratio of specific heats.
-In the Grackle, the ratio of specific heats is only altered from that
+In \texttt{Grackle}, the ratio of specific heats is only altered from that
 of an ideal gas by the presence of H$_{2}$.
 
-For efficiency, Grackle's functions are designed to operate on
+For efficiency, \texttt{Grackle}'s functions are designed to operate on
 multiple computational elements simultaneously.  The user provides
-arrays of the required fields to Grackle and their values will be
+arrays of the required fields to \texttt{Grackle} and their values will be
 updated by the chemistry and cooling solvers.  Because the number of
-required fields depends on the specific solver being used, Grackle
+required fields depends on the specific solver being used, \texttt{Grackle}
 makes use of another C \texttt{struct} as a means of passing field
-arrays to the Grackle functions.  The \texttt{grackle\_field\_data}
+arrays to the \texttt{Grackle} functions.  The \texttt{grackle\_field\_data}
 \texttt{struct} contains pointers to which can be attached the arrays
 of density, internal energy, and any optional fields, such as
 individual species densities or the arrays of constant heating rates
@@ -123,8 +123,8 @@ rval =
 
 An added benefit of this approach is that adding new
 features which use additional fields will not require a change in the
-function signature.  This will, in theory, allow Grackle to maintain
-backward compatibility indefinitely.  We note that versions of Grackle
+function signature.  This will, in theory, allow \texttt{Grackle} to maintain
+backward compatibility indefinitely.  We note that versions of \texttt{Grackle}
 prior to 3.0 did not make use of the \texttt{grackle\_field\_data}
 \texttt{struct} and instead required all fields to be provided as
 individual arguments.  We acknowledge that the release of
@@ -133,17 +133,17 @@ one that will ultimately provide more stability moving forward.
 
 \subsection{Pygrackle - Grackle's Python API}
 
-As described above, Grackle's native API is provided through C and Fortran
+As described above, \texttt{Grackle}'s native API is provided through C and Fortran
 bindings.  This is particularly useful for simulation codes, as they are
 typically written in either C or Fortran compatible languages, but it provides
-a barrier to entry for experimental work and testing of Grackle functionality.
+a barrier to entry for experimental work and testing of \texttt{Grackle} functionality.
 Python is a high-level, interpreted language, increasingly used in scientific
 computing both as ``glue" code as well as a mechanism for authoring production
 scientific codes.  For instance, in 2016, one of the Gordon Bell Prize nominees
 utilizes the Python code PyFR to demonstrate extreme scaling of finite element
 calculations.
 
-To facilitate access to Grackle functionality, we provide Python bindings to
+To facilitate access to \texttt{Grackle} functionality, we provide Python bindings to
 it, designed to make interacting with chemical rates and rate equations
 available to researchers at all stages.  This enables rapid iteration over
 different rate coefficients, different initial state vectors, and over
@@ -154,22 +154,22 @@ we describe two particular aspects of pygrackle.
 \subsubsection{Fluid Container} \label{sec:pyfluid}
 
 Pygrackle provides an object called a ``fluid container.'  When data is passed
-to grackle during the course of a simulation, it may be sent as a single zone,
+to \texttt{Grackle} during the course of a simulation, it may be sent as a single zone,
 as multiple zones that are organized in a 3D array, or as a 1D ``pencil beam" of
 data.  The fluid container object is designed to mimic this, enabling
 individuals to ``create" a collection of fluids either by reading them from
 disk or constructing them in-memory from NumPy arrays \citep{numpy}.  This
 enables calculations of cooling time, chemical evolution, etc, from
 analytically-defined gas parcels and distributions.  While this will not take
-into account hydrodynamics (unless a package spiritually similar to Grackle,
+into account hydrodynamics (unless a package spiritually similar to \texttt{Grackle},
 but for hydrodynamics, is released) it can provide useful and scientifically
 relevant information.
 
 The fluid container provides several high-level functions, such as computing
 the cooling time, the pressure, and so forth, most of which are usually used
-only internally in grackle.  Additionally, this object provides compatibility
+only internally in \texttt{Grackle}.  Additionally, this object provides compatibility
 with \texttt{yt} \citep{2011ApJS..192....9T}, enabling individuals to load data
-with \texttt{yt} and then evolve it through Grackle.  One possible use case for
+with \texttt{yt} and then evolve it through \texttt{Grackle}.  One possible use case for
 this is to load in a dataset and use Pygrackle to compute different cooling
 times for a collection of gas identified in \texttt{yt} based on different
 metallicity assumptions, different chemical rate coefficients, and different
@@ -230,7 +230,7 @@ where the effective adiabatic index, $\gamma$, is
 \end{equation}
 As the density increases, the internal energy is altered by a
 combination of adiabatic compression and radiative cooling, computed
-by Grackle, and is given by
+by \texttt{Grackle}, and is given by
 \begin{equation}
 \frac{de}{dt}= -p \frac{d}{dt} \frac{1}{\rho} - {\Lambda},
 \label{eq:energy}
@@ -254,7 +254,7 @@ this function is shown in Section \ref{sec:free-fall-test}.
 
 \subsection{Adding New Models/Rates}
 
-Adding new rates to Grackle involves modifying the values stored in
+Adding new rates to \texttt{Grackle} involves modifying the values stored in
 the rate coefficients and additionally defining a new network for both
 the chemistry and if desired also the cooling. As it stands, some
 direct modification of the code structure is required (although see \S
@@ -265,14 +265,14 @@ The structure of the current code base is set up to realize either an
 equilibrium chemistry model using cooling tables derived from Cloudy,
 or a non-equilibrium cooling model based on a six, nine or twelve
 species cooling model.  To implement a different equilibrium cooling
-model then the process is relatively straight forward: grackle reads
+model then the process is relatively straight forward: \texttt{Grackle} reads
 the cloudy cooling and interpolates the data along one, two or three
 dimensions as appropriate. By substituting in a different cooling
 table, with the correct format, the behavior of the cooling for a
 given species can be easily changed.
 
 To modify the non-equilibrium cooling behavior, then more work will be
-required. Grackle assumes that non-equilibrium cooling models are
+required. \texttt{Grackle} assumes that non-equilibrium cooling models are
 hierarchical, with the nine species model composed of the six species
 model plus three additional species.  To expand the network to
 include, say, a fourth model containing the twelve species model as a

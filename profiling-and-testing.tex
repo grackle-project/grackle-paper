@@ -6,38 +6,38 @@
 \subsection{Testing Framework}
 \label{sec:testing}
 
-Testing a library like Grackle, with its mix of \texttt{Fortran}, and
+Testing a library like \texttt{Grackle}, with its mix of \texttt{Fortran}, and
 \texttt{C++} code, can be difficult. In the interest of ultimately improving
-test coverage and making it easier to prototype tests, Grackle employs a
+test coverage and making it easier to prototype tests, \texttt{Grackle} employs a
 python-based testing framework that makes heavy use of the \texttt{pygrackle}
-python wrapper for the Grackle. The tests are orchestrated using the
+python wrapper for \texttt{Grackle}. The tests are orchestrated using the
 \texttt{py.test}\footnote{http://pytest.org/} package.
 
-Currently there are two different types of tests in the Grackle test suite: unit
-tests and answer tests. A unit test in Grackle compares the results of a
-calculation using Grackle to some set of ``correct'' answers that are known
-\textit{a priori}. The unit tests currently implemented in grackle check that the
+Currently there are two different types of tests in the \texttt{Grackle} test suite: unit
+tests and answer tests. A unit test in \texttt{Grackle} compares the results of a
+calculation using \texttt{Grackle} to some set of ``correct'' answers that are known
+\textit{a priori}. The unit tests currently implemented in \texttt{Grackle} check that the
 unit system is behaving correctly (see Section~\ref{sec:test-units}) and that the
 ionization equilibrium for a primordial gas agrees with the analytic prediction
-using the rates implemented in Grackle (see Section~\ref{sec:test-cie}).
+using the rates implemented in \texttt{Grackle} (see Section~\ref{sec:test-cie}).
 
 The answer tests consist of a set of example calculations where each calculation
 writes out a summary plot as well as an \texttt{hdf5} dataset that is loadable
 by the \texttt{yt} package. Known ``correct'' answers for the summary plot and
 \texttt{yt}-loadable dataset are saved in the repository so that code changes in
-Grackle can be tested to ensure that answers produced by the library do not
+\texttt{Grackle} can be tested to ensure that answers produced by the library do not
 change. This process does not prevent \textit{incorrect} answers from being
 generated initially, but it does prevent the answers from changing as the code
 is developed. Incorrect answers are prevented by manually inspecting test
 answers when the test is first added to the codebase. If subsequently a bug is
 discovered and the test output changes, then the test answer must also be
-manually updated. Currently Grackle contains stored answers for: the
+manually updated. Currently, \texttt{Grackle} contains stored answers for: the
 instantaneous cooling rate (see Section~\ref{sec:cooling-rate-test})
 at a constant density, the temperature evolution of a uniform-density cloud (see
 Section~\ref{sec:uniform-cooling-test}), and the density and
 temperature evolution of a gas cloud undergoing free-fall collapse
 (see Section~\ref{sec:free-fall-test}). The answer tests are run
-several times using different input physics to ensure Grackle's
+several times using different input physics to ensure \texttt{Grackle}'s
 solvers are well-exercised by the tests.  The answer tests are
 presented as sample scripts that can be run manually by the user,
 producing a figure.  For each answer test, we show the corresponding
@@ -54,7 +54,7 @@ errors.
 \label{sec:test-units}
 
 For a given set of physical conditions, (i.e., densities and internal
-energies), the results of Grackle-related calculations should be
+energies), the results of \texttt{Grackle}-related calculations should be
 independent of the choice of reference frame (comoving or proper) and
 internal unit system.  However, because chemistry and cooling
 calculations involve numerical values that span many orders of
@@ -119,7 +119,7 @@ f_{\rm H,CIE} = \frac{\alpha_{\rm H^{+}}(T)}{\alpha_{\rm H^{+}}(T) +
 where $\alpha_{\rm H^{+}}$ is the recombination rate of H$^{+}$ and
 $\Gamma_{\rm H}$ is the collisional ionization rate of H.
 
-In order to test that Grackle arrives at the correct CIE solution for
+In order to test that \texttt{Grackle} arrives at the correct CIE solution for
 the atomic primordial network, we initialize a fluid container at a
 constant density with temperature varying smoothly in log-space from
 10$^{4}$ K to 10$^{9}$ K.  The gas is initialized in a fully neutral
@@ -220,11 +220,11 @@ metallicity of 10$^{-3}$ Z$_{\odot}$.
 
 \subsubsection{Optimization Strategy}
 
-Our optimization strategy in the Grackle has two components related to serial and parallel execution.  We begin with single processor optimization.  
+Our optimization strategy in the \texttt{Grackle} has two components related to serial and parallel execution.  We begin with single processor optimization.  
 
-The ordinary differential equations that describe chemical and thermal evolution do not use spatial information and so each discretization point (particle or cell) can be evolved independently of the others.  Because of this, the Grackle can be used with a wide variety of codes and applications, and optimization is relatively straightforward.  Our primary technique for single processor optimization is to make good use of cache and (single processor) vectorization.  The API is built around the idea of ``fields" of points (fluid containers) rather than a single point for this reason.  The field can be a single-dimensional contiguous list as might be used for particle-based codes, or a three dimensional grid with inactive ("ghost") points as would be appropriate for grid-based codes.  By taking an entire field, and operating on the field in an order corresponding to the way it is laid out in memory, the code tries to minimize cache misses.  In particular, multi-dimensional arrays are assumed to be fortran-ordered (column-major) and operations are performed in loops over the most rapidly varying index.  Loops are generally also written in a way which facilitates unrolling so that compilers can easily make use of vector operations and prefetching.  Much of the computationally intensive part of the code is written in FORTRAN (in part for historical reasons but in part to take advantage of well-tested FORTRAN compiler loop optimizations).
+The ordinary differential equations that describe chemical and thermal evolution do not use spatial information and so each discretization point (particle or cell) can be evolved independently of the others.  Because of this, the \texttt{Grackle} can be used with a wide variety of codes and applications, and optimization is relatively straightforward.  Our primary technique for single processor optimization is to make good use of cache and (single processor) vectorization.  The API is built around the idea of ``fields" of points (fluid containers) rather than a single point for this reason.  The field can be a single-dimensional contiguous list as might be used for particle-based codes, or a three dimensional grid with inactive ("ghost") points as would be appropriate for grid-based codes.  By taking an entire field, and operating on the field in an order corresponding to the way it is laid out in memory, the code tries to minimize cache misses.  In particular, multi-dimensional arrays are assumed to be fortran-ordered (column-major) and operations are performed in loops over the most rapidly varying index.  Loops are generally also written in a way which facilitates unrolling so that compilers can easily make use of vector operations and prefetching.  Much of the computationally intensive part of the code is written in FORTRAN (in part for historical reasons but in part to take advantage of well-tested FORTRAN compiler loop optimizations).
 
-The second optimization involves taking advantage of parallel computation.  Grackle itself requires no communication and so can easily work as part of a code that uses MPI or some other message passing library to achieve distributed parallelization.  In addition, Grackle supports OpenMP parallelization and thus can easily work with applications adopting a hybrid MPI/OpenMP model.  The OpenMP is implemented by parallelizing over outer j,k loops and giving a thread an i ``slice" to operate on.  This is a natural model for grid-based codes, but some work may be required to get good performance this way with particle based codes (e.g. by artificially splitting a 1D list of particle quantities into a 2D grid).
+The second optimization involves taking advantage of parallel computation.  \texttt{Grackle} itself requires no communication and so can easily work as part of a code that uses MPI or some other message passing library to achieve distributed parallelization.  In addition, \texttt{Grackle} supports OpenMP parallelization and thus can easily work with applications adopting a hybrid MPI/OpenMP model.  The OpenMP is implemented by parallelizing over outer j,k loops and giving a thread an i ``slice" to operate on.  This is a natural model for grid-based codes, but some work may be required to get good performance this way with particle based codes (e.g. by artificially splitting a 1D list of particle quantities into a 2D grid).
 
 \subsubsection{Serial Performance}
 
@@ -247,7 +247,7 @@ The second optimization involves taking advantage of parallel computation.  Grac
 \end{figure}
 
 We utilize the cooling rate test (\S\ref{sec:cooling-rate-test}) to
-assess the performance of Grackle.  We set up the test with $64^3$
+assess the performance of \texttt{Grackle}.  We set up the test with $64^3$
 fluid containers with hydrogen number density $n_{\rm H}$, temperature
 $T$, and metallicity $Z$ varying in each dimension.  These quantities
 are equally log-spaced in the range $\log (n_{\rm H} /
@@ -259,7 +259,7 @@ ionization equilibrium and the non-equilibrium solver with the
 computer with dual Intel Xeon ``Westmere'' E5645 CPUs at 2.4 GHz, each
 of which has six cores.  The tests are evolved for 500 yr, which in
 most cases is shorter than the cooling time, however, it provides an
-ample test for the performance of Grackle.  Because the fluid
+ample test for the performance of \texttt{Grackle}.  Because the fluid
 containers are not initialized in ionization equilibrium, the first
 timestep in the non-equilibrium solvers requires hundreds of subcycles
 for the system to converge.  Due to the fact that the non-equilibrium solver
@@ -274,13 +274,13 @@ typical use conditions).
 The top panel of Figure \ref{fig:performance} shows the total time
 (blue bars) required for this $64^3$ performance test in each solver
 mode.  This is further divided into the time spent in each major
-component of Grackle: the calculation of the temperature (red),
+component of \texttt{Grackle}: the calculation of the temperature (red),
 $\dot{e}$ from primordial (black) and metal (magenta) species, rate
 coefficient interpolation (cyan), and the update of the species
 fractions (green).  From a total performance standpoint, the
 non-equilibrium solver in the 6-species and 9-species primordial
 models require 50\% and 164\% more time than the equilibrium solver,
-respectively.  In this test, Grackle can update $8.6 \times 10^5$,
+respectively.  In this test, \texttt{Grackle} can update $8.6 \times 10^5$,
 $5.7 \times 10^5$, and $3.2 \times 10^5$ fluid containers per second
 for the equilibrium, 6-species and 9-species solvers, respectively.
 The computational expense in the equilibrium solver is almost evenly
@@ -302,21 +302,21 @@ of a single iteration, we show the average time elapsed {\it per
   subcycle} for the same test in the bottom panel of Figure
 \ref{fig:performance}.  The equilibrium and non-equilibrium solvers
 take an average of 1.01 and 2.67 subcycles per solve, respectively.
-Grackle can perform $8.7 \times 10^5$, $1.5 \times 10^6$, and $8.7
+\texttt{Grackle} can perform $8.7 \times 10^5$, $1.5 \times 10^6$, and $8.7
 \times 10^5$ subcycles per second for the equilibrium, 6-species and
 9-species solvers, respectively.  Here we see that the equilibrium
 solver actually requires 75\% more time per subcycle as the 6-species
 non-equilibrium solver and is equivalent to the performance (per
 subcycle) of the 9-species non-equilibrium solver.  In practice, if
 any cells require many subcycles to converge to a solution, the call
-to Grackle will require additional time per cell than this ideal test,
+to \texttt{Grackle} will require additional time per cell than this ideal test,
 because the total performance is entirely dependent on the total
 number of subcycles performed in one solve, not the number of cells.
 
 \subsubsection{OpenMP Performance}
 
 In addition to the single-processor performance just described, we
-characterize the threaded performance of the Grackle.
+characterize the threaded performance of the \texttt{Grackle}.
 Figure \ref{fig:omp-perf} shows an OpenMP performance benchmark for both the
 non-equilibrium and tabulated functionality, where parallel efficiency is
 defined as the ratio of multi-thread to single-thread performance. We
