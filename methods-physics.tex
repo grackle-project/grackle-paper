@@ -273,7 +273,7 @@ There are a number of other optional heating and cooling terms that the code inc
 \begin{enumerate}
 \item Collisionally induced excitation of H$_2$ at high densities, with rates as described in \citet{2004MNRAS.348.1019R}.
 \item X-ray Compton heating (or cooling) using eq. (4) and (11) of \citet{1999ApJ...517L...9M}.
-\item A photoelectric heating rate, equal to $\Gamma_{\rm eff} n_H$, where $\Gamma_{\rm eff}$ is a fixed input parameter.  Although not strictly primordial, we include this rate here as it is distinct from the dust model described later.
+\item A photoelectric heating rate, equal to $\Gamma_{\rm eff} n_{\rm H}$, where $\Gamma_{\rm eff}$ is a fixed input parameter.  Although not strictly primordial, we include this rate here as it is distinct from the dust model described later.
 \end{enumerate}
 
 
@@ -299,11 +299,11 @@ Since simulation codes typically solve for the internal energy of the gas
 instead of the temperature, it is necessary to convert one to the
 other via
 \begin{equation} \label{eqn:e-T}
-e = \frac{k T}{(\gamma - 1)\ \mu m_{H}},
+e = \frac{k T}{(\gamma - 1)\ \mu m_{\rm H}},
 \end{equation}
 where $k$ is the Boltzmann constant, $e$ is
 the specific internal energy, $\gamma$ is the adiabatic index of an
-ideal gas, and $m_{H}$ is the Hydrogen mass.  Since $\mu$ is also a
+ideal gas, and $m_{\rm H}$ is the Hydrogen mass.  Since $\mu$ is also a
 function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
@@ -338,15 +338,15 @@ within the code are discussed further in section
 
 In a cosmological simulation, the CMB acts as a temperature floor,
 below which the gas cannot cool.  We approximate this effect by
-subtracting the cooling rate at the CMB temperature, $T_{CMB}$, from
+subtracting the cooling rate at the CMB temperature, $T_{\rm CMB}$, from
 the calculated cooling rate such that the final cooling rate that is
 applied is given by
 \begin{equation}
-\Lambda_{final}(T) = \Lambda(T) - \Lambda(T_{CMB}).
+\Lambda_{\rm final}(T) = \Lambda(T) - \Lambda(T_{\rm CMB}).
 \end{equation}
 This allows the cooling rate to smoothly approach zero as the
-temperature approaches $T_{CMB}$ and also for the CMB to heat the gas
-when $T < T_{CMB}$.  We take the same approach when calculating the
+temperature approaches $T_{\rm CMB}$ and also for the CMB to heat the gas
+when $T < T_{\rm CMB}$.  We take the same approach when calculating the
 cooling from metals.
 
 % ----------------------------------
@@ -434,41 +434,41 @@ from the CMB.  Future versions of the code will allow for the
 inclusion of additional radiative heating terms.  This heat balance
 equation is, therefore, given by
 \begin{equation} \label{eqn:tdust}
-4 \sigma T_{gr}^{4} \kappa_{gr} = \Lambda_{gas/grain} + 4 \sigma
-T_{rad}^{4} \kappa_{gr},
+4 \sigma T_{\rm gr}^{4} \kappa_{\rm gr} = \Lambda_{\rm gas/grain} + 4 \sigma
+T_{\rm rad}^{4} \kappa_{\rm gr},
 \end{equation}
-where $\sigma$ is the Stefan-Boltzmann constant, $T_{rad}$ is the
-radiation temperature, and $\kappa_{gr}$ is the grain opacity.  The
+where $\sigma$ is the Stefan-Boltzmann constant, $T_{\rm rad}$ is the
+radiation temperature, and $\kappa_{\rm gr}$ is the grain opacity.  The
 left-hand side of Equation \ref{eqn:tdust} represents cooling by
 thermal radiation and the second term on the right-hand side
 represents the incident radiation field characterized by a radiation
-temperature, $T_{rad}$.  The dust/gas heat transfer rate per unit dust
-mass, $\Lambda_{gas/grain}$, is given by
+temperature, $T_{\rm rad}$.  The dust/gas heat transfer rate per unit dust
+mass, $\Lambda_{\rm gas/grain}$, is given by
 \begin{eqnarray} \label{eqn:gasdust}
-\Lambda_{gas/grain} & = & 1.2\times10^{-31}~\frac{n_{H}^{2}}{\rho_{gr}}
+\Lambda_{\rm gas/grain} & = & 1.2\times10^{-31}~\frac{n_{\rm H}^{2}}{\rho_{\rm gr}}
 \left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T})  \nonumber \\
-& & (T - T_{gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
+& & (T - T_{\rm gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
 \end{eqnarray}
-\citep{1989ApJ...342..306H}, where $\rho_{gr}$ is the dust mass density.  Currently,
+\citep{1989ApJ...342..306H}, where $\rho_{\rm gr}$ is the dust mass density.  Currently,
 the dust to gas mass ratio is assumed to scale with metallicity, i.e.,
 the dust to metal mass ratio is constant.  In the future, the user
 will have the option to provide the dust density independently of the
 metal density.  For the grain opacity, we use the piece-wise
 polynomial of \citet{2011ApJ...729L...3D}, which is given by
 \begin{equation}
-\kappa(T_{gr}) \propto \left\{ \begin{array}{ll}
-T_{gr}^{2} & \textrm{, $T_{gr}$ $<$ 200~K,}\\
-constant & \textrm{, 200~K $<$ $T_{gr}$ $<$ 1500~K,}\\
-T_{gr}^{-12} & \textrm{, $T_{gr}$ $>$ 1500~K},
+\kappa(T_{\rm gr}) \propto \left\{ \begin{array}{ll}
+T_{\rm gr}^{2} & \textrm{, $T_{\rm gr}$ $<$ 200~K,}\\
+constant & \textrm{, 200~K $<$ $T_{\rm gr}$ $<$ 1500~K,}\\
+T_{\rm gr}^{-12} & \textrm{, $T_{\rm gr}$ $>$ 1500~K},
 \end{array} \right.
 \end{equation}
-with a normalization of $\kappa_{gr}(T_{gr} = 200~K) = 16$ cm$^{2}$ g$^{-1}$
+with a normalization of $\kappa_{\rm gr}(T_{\rm gr} = 200~K) = 16$ cm$^{2}$ g$^{-1}$
 \citep{1994ApJ...421..615P, 2000ApJ...534..809O}.  The steep power-law
 for $T > 1500$ K is designed to mimic the effect of grains melting.
 The timescale for dust to reach thermal equilibrium is extremely
 short and, thus, we assume it to be in instantaneous equilibrium.  We
 calculate the dust temperature by solving Equation \ref{eqn:tdust} for
-$T_{gr}$ using Newton's method.  From this solution, a corresponding
+$T_{\rm gr}$ using Newton's method.  From this solution, a corresponding
 heating/cooling term is added to the gas following Equation
 \ref{eqn:gasdust}.  The dust temperature is then used to calculate the
 rate coefficient for H$_{2}$ formation on dust, which is a function of
