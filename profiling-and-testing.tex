@@ -233,8 +233,8 @@ The second optimization involves taking advantage of parallel computation.  \tex
   \includegraphics[width=\columnwidth]{performance.pdf}
   \caption{Top panel: Total time to compute the cooling rate test
     (\S\ref{sec:cooling-rate-test}) in $64^3$ fluid containers, using
-    the tabulated equilibrium cooling model (left), 6-species
-    non-equilibrium model (middle), and 9-species non-equilibrium
+    the tabulated equilibrium cooling model (left), six species
+    non-equilibrium model (middle), and nine species non-equilibrium
     model (right).  The different bars show the time needed for the
     complete solve (blue), the temperature calculation (red), the
     $\dot{e}$ computation due to primordial chemistry (black) and
@@ -255,7 +255,7 @@ are equally log-spaced in the range $\log (n_{\rm H} /
 $\log (Z/Z_\odot) = [-4, 0]$.  All of the fluid containers are
 initially neutral.  We run each test with the tabulated solver in
 ionization equilibrium and the non-equilibrium solver with the
-6-species and 9-species networks on a single core of a desktop
+six species and nine species networks on a single core of a desktop
 computer with dual Intel Xeon ``Westmere'' E5645 CPUs at 2.4 GHz, each
 of which has six cores.  The tests are evolved for 500 yr, which in
 most cases is shorter than the cooling time, however, it provides an
@@ -278,16 +278,16 @@ component of \texttt{Grackle}: the calculation of the temperature (red),
 $\dot{e}$ from primordial (black) and metal (magenta) species, rate
 coefficient interpolation (cyan), and the update of the species
 fractions (green).  From a total performance standpoint, the
-non-equilibrium solver in the 6-species and 9-species primordial
+non-equilibrium solver in the six species and nine species primordial
 models require 50\% and 164\% more time than the equilibrium solver,
 respectively.  In this test, \texttt{Grackle} can update $8.6 \times 10^5$,
 $5.7 \times 10^5$, and $3.2 \times 10^5$ fluid containers per second
-for the equilibrium, 6-species and 9-species solvers, respectively.
+for the equilibrium, six species and nine species solvers, respectively.
 The computational expense in the equilibrium solver is almost evenly
 split between the equilibrium temperature calculation and metal
 cooling rates.  The metal cooling rate and rate coefficient
-interpolation consume the most compute cycles in the 6-species and
-9-species solvers, respectively.  The temperature calculation in the
+interpolation consume the most compute cycles in the six species and
+nine species solvers, respectively.  The temperature calculation in the
 non-equilibrium solver takes relatively little computation because it
 is simply calculated from the pressure and total number density with
 no iterative processes.
@@ -303,11 +303,11 @@ of a single iteration, we show the average time elapsed {\it per
 \ref{fig:performance}.  The equilibrium and non-equilibrium solvers
 take an average of 1.01 and 2.67 subcycles per solve, respectively.
 \texttt{Grackle} can perform $8.7 \times 10^5$, $1.5 \times 10^6$, and $8.7
-\times 10^5$ subcycles per second for the equilibrium, 6-species and
-9-species solvers, respectively.  Here we see that the equilibrium
-solver actually requires 75\% more time per subcycle as the 6-species
+\times 10^5$ subcycles per second for the equilibrium, six species and
+nine species solvers, respectively.  Here we see that the equilibrium
+solver actually requires 75\% more time per subcycle as the six species
 non-equilibrium solver and is equivalent to the performance (per
-subcycle) of the 9-species non-equilibrium solver.  In practice, if
+subcycle) of the nine species non-equilibrium solver.  In practice, if
 any cells require many subcycles to converge to a solution, the call
 to \texttt{Grackle} will require additional time per cell than this ideal test,
 because the total performance is entirely dependent on the total
