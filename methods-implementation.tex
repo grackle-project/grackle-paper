@@ -262,11 +262,11 @@ direct modification of the code structure is required (although see \S
 give more details of that in this section.
 
 The structure of the current code base is set up to realize either an
-equilibrium chemistry model using cooling tables derived from Cloudy,
+equilibrium chemistry model using cooling tables derived from \texttt{Cloudy},
 or a non-equilibrium cooling model based on a six, nine or twelve
 species cooling model.  To implement a different equilibrium cooling
 model then the process is relatively straight forward: \texttt{Grackle} reads
-the cloudy cooling and interpolates the data along one, two or three
+the \texttt{Cloudy} cooling and interpolates the data along one, two or three
 dimensions as appropriate. By substituting in a different cooling
 table, with the correct format, the behavior of the cooling for a
 given species can be easily changed.
