@@ -69,7 +69,7 @@ The tests assert that the cooling time values agree to within 4
 decimal places between the two unit systems.
 
 Three variants of this unit test exist.  In the first two, a
-comoving-frame unit system appropriate for a cosmological simulations
+comoving-frame unit system appropriate for a cosmological simulation
 is compared with a proper-frame unit system drawn from a random number
 generator that allows the density, time, and length units to vary by 4
 orders of magnitude.  A cosmologically appropriate unit system is
@@ -79,8 +79,8 @@ proportional to 1/$\sqrt{G\ \bar{\rho}_{m}}$; and length units on the
 scale of Mpc.  One of the two of these type is performed with the
 non-equilibrium chemistry solver and the other with the fully
 tabulated solver.  In both cases, we compare a randomly generated
-proper-frame unit system with a comoving-frame unit system at z = 0
-and z $>$ 0, where the proper and comoving frames differ.  In these
+proper-frame unit system with a comoving-frame unit system at $z = 0$
+and $z > 0$, where the proper and comoving frames differ.  In these
 tests, a UV background model is also used as the radiative heating
 rate is proportional to $\rho$, whereas collisional heating/cooling
 rates are proportional to $\rho^{2}$ (or $\rho^{3}$ for three-body
@@ -138,13 +138,13 @@ rate answer test initializes a fluid container with a constant density
 and smoothly varying temperature from 10 K to 10$^{9}$ K, then
 iterates the chemistry solver until all species have reached
 equilibrium.  Unlike the CIE unit test, metal cooling and a
-\citet{2012ApJ...746..125H} UV background at z = 0 are also included.
+\citet{2012ApJ...746..125H} UV background at $z = 0$ are also included.
 After reaching equilibrium, the total cooling rate is calculated and
 compared with stored answers, as described in Section
 \ref{sec:testing} above.  This test is performed for all versions of
 the primordial solver as well as the fully tabulated cooling solver.
 The figure produced by the default configuration of this test
-(H,D,He non-equilibrium solver) is shown in Figure
+(H, D, He non-equilibrium solver) is shown in Figure
 \ref{fig:cooling-rate-test}.
 
 \begin{figure}
@@ -169,7 +169,7 @@ solver properly evolves the internal energy over a period of time.
 The test initializes a single-cell fluid container with a density of
 0.1 amu/cm$^{3}$ and a temperature of 10$^{6}$ K.  The cell is evolved
 for 100 Myr using the \texttt{evolve\_constant\_density} convenience
-function with timesteps of 1\% of the cooling time time.  The
+function with timesteps of 1\% of the cooling time.  The
 resulting evolution is shown in Figure
 \ref{fig:uniform-cooling-test}.
 
@@ -257,8 +257,8 @@ initially neutral.  We run each test with the tabulated solver in
 ionization equilibrium and the non-equilibrium solver with the
 six species and nine species networks on a single core of a desktop
 computer with dual Intel Xeon ``Westmere'' E5645 CPUs at 2.4 GHz, each
-of which has six cores.  The tests are evolved for 500 yr, which in
-most cases is shorter than the cooling time, however, it provides an
+of which has six cores.  The tests are evolved for 500 yr. In
+most cases, this is shorter than the cooling time, but it provides an
 ample test for the performance of \texttt{Grackle}.  Because the fluid
 containers are not initialized in ionization equilibrium, the first
 timestep in the non-equilibrium solvers requires hundreds of subcycles

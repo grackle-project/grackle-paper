@@ -108,14 +108,14 @@ implemented:
 
 \subsubsection{Including new rates and models in Grackle}
 The current code structure is highly integrated. This makes introducing new rates for the 
-chemical network or cooling network a rather intricate task requiring multiple changes throughout the code. 
+chemical network or cooling function a rather intricate task requiring multiple changes throughout the code. 
 Apart from the fact that this is more time consuming it is also much more error prone. In a future release of the 
-code the modularity of the code will be increased greatly. There will be a function to populate the species 
-rate coefficients and a function to populate the cooling coefficients. Separate template files can then be 
+code the modularity of the code will be greatly increased. There will be a function to populate the species 
+rate coefficients and a function to populate the cooling rate coefficients. Separate template files can then be 
 updated by a developer wishing to use their own rates. This file can then be included in the build and a flag
-set to indicate the new rates be used in place of the old rates. Furthermore, a similar method will be 
+set to indicate that the new rates should be used in place of the old rates. Furthermore, a similar method will be 
 implemented for solving the network. A template network solver will be available which the developer can use to 
-implement a new network with a developer determined number of species. The developer will be responsible for
+implement a new network with a developer-determined number of species. The developer will be responsible for
 updating only three files to achieve a solution to their own chemical network. 
 
 
@@ -125,7 +125,7 @@ Currently, \texttt{Grackle} only considers a single metallicity field
 for the calculation of the cooling due to heavy elements.  However,
 more sophisticated feedback models now consider feedback from multiple
 sources, like type Ia and type II supernova and winds from AGB stars,
-each of this producing distinct abundance patterns.  In the future, we
+each of which produce distinct abundance patterns.  In the future, we
 will look to create additional cooling tables that consider varying
 abundance patterns.  As an intermediate step before creating cooling
 tables for every metal species, as in \citet{2009MNRAS.393...99W}, we
