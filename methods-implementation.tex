@@ -140,7 +140,7 @@ a barrier to entry for experimental work and testing of \texttt{Grackle} functio
 Python is a high-level, interpreted language, increasingly used in scientific
 computing both as ``glue" code as well as a mechanism for authoring production
 scientific codes.  For instance, in 2016, one of the Gordon Bell Prize nominees
-utilizes the Python code PyFR to demonstrate extreme scaling of finite element
+utilized the Python code PyFR to demonstrate extreme scaling of finite element
 calculations.
 
 To facilitate access to \texttt{Grackle} functionality, we provide Python bindings to
@@ -153,13 +153,13 @@ we describe two particular aspects of pygrackle.
 
 \subsubsection{Fluid Container} \label{sec:pyfluid}
 
-Pygrackle provides an object called a ``fluid container.'  When data is passed
+Pygrackle provides an object called a ``fluid container''.  When data is passed
 to \texttt{Grackle} during the course of a simulation, it may be sent as a single zone,
-as multiple zones that are organized in a 3D array, or as a 1D ``pencil beam" of
+as multiple zones that are organized in a 3D array, or as a 1D ``pencil beam'' of
 data.  The fluid container object is designed to mimic this, enabling
 individuals to ``create" a collection of fluids either by reading them from
 disk or constructing them in-memory from NumPy arrays \citep{numpy}.  This
-enables calculations of cooling time, chemical evolution, etc, from
+enables calculations of cooling time, chemical evolution, etc., from
 analytically-defined gas parcels and distributions.  While this will not take
 into account hydrodynamics (unless a package spiritually similar to \texttt{Grackle},
 but for hydrodynamics, is released) it can provide useful and scientifically
@@ -185,7 +185,7 @@ These functions return a dictionary of arrays of all fluid quantities
 values of the evolution.  These functions can be used in semi-analytic
 models that require knowledge of the thermal evolution of gas under
 different conditions.  Examples of use of are discussed in
-\ref{sec:testing}.
+Section \ref{sec:testing}.
 
 The simplest of these evolves a fluid container assuming a constant
 density model.  The \texttt{evolve\_constant\_density} function takes
@@ -264,15 +264,15 @@ give more details of that in this section.
 The structure of the current code base is set up to realize either an
 equilibrium chemistry model using cooling tables derived from \texttt{Cloudy},
 or a non-equilibrium cooling model based on a six, nine or twelve
-species cooling model.  To implement a different equilibrium cooling
-model then the process is relatively straight forward: \texttt{Grackle} reads
+species chemistry model.  To implement a different equilibrium cooling
+model, the process is relatively straightforward: \texttt{Grackle} reads
 the \texttt{Cloudy} cooling and interpolates the data along one, two or three
 dimensions as appropriate. By substituting in a different cooling
 table, with the correct format, the behavior of the cooling for a
 given species can be easily changed.
 
-To modify the non-equilibrium cooling behavior, then more work will be
-required. \texttt{Grackle} assumes that non-equilibrium cooling models are
+To modify the non-equilibrium cooling behavior, more work is
+required. \texttt{Grackle} assumes that non-equilibrium chemistry models are
 hierarchical, with the nine species model composed of the six species
 model plus three additional species.  To expand the network to
 include, say, a fourth model containing the twelve species model as a
@@ -299,7 +299,7 @@ details of this process.
 %% to be added into the Grackle API. In both of these cases the
 %% hierarchical nature of the code would be preserved.
 
-\subsubsection{Updating the Rate Coefficients}
+\subsubsection{Updating the rate coefficients}
 
 The rates are allocated and declared in the
 \texttt{initialize\_chemistry} function. To update the rate
@@ -308,7 +308,7 @@ make use of the already existing rate coefficient arrays (\texttt{k}
 array) as declared in \texttt{initialize\_chemistry}. The rates are
 populated in \texttt{calc\_rates\_g}. Within this function the rates
 are fully described. For example, \texttt{k1} is the rate coefficient
-for the collisional ionization of neutral Hydrogen (k1: HI + e -> HII
+for the collisional ionization of neutral hydrogen by electrons (k1: HI + e -> HII
 + 2e). If a significant number of new rate coefficients are needed
 then the most expedient approach would be to insert a preprocessor
 directive into \texttt{calc\_rates\_g} in which the appropriate
@@ -329,11 +329,11 @@ easiest option is to simply augment this network with the three extra
 species using the appropriate interactions. The species will then be
 evolved until they converge.
 
-\subsubsection{Updating the cooling network}
+\subsubsection{Updating the cooling model}
 
-Apart from the chemical network, the cooling network may also be
+Apart from the chemical network, the cooling model may also be
 modified. As discussed previously, if the intention is to implement a
-new cooling table then the changes are straight forward.  For changes
+new cooling table then the changes are straightforward.  For changes
 to the equilibrium network (say, to modify the cooling rate due, for
 example, emission line cooling from a given species), this is handled
 in \texttt{cool1d\_multi\_g}. As discussed in \S \ref{Cooling}, line
