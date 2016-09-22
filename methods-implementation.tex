@@ -18,7 +18,7 @@ also responsible for loading data from external files and calculating
 the chemistry and cooling rate tables used by the solvers.  All
 \texttt{Grackle} run-time parameters are stored within a C \texttt{struct} of type
 \texttt{chemistry\_data}.  The user initializes this structure by
-calling the function, \texttt{set\_default\_chemistry\_parameters}
+calling the function \texttt{set\_default\_chemistry\_parameters}
 and supplying a pointer to a \texttt{chemistry\_data} structure.  The
 \texttt{chemistry\_data} pointer is then attached to a globally
 viewable pointer called \texttt{grackle\_data}, allowing all run-time
@@ -70,7 +70,7 @@ of an ideal gas by the presence of H$_{2}$.
 
 For efficiency, \texttt{Grackle}'s functions are designed to operate on
 multiple computational elements simultaneously.  The user provides
-arrays of the required fields to \texttt{Grackle} and their values will be
+arrays of the required fields to \texttt{Grackle} and their values are
 updated by the chemistry and cooling solvers.  Because the number of
 required fields depends on the specific solver being used, \texttt{Grackle}
 makes use of another C \texttt{struct} as a means of passing field
