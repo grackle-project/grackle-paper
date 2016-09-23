@@ -6,7 +6,7 @@ the existing models and networks may be extended.  For more detailed
 information, users should consult online documentation available at
 \texttt{https://grackle.readthedocs.org}.
 
-\subsection{Simulation Code API}
+\subsection{Simulation Code API} \label{methods:api}
 
 The \texttt{Grackle} library provides five main functions to the user for use
 in simulation codes: solving the chemistry and cooling (i.e.,
@@ -274,9 +274,9 @@ given species can be easily changed.
 To modify the non-equilibrium cooling behavior, more work is
 required. \texttt{Grackle} assumes that non-equilibrium chemistry models are
 hierarchical, with the nine species model composed of the six species
-model plus three additional species.  To expand the network to
-include, say, a fourth model containing the twelve species model as a
-subset then the procedure is straightforward. However, if a different
+model plus three additional species and likewise for the twelve species model.
+To expand the network to include, say, a fourth model containing the twelve species 
+model as a subset then the procedure is straightforward. However, if a different
 chemical network is envisaged containing some species already in the
 twelve species model and some not, then this will require modifying
 the existing hierarchical structure.  The next sections provide some
@@ -327,7 +327,9 @@ a new rate network will be required. As a template, the function
 addition to the existing network (e.g. a 15 species model) then the
 easiest option is to simply augment this network with the three extra
 species using the appropriate interactions. The species will then be
-evolved until they converge.
+evolved until they converge. More complex additions would require
+creating a new network update routine using \texttt{step\_rate}
+as a template.
 
 \subsubsection{Updating the cooling model}
 
