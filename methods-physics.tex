@@ -458,13 +458,13 @@ polynomial of \citet{2011ApJ...729L...3D}, which is given by
 \begin{equation}
 \kappa(T_{\rm gr}) \propto \left\{ \begin{array}{ll}
 T_{\rm gr}^{2} & \textrm{, $T_{\rm gr}$ $<$ 200~K,}\\
-constant & \textrm{, 200~K $<$ $T_{\rm gr}$ $<$ 1500~K,}\\
+\textrm{constant} & \textrm{, 200~K $<$ $T_{\rm gr}$ $<$ 1500~K,}\\
 T_{\rm gr}^{-12} & \textrm{, $T_{\rm gr}$ $>$ 1500~K},
 \end{array} \right.
 \end{equation}
 with a normalization of $\kappa_{\rm gr}(T_{\rm gr} = 200~K) = 16$ cm$^{2}$ g$^{-1}$
 \citep{1994ApJ...421..615P, 2000ApJ...534..809O}.  The steep power-law
-for $T > 1500$ K is designed to mimic the effect of grains melting.
+for $T > 1500$ K is designed to mimic the effect of grains sublimating.
 The timescale for dust to reach thermal equilibrium is extremely
 short and, thus, we assume it to be in instantaneous equilibrium.  We
 calculate the dust temperature by solving Equation \ref{eqn:tdust} for
@@ -501,13 +501,14 @@ is independent of density.
 
 The Universe was reionized during the epoch of $z \sim 6-10$ by the
 buildup of radiation from stars and active galactic nuclei (AGN).
-This radiation heated the intergalactic medium (IGM) to $\sim10^{5}$
-K, inhibiting the collapse of halos with virial temperatures below
-this.  Reproducing these effects directly in simulations requires 
-large box sizes, extremely high resolution, as well as radiative
-transfer, and is, thus, prohibitively expensive.  A simpler approach
-is to make use of a spatially uniform, redshift dependent model for
-the evolution of UV background radiation, such as those introduced by
+This radiation heated the intergalactic medium (IGM) to $\sim 2 \times
+10^{5}$ K \citep[e.g.][]{2000MNRAS.318..817S}, inhibiting the collapse
+of halos with virial temperatures below this.  Reproducing these
+effects directly in simulations requires large box sizes, extremely
+high resolution, as well as radiative transfer, and is, thus,
+prohibitively expensive.  A simpler approach is to make use of a
+spatially uniform, redshift dependent model for the evolution of UV
+background radiation, such as those introduced by
 \citet{1996ApJ...461...20H}.  These models produce time/redshift
 dependent spectra from which photo-heating and photo-chemical reaction
 rates can be derived.  These rates can then be used in the reactions
@@ -523,7 +524,7 @@ rates as a function of redshift for each UV background model.  For the
 six and nine species primordial chemistry networks, we store
 photo-heating rates for H, He, and He$^{+}$; photo-ionization rates
 for H, He, He$^{+}$, H$_{2}$; photo-dissociation of H$_{2}$ and
-H$_{2}^{+}$; and photo-dettachment of H$^{-}$.  For the tabulated
+H$_{2}^{+}$; and photo-detachment of H$^{-}$.  For the tabulated
 cooling method, we store the total heating and cooling rates for the
 primordial and metal species as well as the mean molecular weight.
 These tables are also functions of density and temperature as they are
@@ -548,7 +549,7 @@ where $\bar{\sigma}_{\nu}$ is the gray (spectrum-averaged) absorption cross-sect
 \end{equation}
 where $x = n_{\rm H} / n_{\rm H,SSh}$.
 
-All three available methods are various applications of equations \ref{eq:nssh} and \ref{eq:gamma_shield}. The first includes self-shielding in H only by applying these equations, leaving He and He$^+$ optically thin. The second includes self-shielding in both neutral H and neutral He using these equations, leaving He$^+$ optically thin. Finally, the third applies these equations for both neutral H and He as before, while ignoring He$^+$ photoionization/photoheating from the UV background entirely (In other words, when accounting for self-shielding, leaving He$^+$ optically thin to the UV background may be much worse than ignoring it entirely). The later is a common simplifying assumption in radiative transfer simulations for the H reionization epoch (but not during He reionization!), that is generally found to be a reasonable approximation \citep{2006agna.book.....O, 2010MNRAS.408.1945M, 2012MNRAS.421.2232F, 2013MNRAS.430.2427R}.  
+All three available methods are various applications of equations \ref{eq:nssh} and \ref{eq:gamma_shield}. The first includes self-shielding in H only by applying these equations, leaving He and He$^+$ optically thin. The second includes self-shielding in both neutral H and neutral He using these equations, leaving He$^+$ optically thin. Finally, the third applies these equations for both neutral H and He as before, while ignoring He$^+$ photoionization/photoheating from the UV background entirely (In other words, when accounting for self-shielding, leaving He$^+$ optically thin to the UV background may be much worse than ignoring it entirely). The latter is a common simplifying assumption in radiative transfer simulations for the H reionization epoch (but not during He reionization!), that is generally found to be a reasonable approximation \citep{2006agna.book.....O, 2010MNRAS.408.1945M, 2012MNRAS.421.2232F, 2013MNRAS.430.2427R}.  
 
 By default self-shielding is off; these methods should be used with care, as these equations may not be applicable in all situations. This is particularly true in regimes where the ionization rate becomes dominated by collisional ionization \citep{2013MNRAS.430.2427R}, as is the case at high densities or for low UV background ionizing rates.  Finally, we note that no shielding correction is applied to the metals, which can cause large errors in the cooling due to the very different predicted electron fractions (in the non-equilibrium calculation vs.\ the \texttt{Cloudy} metal tables). Great care must therefore be taken when using this feature with metal cooling.  We note that it is, in principle, possible to address this shortcoming by generating \texttt{Cloudy} tables including shielding effects.
 
@@ -558,5 +559,5 @@ While equations \ref{eq:nssh} and \ref{eq:gamma_shield} are redshift independent
 \subsection{Ionization and Heating from Radiative Transfer Simulations}
 \label{section:radiative-transfer}
 
-Although \texttt{Grackle} itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-disassociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could be done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table.
+Although \texttt{Grackle} itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-disassociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could be done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table \citep[e.g.][]{2013ApJ...771...50A}.
 
