@@ -8,18 +8,19 @@ information, users should consult online documentation available at
 
 \subsection{Simulation Code API} \label{methods:api}
 
-The \texttt{Grackle} library provides five main functions to the user for use
-in simulation codes: solving the chemistry and cooling (i.e.,
-updating the chemical species and internal energy) and calculating the
-cooling time, temperature, pressure, and ratio of specific heats.
-Before these functions can be called, the code must be initialized
-with various user-specified settings.  This initialization process is
-also responsible for loading data from external files and calculating
-the chemistry and cooling rate tables used by the solvers.  All
-\texttt{Grackle} run-time parameters are stored within a C \texttt{struct} of type
+The \texttt{Grackle} library provides five main functions to the user
+for use in simulation codes through C or Fortran bindings: solving the
+chemistry and cooling (i.e., updating the chemical species and
+internal energy) and calculating the cooling time, temperature,
+pressure, and ratio of specific heats.  Before these functions can be
+called, the code must be initialized with various user-specified
+settings.  This initialization process is also responsible for loading
+data from external files and calculating the chemistry and cooling
+rate tables used by the solvers.  All \texttt{Grackle} run-time
+parameters are stored within a C \texttt{struct} of type
 \texttt{chemistry\_data}.  The user initializes this structure by
-calling the function \texttt{set\_default\_chemistry\_parameters}
-and supplying a pointer to a \texttt{chemistry\_data} structure.  The
+calling the function \texttt{set\_default\_chemistry\_parameters} and
+supplying a pointer to a \texttt{chemistry\_data} structure.  The
 \texttt{chemistry\_data} pointer is then attached to a globally
 viewable pointer called \texttt{grackle\_data}, allowing all run-time
 parameters to be accessible without having to store the struct
@@ -308,15 +309,16 @@ make use of the already existing rate coefficient arrays (\texttt{k}
 array) as declared in \texttt{initialize\_chemistry}. The rates are
 populated in \texttt{calc\_rates\_g}. Within this function the rates
 are fully described. For example, \texttt{k1} is the rate coefficient
-for the collisional ionization of neutral hydrogen by electrons (k1: HI + e -> HII
-+ 2e). If a significant number of new rate coefficients are needed
-then the most expedient approach would be to insert a preprocessor
-directive into \texttt{calc\_rates\_g} in which the appropriate
-function call can be inserted.  For any additional rate coefficients
-that are required, the corresponding \texttt{k} array needs to be
-declared and allocated in \texttt{initialize\_chemistry}.
-Furthermore, the interpolation of the new rates will need to be added
-in the function \texttt{lookup\_cool\_rates1d}.
+for the collisional ionization of neutral hydrogen by electrons
+(\texttt{k1}: H + e$^{-}$ $\rightarrow$ H$^{+}$ + 2e$^{-}$). If a
+significant number of new rate coefficients are needed then the most
+expedient approach would be to insert a preprocessor directive into
+\texttt{calc\_rates\_g} in which the appropriate function call can be
+inserted.  For any additional rate coefficients that are required, the
+corresponding \texttt{k} array needs to be declared and allocated in
+\texttt{initialize\_chemistry}.  Furthermore, the interpolation of the
+new rates will need to be added in the function
+\texttt{lookup\_cool\_rates1d}.
 
 
 \subsubsection{Updating the chemistry network}
