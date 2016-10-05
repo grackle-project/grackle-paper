@@ -150,11 +150,11 @@ available to researchers at all stages.  This enables rapid iteration over
 different rate coefficients, different initial state vectors, and over
 arbitrary time periods.  The bindings are written in Cython
 \citep{behnel2010cython} with minimal overhead from Python operations.  Below,
-we describe two particular aspects of pygrackle.
+we describe two particular aspects of \texttt{Pygrackle}.
 
 \subsubsection{Fluid Container} \label{sec:pyfluid}
 
-Pygrackle provides an object called a ``fluid container''.  When data is passed
+\texttt{Pygrackle} provides an object called a ``fluid container''.  When data is passed
 to \texttt{Grackle} during the course of a simulation, it may be sent as a single zone,
 as multiple zones that are organized in a 3D array, or as a 1D ``pencil beam'' of
 data.  The fluid container object is designed to mimic this, enabling
@@ -171,7 +171,7 @@ the cooling time, the pressure, and so forth, most of which are usually used
 only internally in \texttt{Grackle}.  Additionally, this object provides compatibility
 with \texttt{yt} \citep{2011ApJS..192....9T}, enabling individuals to load data
 with \texttt{yt} and then evolve it through \texttt{Grackle}.  One possible use case for
-this is to load in a dataset and use Pygrackle to compute different cooling
+this is to load in a dataset and use \texttt{Pygrackle} to compute different cooling
 times for a collection of gas identified in \texttt{yt} based on different
 metallicity assumptions, different chemical rate coefficients, and different
 radiation backgrounds.
@@ -179,7 +179,7 @@ radiation backgrounds.
 \subsubsection{Evolution Models} \label{sec:pyevolve}
 
 In addition to providing access to \texttt{Grackle}'s primary
-functionality, Pygrackle also features a set of convenience functions
+functionality, \texttt{Pygrackle} also features a set of convenience functions
 to evolve a fluid container forward in time following simple models.
 These functions return a dictionary of arrays of all fluid quantities
 (i.e., species densities, internal energy, temperature, etc.) for time
