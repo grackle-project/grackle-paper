@@ -3,7 +3,7 @@
 \subsection{Applicability and Limitations}
 
 It is important to remember that the range of physical conditions over
-which Grackle can be considered valid is not unlimited.  In Figure
+which \texttt{Grackle} can be considered valid is not unlimited.  In Figure
 \ref{fig:valid-range}, we show the rough density range over which
 different components of the solver are valid.  The high density limit
 of the non-equilibrium solver is set roughly by the reactions present
@@ -20,7 +20,7 @@ beyond the upper limit may result in vast over-prediction of the
 cooling rate.  If the use-case requires exceeding this limit, then the
 high density metal table should be used in conjunction with the
 non-equilibrium solver.  It is also extremely important to remember
-that all Grackle calculations are based on the assumption that the
+that all \texttt{Grackle} calculations are based on the assumption that the
 medium is optically thin.  In practice, the length scale of optical
 thickness will become very short as density increases.
 
@@ -29,7 +29,7 @@ thickness will become very short as density increases.
   \includegraphics[width=0.48\textwidth]{valid_range.pdf}
   \caption{
     The appropriate density range for different versions of the
-    Grackle solver.  The high density metal cooling table (bottom)
+    \texttt{Grackle} solver.  The high density metal cooling table (bottom)
     explicitly spans the density range, 10$^{-6}$ cm$^{-3}$ $< n <$
     10$^{12}$ cm$^{-3}$, but extrapolation down to $n = 10^{-10}$ cm$^{-3}$ 
     is still valid, as indicated by the dashed line.  For each
