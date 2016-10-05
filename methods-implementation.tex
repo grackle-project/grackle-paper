@@ -283,23 +283,6 @@ twelve species model and some not, then this will require modifying
 the existing hierarchical structure.  The next sections provide some
 details of this process.
 
-%% The flow of the chemistry network is controlled by the
-%% \texttt{primordial\_chemistry} flag, as described earlier.  In
-%% general, throughout the code, an if clause of \texttt{if
-%%   (primordial\_chemistry > 0)} is followed by \texttt{else if
-%%   (primordial\_chemistry > 1)} which means that instructions are
-%% carried out consecutively assuming the higher models include the lower
-%% ones.  For example say we wish to implements a 10 species model using
-%% the current 9 species set and one other element.  Two options exist in
-%% this case. We could implement a 13 species model and set
-%% \texttt{primordial\_species = 4} and update the code accordingly to
-%% deal with an additional species setting the Deuterium species to zero
-%% in input.  This would be straight forward but somewhat wasteful. The
-%% alternative option would be to adjust the \texttt{primordial\_species}
-%% = 2 criteria to include an extra species. This species would also need
-%% to be added into the Grackle API. In both of these cases the
-%% hierarchical nature of the code would be preserved.
-
 \subsubsection{Updating the rate coefficients}
 
 The rates are allocated and declared in the
