@@ -56,7 +56,7 @@ to the CGS unit system for quantities such as density, length, and
 time.  These are required in order to set up the internal unit system
 for the chemistry and cooling rate tables.
 
-Once the \texttt{Grackle} has been initialized, the functionality described
+Once \texttt{Grackle} has been initialized, the functionality described
 above can be called by the simulation code.  The available functions
 are: 1) \texttt{solve\_chemistry} to integrate chemistry and cooling
 equations over a specified time step, 2)
@@ -142,7 +142,7 @@ Python is a high-level, interpreted language, increasingly used in scientific
 computing both as ``glue" code as well as a mechanism for authoring production
 scientific codes.  For instance, in 2016, one of the Gordon Bell Prize nominees
 utilized the Python code PyFR to demonstrate extreme scaling of finite element
-calculations.
+calculations \citep{pyfr}.
 
 To facilitate access to \texttt{Grackle} functionality, we provide Python bindings to
 it, designed to make interacting with chemical rates and rate equations
@@ -309,7 +309,7 @@ new rates will need to be added in the function
 To update the chemical network to either include or exclude reactions,
 a new rate network will be required. As a template, the function
 \texttt{step\_rate} can be used.  If the new network is simply an
-addition to the existing network (e.g. a 15 species model) then the
+addition to the existing network (e.g., a 15 species model) then the
 easiest option is to simply augment this network with the three extra
 species using the appropriate interactions. The species will then be
 evolved until they converge. More complex additions would require
@@ -321,7 +321,7 @@ as a template.
 Apart from the chemical network, the cooling model may also be
 modified. As discussed previously, if the intention is to implement a
 new cooling table then the changes are straightforward.  For changes
-to the equilibrium network (say, to modify the cooling rate due, for
+to the equilibrium network (say, to modify the cooling rate due to, for
 example, emission line cooling from a given species), this is handled
 in \texttt{cool1d\_multi\_g}. As discussed in \S \ref{Cooling}, line
 emission cooling is determined using collisional excitation,
@@ -337,5 +337,3 @@ temperature values in \texttt{calc\_rates\_g}, following the examples
 there. Finally, once the new cooling rate has been determined its
 values needs to be added to the \texttt{edot} array, which tracks
 the total cooling/heating rate.
-
-

@@ -50,15 +50,18 @@ references that are the original sources of the theoretical or experimental  dat
 A few of the reactions listed in Table~\ref{tab:six} deserve further comment:
 \begin{enumerate}
 \item[(i)] By default, the recombination of
-H$^{+}$, He$^{+}$ and He$^{++}$ is modelled using the case A recombination rate coefficients. However, the case B
-rate coefficients can instead be selected by setting \texttt{CaseBRecombination} = 1. The additional complication that photons from the recombination of
+H$^{+}$, He$^{+}$ and He$^{++}$ is modelled using the case A
+recombination rate coefficients (the optically-thin approximation in
+which recombination photons above 1 Ryd escape). However, the case B
+rate coefficients (in which recombination photons above 1 Ryd are
+locally re-absorbed) can instead be selected by setting \texttt{CaseBRecombination} = 1. The additional complication that photons from the recombination of
 He$^{+}$ can bring about the photoionization of hydrogen \citep[discussed in some detail in][]{1989agna.book.....O} is not accounted
 for, but in most circumstances this will only lead to a small error in the H$^{+}$ and He$^{+}$ abundances. 
 \item[(ii)] The rates of the photoionization reactions are not calculated internally by \texttt{Grackle}, but instead are specified either via an input data file or 
 passed directly to \texttt{Grackle}  via the  \texttt{Grackle} API as described in Section~\ref{section:radback}.
 \item[(iii)] The six species network implemented in \texttt{Grackle} includes two additional reactions that were not part of the original \citet{1997NewA....2..181A}
 six species network: the collisional ionization of H by collisions with H and He atoms. Often, these reactions are unimportant. However, they 
-can become competitive with the collisional ionization of H by electrons if the fractional ionization of the gas is very low \citep[see e.g.][for an example of when this can be important]{2015MNRAS.451.2082G}.
+can become competitive with the collisional ionization of H by electrons if the fractional ionization of the gas is very low \citep[see, e.g.][for an example of when this can be important]{2015MNRAS.451.2082G}.
 \end{enumerate}
 
 \begin{table}
@@ -261,7 +264,7 @@ We include a variety of cooling rates due to transitions of the non-equilibrium 
 \end{enumerate}
 In addition to the sources referenced above, we note that most of these rates were tabulated in Appendix B of \citet{1997NewA....2..209A}.
 
-For the nine species version (\texttt{primordial\_chemistry = 2}), we add H$_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and hence depend only on temperature, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1983ApJ...270..578L}. At very high densities, \texttt{Grackle} can also account for the decrease in the H$_{2}$ cooling rate that comes about once the H$_{2}$ lines becomes optically thick. This is treated using a simple density-dependent opacity correction term introduced by \citet{2004MNRAS.348.1019R}. This option is enabled by setting \texttt{h2\_optical\_depth\_approximation = 1}.
+For the nine species version (\texttt{primordial\_chemistry = 2}), we add H$_2$ cooling.  Our default cooling rate is as follows.  At high densities, where the level populations are in LTE and hence depend only on temperature, we use the high-density rate from \citet{1998A&A...335..403G}. For low densities, we computed the cooling rate due to collisions with H, H$_2$, He, H$^+$, and e$^-$ as described in section 2.3 of  \citet{2008MNRAS.388.1627G}.  The exception is that for collisions with e$^-$, we use revised rates from \citet{yoon2008cross} and for H$^+$, we adopt rates from \citet{2011PhRvL.107b3201H} and \citet{2012PhRvL.108j9903H}.  For intermediate densities, we use the smooth density-dependent switch from \citet{1998A&A...335..403G}.  In addition to this cooling function, the code can also (depending on a compile time switch) use an older rate from \citet{1983ApJ...270..578L}. At very high densities, \texttt{Grackle} can also account for the decrease in the H$_{2}$ cooling rate that comes about once the H$_{2}$ lines becomes optically thick. This is treated using a simple density-dependent opacity correction term introduced by \citet{2004MNRAS.348.1019R}. This option is enabled by setting \texttt{h2\_optical\_depth\_approximation = 1}.
 
 \label{sec:chemheat}
 
@@ -322,7 +325,7 @@ correction such that the value with metals included, $\mu_{i, Z}$ is
 \frac{\rho_{Z}}{\mu_{Z}},
 \end{equation}
 where $\rho_{Z}$ is the metal density and $\mu_{Z} \equiv 16$, which
-is consistent with a solar abundance pattern.  In practice, this
+is consistent with a Solar abundance pattern.  In practice, this
 process arrives at a solution for $\mu$ and $T$ that converges to
 within 1\% in just a few iterations.
 
@@ -372,15 +375,15 @@ primordial species as calculated by either the non-equilibrium network
 \ref{sec:pri-tab}).  As in the tabulated primordial cooling, the
 heating and cooling tables have three dimensions ($z$, $\rho$, and
 $T$) to account for the effects of the UV background models.  The
-values stored in the tables correspond to those of solar metallicity
+values stored in the tables correspond to those of Solar metallicity
 and the cooling rate applied to the gas is scaled by the local
-metallicity.  All of the available metal cooling tables assume a solar
+metallicity.  All of the available metal cooling tables assume a Solar
 abundance pattern and consider all elements heavier than He up to
 atomic number 30 (Zn).
 
 \subsubsection{Constructing Cooling Tables} \label{sec:cooling-tables}
 
-The \texttt{Grackle} comes with three different model input files that can be
+The \texttt{Grackle} library comes with three different model input files that can be
 used to calculated the tabulated cooling from primordial species and
 metals under different conditions.  The three available models are the
 UV background model of \citet{2009ApJ...703.1416F}, that of
@@ -424,7 +427,8 @@ also provide a site for efficient formation of molecules, particularly
 H$_{2}$.  Both heat transfer and molecular formation rates depend very
 sensitively on the dust temperature, $T_{gr}$.  The dust temperature
 is determined by balancing the relevant heating and cooling terms.
-Dust grains are heated by incident radiation and cool through thermal
+Dust grains are heated by incident radiation and cool through emission
+of thermal
 radiation.  Heat flows between gas and dust in the direction of
 whichever has the lower temperature.  The implementation of
 dust-related chemistry here follows very closely the work of
@@ -538,7 +542,11 @@ created following the method described in Section
 
 \subsection{Approximate Self-shielding of the UV Background}
 \label{section:UVB-self-shielding}
-Self-shielding against the UV photoionizing background can be important in many applications. However, accounting for this effect directly requires full radiative transfer, which is often computationally infeasible. In many cosmological simulations, the UV background is commonly taken to be everywhere optically thin, which may not always be an appropriate assumption. If desired, the user may include one of three analytic self-shielding prescriptions which operate independently on each computational element. Each method stems from the analytic fits to radiative transfer simulations from \citet{2013MNRAS.430.2427R}. They found that H self-shielding occurs at densities
+Self-shielding against the UV photoionizing background can be
+important in many applications. However, accounting for this effect
+directly requires full radiative transfer, which is often
+computationally infeasible. In many cosmological simulations, the UV
+background is commonly taken to be optically thin everywhere, which may not always be an appropriate assumption. If desired, the user may include one of three analytic self-shielding prescriptions which operate independently on each computational element. Each method stems from the analytic fits to radiative transfer simulations from \citet{2013MNRAS.430.2427R}. They found that H self-shielding occurs at densities
 \begin{eqnarray} \label{eq:nssh}
 n_{\rm{H,SSh}} & \sim & 6.73\times10^{-3} \rm{cm}^{-3} \left(\frac{\bar{\sigma}_{\nu}}{2.49\times10^{-18} \rm{cm}^{2}}\right)^{-2/3} \nonumber \\
  & & \times ~ T_{4}^{0.17} \Gamma_{-12}^{2/3} \left(\frac{f_{\rm{g}}}{0.17}\right)^{-1/3},
