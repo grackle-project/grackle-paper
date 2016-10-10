@@ -1,4 +1,4 @@
-\section{Summary} \label{sec:summary}
+\section{Discussion} \label{sec:summary}
 
 \subsection{Applicability and Limitations}
 
@@ -134,6 +134,25 @@ abundance patterns.  As an intermediate step before creating cooling
 tables for every metal species, as in \citet{2009MNRAS.393...99W}, we
 will likely begin with a two-element model distinguishing between type
 Ia and II supernovae, such as that of \citet{2013MNRAS.433.3005D}.
+
+\subsection{Summary}
+
+In this paper, we have described an open-source chemistry and
+radiative cooling/heating library suitable for use in numerical
+astrophysical simulations.  Grackle includes a number of
+non-equilibrium chemistry and cooling models involve H, D and He,
+including H$_2$ formation and a simple dust model.  In addition, the
+library has the ability to compute equilibrium cooling/heating rates
+for primordial and metal-enriched gas, with a number of radiative
+backgrounds.  The library has an API suitable for calling from C, C++,
+FORTRAN and Python.  This paper describes the physical processes
+included, the implementation of the models, as well as our open
+development and testing framework which allows users/developers to add
+to the code in a scalable way that is also intended to minimize new
+errors.  We describe the optimization and parallelization strategy,
+along with performance benchmarks.  Grackle is well-tested and already
+used in a substantial number of high-performance numerical simulation
+codes.
 
 
 
