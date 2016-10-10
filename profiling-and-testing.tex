@@ -323,7 +323,9 @@ non-equilibrium and tabulated functionality, where parallel efficiency is
 defined as the ratio of multi-thread to single-thread performance. We
 conduct this benchmark on the Campus Cluster of the University of Illinois
 at Urbana-Champaign using 20 threads on two Intel Xeon E5-2670 v2 CPUs
-at 2.50 GHz, each of which has ten cores. For all time-consuming routines
+at 2.50 GHz, each of which has ten cores. We compile \texttt{Grackle}
+using version 15.0.0 of the Intel compilers with ``-O3''
+optimization.  For all time-consuming routines
 (i.e., calculating cooling, cooling time, and temperature with the tabulated
 solver, and calculating chemistry, cooling, and cooling time with the
 non-equilibrium chemistry solver), the parallel efficiency reaches
