@@ -280,7 +280,7 @@ $\dot{e}$ from primordial (black) and metal (magenta) species, rate
 coefficient interpolation (cyan), and the update of the species
 fractions (green).  From a total performance standpoint, the
 non-equilibrium solver in the six species and nine species primordial
-models require 50\% and 164\% more time than the equilibrium solver,
+models requires 50\% and 164\% more time than the equilibrium solver,
 respectively.  In this test, \texttt{Grackle} can update $8.6 \times 10^5$,
 $5.7 \times 10^5$, and $3.2 \times 10^5$ fluid containers per second
 for the equilibrium, six species and nine species solvers, respectively.
@@ -306,11 +306,11 @@ take an average of 1.01 and 2.67 subcycles per solve, respectively.
 \texttt{Grackle} can perform $8.7 \times 10^5$, $1.5 \times 10^6$, and $8.7
 \times 10^5$ subcycles per second for the equilibrium, six species and
 nine species solvers, respectively.  Here we see that the equilibrium
-solver actually requires 75\% more time per subcycle as the six species
+solver actually requires 75\% more time per subcycle than the six species
 non-equilibrium solver and is equivalent to the performance (per
 subcycle) of the nine species non-equilibrium solver.  In practice, if
 any cells require many subcycles to converge to a solution, the call
-to \texttt{Grackle} will require additional time per cell than this ideal test,
+to \texttt{Grackle} will require more time per cell than in this ideal test,
 because the total performance is entirely dependent on the total
 number of subcycles performed in one solve, not the number of cells.
 
