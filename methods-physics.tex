@@ -212,7 +212,11 @@ Our kinetic network for solving the rate of change of species density $n_i$ has 
 \frac{\partial n_i}{\partial t} = \sum_j \sum_l k_{jl} n_j n_l + \sum_j I_j n_j
 \label{eq:rate_general}
 \end{equation}
-where $k_{jl}$ is the rate for reactions involving species $j$ and $l$ while $I_j$ is the appropriate radiative rate.  Note that in rare cases there may be an additional term for three-body reactions.   To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+where $k_{jl}$ is the rate for reactions involving species $j$ and $l$
+while $I_j$ is the appropriate radiative rate.  {\bf Note, that the first
+term on the right-hand side of Equation \ref{eq:rate_general} can
+denote either creation or destruction reactions.  For a destruction
+reaction, this term would be negative.}  In rare cases there may be an additional term for three-body reactions.  To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
 \begin{equation}
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
@@ -316,9 +320,10 @@ other via
 \begin{equation} \label{eqn:e-T}
 e = \frac{k T}{(\gamma - 1)\ \mu m_{\rm H}},
 \end{equation}
-where $k$ is the Boltzmann constant, $e$ is
+where $k$ is the Boltzmann constant, $T$ is the gas temperature, $e$ is
 the specific internal energy, $\gamma$ is the adiabatic index of an
-ideal gas, and $m_{\rm H}$ is the mass of a hydrogen atom.  Since $\mu$ is also a
+ideal gas, and $m_{\rm H}$ is the mass of a hydrogen atom.  Since {\bf
+the mean molecular weight}, $\mu$, is also a
 function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
@@ -336,7 +341,8 @@ correction such that the value with metals included, $\mu_{i, Z}$ is
 \frac{\rho}{\mu_{i, Z}} = \frac{\rho}{\mu_{i}} +
 \frac{\rho_{Z}}{\mu_{Z}},
 \end{equation}
-where $\rho_{Z}$ is the metal density and $\mu_{Z} \equiv 16$, which
+{\bf where $\rho$ is the total gas density}, $\rho_{Z}$ is the metal
+density, and $\mu_{Z} \equiv 16$, which
 is consistent with a Solar abundance pattern.  In practice, this
 process arrives at a solution for $\mu$ and $T$ that converges to
 within 1\% in just a few iterations.
@@ -465,7 +471,8 @@ mass, $\Lambda_{\rm gas/grain}$, is given by
 \left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T})  \nonumber \\
 & & (T - T_{\rm gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
 \end{eqnarray}
-\citep{1989ApJ...342..306H}, where $\rho_{\rm gr}$ is the dust mass density.  Currently,
+\citep{1989ApJ...342..306H}, {\bf where $T$ is the gas temperature} and
+$\rho_{\rm gr}$ is the dust mass density.  Currently,
 the dust to gas mass ratio is assumed to scale with metallicity, i.e.,
 the dust to metal mass ratio is constant.  As in
 \citet{2000ApJ...534..809O}, we use the grain composition model of
@@ -496,9 +503,13 @@ grains.  The exact form of this rate is given by
 \citet{2000ApJ...534..809O}, who derive it from that of
 \citet{1985ApJ...291..722T}.  This reaction can be extremely
 efficient and the heating resulting from molecule formation can
-significantly heat the gas.  For this reason, we also include the
+significantly heat the gas {\bf if the total H$_{2}$ binding energy is
+returned to the gas.}  For this reason, we also include the
 appropriate chemical heating term, as described in Section
-\ref{sec:chemheat}. We do not account for heating of the dust grains
+\ref{sec:chemheat}.  {\bf We note that the amount of H$_{2}$ binding
+energy that goes toward heating the gas is highly uncertain and so we
+adopt this option as it is the most commonly employed.}
+We do not account for heating of the dust grains
 due to H$_{2}$ formation on their surfaces, as this effect is minor compared 
 to the other terms in Equation \ref{eqn:tdust}.
 
@@ -584,5 +595,5 @@ While equations \ref{eq:nssh} and \ref{eq:gamma_shield} are redshift independent
 \subsection{Ionization and Heating from Radiative Transfer Simulations}
 \label{section:radiative-transfer}
 
-Although \texttt{Grackle} itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-disassociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could be done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table \citep[e.g.][]{2013ApJ...771...50A}.
+Although \texttt{Grackle} itself does not perform radiative transfer, it can be used with a simulation code that does.  In particular, we allow for the optional inclusion of (spatially-varying) arrays of H, He, and He$^+$ photo-ionization rates, as well as a $\rm{H}_2$ photo-dissociation rate, from radiative transfer calculations. Associated heating from these processes is handled through a single heating rate array. These rates are included for each computational element and are tied to the overall heating/cooling and chemistry rates. This allows the user to couple radiative transfer solutions self-consistently with the chemical reaction network.  This could be done as a post-processing step, usually for cosmic reionization calculations \citep[e.g.][]{2014MNRAS.439..725I, 2016MNRAS.459.2342M}, or coupled with the hydrodynamics, which is becoming more commonplace in galaxy and star formation simulations \citep[e.g.][]{2014MNRAS.442.2560W, 2015MNRAS.451...34R,  2015arXiv151100011O, 2015MNRAS.454..380B, 2016arXiv160300034P, 2016arXiv160703117R}.  Our current interface only connects to primordial rates, but in the future, additional connections to radiative transfer models could include a more accurate computation of (i) the photoelectric effect, or (ii) the heating and cooling rates from metals, where the local UV/X-ray flux would be an additional interpolation variable in the lookup table \citep[e.g.][]{2013ApJ...771...50A}.
 
