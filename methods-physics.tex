@@ -53,8 +53,8 @@ A few of the reactions listed in Table~\ref{tab:six} deserve further comment:
 H$^{+}$, He$^{+}$ and He$^{++}$ is modelled using the case A
 recombination rate coefficients (the optically-thin approximation in
 which recombination photons above 1 Ryd escape). However, the case B
-rate coefficients (in which recombination photons above 1 Ryd are
-locally re-absorbed) can instead be selected by setting \texttt{CaseBRecombination} = 1. The additional complication that photons from the recombination of
+rate coefficients \citep[in which recombination photons above 1 Ryd are
+locally re-absorbed,][]{1989agna.book.....O} can instead be selected by setting \texttt{CaseBRecombination} = 1. The additional complication that photons from the recombination of
 He$^{+}$ can bring about the photoionization of hydrogen \citep[discussed in some detail in][]{1989agna.book.....O} is not accounted
 for, but in most circumstances this will only lead to a small error in the H$^{+}$ and He$^{+}$ abundances. 
 \item[(ii)] The rates of the photoionization reactions are not calculated internally by \texttt{Grackle}, but instead are specified either via an input data file or 
@@ -213,10 +213,11 @@ Our kinetic network for solving the rate of change of species density $n_i$ has 
 \label{eq:rate_general}
 \end{equation}
 where $k_{jl}$ is the rate for reactions involving species $j$ and $l$
-while $I_j$ is the appropriate radiative rate.  {\bf Note, that the first
-term on the right-hand side of Equation \ref{eq:rate_general} can
-denote either creation or destruction reactions.  For a destruction
-reaction, this term would be negative.}  In rare cases there may be an additional term for three-body reactions.  To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+while $I_j$ is the appropriate radiative rate.  {\bf Note, that the
+terms on the right-hand side of Equation \ref{eq:rate_general} can
+denote either creation or destruction reactions.  For creation
+reactions, the corresponding term is positive; for destruction
+reactions, it is negative.}  In rare cases there may be an additional term for three-body reactions.  To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
 \begin{equation}
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
@@ -507,7 +508,10 @@ significantly heat the gas {\bf if the total H$_{2}$ binding energy is
 returned to the gas.}  For this reason, we also include the
 appropriate chemical heating term, as described in Section
 \ref{sec:chemheat}.  {\bf We note that the amount of H$_{2}$ binding
-energy that goes toward heating the gas is highly uncertain and so we
+energy that goes toward heating the gas is highly uncertain
+\citep[see e.g.,][for a brief review of theoretical and experimental
+efforts to determine the fraction of energy going into
+heating]{2010ApJ...725.1111I} and so we
 adopt this option as it is the most commonly employed.}
 We do not account for heating of the dust grains
 due to H$_{2}$ formation on their surfaces, as this effect is minor compared 
