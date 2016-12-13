@@ -19,12 +19,12 @@ change from scaling as $\rho^{2}$ to $\rho$.  Hence, extrapolation
 beyond the upper limit may result in vast over-prediction of the
 cooling rate.  If the use-case requires exceeding this limit, then the
 high density metal table should be used in conjunction with the
-non-equilibrium solver.  {\bf In all cases, the valid temperature range is
+non-equilibrium solver.  In all cases, the valid temperature range is
 roughly 1 K to 10$^{9}$ K.  The tables computed with \texttt{Cloudy}
 are defined over this temperature range.  For the primordial
 chemistry, we note that the reaction rates are defined over this
 temperature range, if not explicitly valid.  However, at all
-temperatures, the rates describing the dominant processes are valid.}
+temperatures, the rates describing the dominant processes are valid.
 It is also extremely important to remember
 that all \texttt{Grackle} calculations are based on the assumption that the
 medium is optically thin.  In practice, the length scale of optical
@@ -150,12 +150,12 @@ non-equilibrium chemistry and cooling models involving H, D and He,
 including H$_2$ formation and a simple dust model.  In addition, the
 library has the ability to compute equilibrium cooling/heating rates
 for primordial and metal-enriched gas, with a number of radiative
-backgrounds.  {\bf The sophistication of the primordial chemistry network
+backgrounds.  The sophistication of the primordial chemistry network
 makes \texttt{Grackle} ideally suited for detailed studies of the
 chemistry of metal-free gas.  Although \texttt{Grackle} does not
 explicitly follow chemical reactions for elements heavier than He,
 the tabulated metal cooling rates allow the code to be employed in all
-situations where only the total cooling rate is needed.}
+situations where only the total cooling rate is needed.
 The library has an API suitable for calling from C, C++,
 FORTRAN and Python.  This paper describes the physical processes
 included, the implementation of the models, as well as our open

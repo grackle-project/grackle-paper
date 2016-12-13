@@ -213,11 +213,11 @@ Our kinetic network for solving the rate of change of species density $n_i$ has 
 \label{eq:rate_general}
 \end{equation}
 where $k_{jl}$ is the rate for reactions involving species $j$ and $l$
-while $I_j$ is the appropriate radiative rate.  {\bf Note, that the
+while $I_j$ is the appropriate radiative rate.  Note, that the
 terms on the right-hand side of Equation \ref{eq:rate_general} can
 denote either creation or destruction reactions.  For creation
 reactions, the corresponding term is positive; for destruction
-reactions, it is negative.}  In rare cases there may be an additional term for three-body reactions.  To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
+reactions, it is negative.  In rare cases there may be an additional term for three-body reactions.  To solve this kinetic network, \texttt{Grackle} follows closely the procedure described in \citet{1997NewA....2..209A} and \citet{2014ApJS..211...19B} by grouping creation and destruction rates to rewrite Eq.~\ref{eq:rate_general} as,
 \begin{equation}
 \frac{\partial n_i}{\partial t} = C_i(T, n_j) - D_i(T, n_j) n_i
 \label{eq:rateCD}
@@ -323,8 +323,8 @@ e = \frac{k T}{(\gamma - 1)\ \mu m_{\rm H}},
 \end{equation}
 where $k$ is the Boltzmann constant, $T$ is the gas temperature, $e$ is
 the specific internal energy, $\gamma$ is the adiabatic index of an
-ideal gas, and $m_{\rm H}$ is the mass of a hydrogen atom.  Since {\bf
-the mean molecular weight}, $\mu$, is also a
+ideal gas, and $m_{\rm H}$ is the mass of a hydrogen atom.  Since
+the mean molecular weight, $\mu$, is also a
 function of temperature, we solve Equation \ref{eqn:e-T} iteratively
 with an initial guess of $\mu = 1$.  The temperature calculated using
 the initial guess for $\mu$ is then used as an input to the table of
@@ -342,7 +342,7 @@ correction such that the value with metals included, $\mu_{i, Z}$ is
 \frac{\rho}{\mu_{i, Z}} = \frac{\rho}{\mu_{i}} +
 \frac{\rho_{Z}}{\mu_{Z}},
 \end{equation}
-{\bf where $\rho$ is the total gas density}, $\rho_{Z}$ is the metal
+where $\rho$ is the total gas density, $\rho_{Z}$ is the metal
 density, and $\mu_{Z} \equiv 16$, which
 is consistent with a Solar abundance pattern.  In practice, this
 process arrives at a solution for $\mu$ and $T$ that converges to
@@ -472,7 +472,7 @@ mass, $\Lambda_{\rm gas/grain}$, is given by
 \left(\frac{T}{1000 K}\right)^{1/2} (1 - 0.8 e^{-75 / T})  \nonumber \\
 & & (T - T_{\rm gr})~\textrm{erg~s$^{-1}$~g$^{-1}$},
 \end{eqnarray}
-\citep{1989ApJ...342..306H}, {\bf where $T$ is the gas temperature} and
+\citep{1989ApJ...342..306H}, where $T$ is the gas temperature and
 $\rho_{\rm gr}$ is the dust mass density.  Currently,
 the dust to gas mass ratio is assumed to scale with metallicity, i.e.,
 the dust to metal mass ratio is constant.  As in
@@ -504,15 +504,15 @@ grains.  The exact form of this rate is given by
 \citet{2000ApJ...534..809O}, who derive it from that of
 \citet{1985ApJ...291..722T}.  This reaction can be extremely
 efficient and the heating resulting from molecule formation can
-significantly heat the gas {\bf if the total H$_{2}$ binding energy is
-returned to the gas.}  For this reason, we also include the
+significantly heat the gas if the total H$_{2}$ binding energy is
+returned to the gas.  For this reason, we also include the
 appropriate chemical heating term, as described in Section
-\ref{sec:chemheat}.  {\bf We note that the amount of H$_{2}$ binding
+\ref{sec:chemheat}.  We note that the amount of H$_{2}$ binding
 energy that goes toward heating the gas is highly uncertain
 \citep[see e.g.,][for a brief review of theoretical and experimental
 efforts to determine the fraction of energy going into
 heating]{2010ApJ...725.1111I} and so we
-adopt this option as it is the most commonly employed.}
+adopt this option as it is the most commonly employed.
 We do not account for heating of the dust grains
 due to H$_{2}$ formation on their surfaces, as this effect is minor compared 
 to the other terms in Equation \ref{eqn:tdust}.
